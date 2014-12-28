@@ -180,8 +180,11 @@ typedef NS_ENUM(NSInteger, PPFileType) {
             type = PPFileTypeFile;
         }
 
-        NSString *name = [NSString stringWithFormat:@"%@", [[[[currentURL absoluteString]
-                lastPathComponent] stringByDeletingPathExtension] stringByRemovingPercentEncoding]];
+        NSString *name = [NSString stringWithFormat:@"%@", [[currentURL absoluteString] lastPathComponent]];
+        while (![[name stringByDeletingPathExtension] isEqualToString:name]) {
+            name = [name stringByDeletingPathExtension];
+        }
+        name = [name stringByRemovingPercentEncoding];
 
         PPFileModel *fileModel = [PPFileModel modelWithUrl:currentURL
                                                      title:name
