@@ -312,15 +312,29 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     [cell.textLabel setText:currentFile.title];
 }
 
-- (void)      tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    if (_isSelecting) {
+        return;
+    }
+
+    PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
+    if (currentFile.type == PPFileTypeFolder) {
+        PPFilesListViewController *folderListVC = [PPFilesListViewController controllerWithRootURL:currentFile.url];
+        folderListVC.title = currentFile.title;
+
+        [self.storageViewController pushViewController:folderListVC animated:YES];
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (_isSelecting) {
+        return NO;
+    }
+
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
     return currentFile.type == PPFileTypeFolder;
 }
-
 
 @end
