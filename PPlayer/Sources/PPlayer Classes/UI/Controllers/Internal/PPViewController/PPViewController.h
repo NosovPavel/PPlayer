@@ -19,23 +19,14 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "AppDelegate.h"
-#import "PPRootViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface AppDelegate ()
+@interface PPViewController : UIViewController
 
-@end
+- (void)designedInit;
 
-@implementation AppDelegate
+- (void)commonInit;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    PPRootViewController *rootViewController = [[PPRootViewController alloc] init];
-
-    [self setWindow:[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-    [[self window] setRootViewController:rootViewController];
-    [[self window] makeKeyAndVisible];
-
-    return YES;
-}
+- (void)performLayout;
 
 @end

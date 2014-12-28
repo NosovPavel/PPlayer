@@ -19,23 +19,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "AppDelegate.h"
-#import "PPRootViewController.h"
+#import "PPTabBarController.h"
 
-@interface AppDelegate ()
-
-@end
-
-@implementation AppDelegate
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    PPRootViewController *rootViewController = [[PPRootViewController alloc] init];
-
-    [self setWindow:[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-    [[self window] setRootViewController:rootViewController];
-    [[self window] makeKeyAndVisible];
-
-    return YES;
-}
-
+@implementation PPTabBarController
 @end

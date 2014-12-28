@@ -7,12 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A73E446F1A502E29009E8B7C /* PPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E445D1A502E29009E8B7C /* PPNavigationController.m */; };
+		A73E44701A502E29009E8B7C /* PPRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E44601A502E29009E8B7C /* PPRootViewController.m */; };
+		A73E44711A502E29009E8B7C /* PPTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E44631A502E29009E8B7C /* PPTabBarController.m */; };
+		A73E44741A502E29009E8B7C /* PPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E446D1A502E29009E8B7C /* PPViewController.m */; };
+		A73EE0D21A5032800080A13F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A73EE0CF1A5032800080A13F /* Localizable.strings */; };
 		A79B13591A502AF70042DD4E /* Common.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A79B13581A502AF70042DD4E /* Common.xcassets */; };
 		A7C448C61A501FB300FE096B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C448C11A501FB300FE096B /* AppDelegate.m */; };
 		A7C448C81A501FB300FE096B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C448C41A501FB300FE096B /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A73E445C1A502E29009E8B7C /* PPNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPNavigationController.h; sourceTree = "<group>"; };
+		A73E445D1A502E29009E8B7C /* PPNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPNavigationController.m; sourceTree = "<group>"; };
+		A73E445F1A502E29009E8B7C /* PPRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPRootViewController.h; sourceTree = "<group>"; };
+		A73E44601A502E29009E8B7C /* PPRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPRootViewController.m; sourceTree = "<group>"; };
+		A73E44621A502E29009E8B7C /* PPTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPTabBarController.h; sourceTree = "<group>"; };
+		A73E44631A502E29009E8B7C /* PPTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPTabBarController.m; sourceTree = "<group>"; };
+		A73E446C1A502E29009E8B7C /* PPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPViewController.h; sourceTree = "<group>"; };
+		A73E446D1A502E29009E8B7C /* PPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPViewController.m; sourceTree = "<group>"; };
+		A73EE0D01A5032800080A13F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A73EE0D11A5032800080A13F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A79B13581A502AF70042DD4E /* Common.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Common.xcassets; sourceTree = "<group>"; };
 		A7C448961A501F1E00FE096B /* PPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7C448C01A501FB300FE096B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -32,9 +47,121 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		65CDA177E08D002FC36840E6 /* PPlayer Classes */ = {
+			isa = PBXGroup;
+			children = (
+				65CDA663B2275BD24E71A016 /* Model */,
+				65CDAFB640B99E8F1959D331 /* UI */,
+			);
+			path = "PPlayer Classes";
+			sourceTree = "<group>";
+		};
+		65CDA663B2275BD24E71A016 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		65CDABF15F4F5BF65ED5B88B /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				65CDA177E08D002FC36840E6 /* PPlayer Classes */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		65CDAFB640B99E8F1959D331 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A73E44591A502E29009E8B7C /* Controllers */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		A73E44591A502E29009E8B7C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A73E445A1A502E29009E8B7C /* Common */,
+				A73E44641A502E29009E8B7C /* Internal */,
+				A73E446E1A502E29009E8B7C /* Screens */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		A73E445A1A502E29009E8B7C /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				A73E445B1A502E29009E8B7C /* PPNavigationController */,
+				A73E445E1A502E29009E8B7C /* PPRootViewController */,
+				A73E44611A502E29009E8B7C /* PPTabBarController */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		A73E445B1A502E29009E8B7C /* PPNavigationController */ = {
+			isa = PBXGroup;
+			children = (
+				A73E445C1A502E29009E8B7C /* PPNavigationController.h */,
+				A73E445D1A502E29009E8B7C /* PPNavigationController.m */,
+			);
+			path = PPNavigationController;
+			sourceTree = "<group>";
+		};
+		A73E445E1A502E29009E8B7C /* PPRootViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A73E445F1A502E29009E8B7C /* PPRootViewController.h */,
+				A73E44601A502E29009E8B7C /* PPRootViewController.m */,
+			);
+			path = PPRootViewController;
+			sourceTree = "<group>";
+		};
+		A73E44611A502E29009E8B7C /* PPTabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				A73E44621A502E29009E8B7C /* PPTabBarController.h */,
+				A73E44631A502E29009E8B7C /* PPTabBarController.m */,
+			);
+			path = PPTabBarController;
+			sourceTree = "<group>";
+		};
+		A73E44641A502E29009E8B7C /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				A73E446B1A502E29009E8B7C /* PPViewController */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		A73E446B1A502E29009E8B7C /* PPViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A73E446C1A502E29009E8B7C /* PPViewController.h */,
+				A73E446D1A502E29009E8B7C /* PPViewController.m */,
+			);
+			path = PPViewController;
+			sourceTree = "<group>";
+		};
+		A73E446E1A502E29009E8B7C /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		A73EE0CE1A5032800080A13F /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				A73EE0CF1A5032800080A13F /* Localizable.strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
 		A79B13561A502AF70042DD4E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A73EE0CE1A5032800080A13F /* Localization */,
 				A79B13571A502AF70042DD4E /* Images */,
 			);
 			path = Resources;
@@ -70,6 +197,7 @@
 				A7C448BF1A501FB300FE096B /* AppDelegate */,
 				A79B13561A502AF70042DD4E /* Resources */,
 				A7C448C21A501FB300FE096B /* Other */,
+				65CDABF15F4F5BF65ED5B88B /* Sources */,
 			);
 			path = PPlayer;
 			sourceTree = "<group>";
@@ -135,6 +263,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = A7C4488D1A501F1E00FE096B;
 			productRefGroup = A7C448971A501F1E00FE096B /* Products */;
@@ -152,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A79B13591A502AF70042DD4E /* Common.xcassets in Resources */,
+				A73EE0D21A5032800080A13F /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,11 +310,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7C448C81A501FB300FE096B /* main.m in Sources */,
+				A73E446F1A502E29009E8B7C /* PPNavigationController.m in Sources */,
+				A73E44741A502E29009E8B7C /* PPViewController.m in Sources */,
 				A7C448C61A501FB300FE096B /* AppDelegate.m in Sources */,
+				A73E44701A502E29009E8B7C /* PPRootViewController.m in Sources */,
+				A73E44711A502E29009E8B7C /* PPTabBarController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A73EE0CF1A5032800080A13F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A73EE0D01A5032800080A13F /* en */,
+				A73EE0D11A5032800080A13F /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		A7C448B71A501F1E00FE096B /* Debug */ = {
