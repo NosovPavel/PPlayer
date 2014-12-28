@@ -40,6 +40,7 @@
 }
 
 #pragma mark - Lifecycle
+
 - (instancetype)init {
     self = [super init];
     if (self) {
