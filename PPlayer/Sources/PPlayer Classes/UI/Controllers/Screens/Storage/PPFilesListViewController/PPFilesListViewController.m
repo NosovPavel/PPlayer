@@ -106,22 +106,41 @@
 }
 
 - (void)_setupUnselectedStateActionsAnimated:(BOOL)animated {
-    PPNavigationBarMenuViewAction *selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:nil handler:^{
-        //
-    }                                                                                             title:NSLocalizedString(@"Select items...", nil)];
+    __block typeof(self) selfRef = self;
+    PPNavigationBarMenuViewAction *selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconSelect.png"]
+                                                                                                handler:^{
+                                                                                                    selfRef->_isSelecting = YES;
+                                                                                                    [selfRef _selectingStateChanged];
+                                                                                                } title:NSLocalizedString(@"Select items...", nil)];
 
     [self.storageViewController setNavigationMenuActions:@[selectElementsAction] animated:animated];
 }
 
 - (void)_setupSelectedStateActionsAnimated:(BOOL)animated {
-    PPNavigationBarMenuViewAction *importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:nil handler:^{
-        //
-    }                                                                                              title:NSLocalizedString(@"Import to Library", nil)];
-    PPNavigationBarMenuViewAction *deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:nil handler:^{
-        //
-    }                                                                                     title:NSLocalizedString(@"Delete", nil)];
+    __block typeof(self) selfRef = self;
+    PPNavigationBarMenuViewAction *importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconToLibrary.png"]
+                                                                                                 handler:^{
+                                                                                                     //
+                                                                                                 } title:NSLocalizedString(@"Import to Library", nil)];
+    PPNavigationBarMenuViewAction *deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
+                                                                                        handler:^{
+                                                                                            //
+                                                                                        } title:NSLocalizedString(@"Delete", nil)];
+    PPNavigationBarMenuViewAction *cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconCancel.png"]
+                                                                                        handler:^{
+                                                                                            selfRef->_isSelecting = NO;
+                                                                                            [selfRef _selectingStateChanged];
+                                                                                        }
+                                                                                          title:NSLocalizedString(@"Cancel", nil)];
 
-    [self.storageViewController setNavigationMenuActions:@[importToLibraryAction, deleteAction] animated:animated];
+    [self.storageViewController setNavigationMenuActions:@[importToLibraryAction, deleteAction, cancelAction]
+                                                animated:animated];
+}
+
+#pragma mark - Selecting State Changing
+
+- (void)_selectingStateChanged {
+    [self _setupActualActionsAnimated:YES];
 }
 
 @end

@@ -21,7 +21,11 @@
 
 #import "PPNavigationBarMenuView.h"
 
-static const CGFloat actionsButtonsFontSize = 13.0f;
+static const CGFloat actionsButtonsFontSize = 14.0f;
+
+UIEdgeInsets actionsButtonsTitleInset() {
+    return UIEdgeInsetsMake(0.0f, 13.0f, 0.0f, 0.0f);
+}
 
 @interface PPNavigationBarMenuView () {
 @private
@@ -77,14 +81,27 @@ static const CGFloat actionsButtonsFontSize = 13.0f;
 - (void)_updateActionsButtons {
     _actionsButtons = [NSMutableArray array];
     _actionsHandlers = [NSMutableArray array];
+
+    [self.subviews enumerateObjectsUsingBlock:^(UIView *currentSubview, NSUInteger idx, BOOL *stop) {
+        if ([currentSubview isKindOfClass:[UIButton class]]) {
+            [currentSubview removeFromSuperview];
+        }
+    }];
+
     [_actions enumerateObjectsUsingBlock:^(PPNavigationBarMenuViewAction *currentAction, NSUInteger idx, BOOL *stop) {
         if ([currentAction isKindOfClass:[PPNavigationBarMenuViewAction class]]) {
             UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [actionButton setTitle:currentAction.title forState:UIControlStateNormal];
-            [actionButton setImage:currentAction.icon forState:UIControlStateNormal];
+            [actionButton setImage:[currentAction.icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                          forState:UIControlStateNormal];
             [actionButton setTitleColor:[self tintColor]
                                forState:UIControlStateNormal];
+            [actionButton setTintColor:[self tintColor]];
             [actionButton.titleLabel setFont:[UIFont systemFontOfSize:actionsButtonsFontSize]];
+            [actionButton setTitleEdgeInsets:actionsButtonsTitleInset()];
+            [actionButton addTarget:self
+                             action:@selector(_buttonTouchedUp:)
+                   forControlEvents:UIControlEventTouchUpInside];
 
             [self addSubview:actionButton];
 
@@ -126,6 +143,21 @@ static const CGFloat actionsButtonsFontSize = 13.0f;
                 self.bounds.size.width, _tintingNavBar.bounds.size.height)];
     } else {
         [_tintingNavBar setFrame:self.bounds];
+    }
+}
+
+#pragma mark - Actions Calling
+
+- (void)_buttonTouchedUp:(UIButton *)sender {
+    NSUInteger index = [_actionsButtons indexOfObject:sender];
+    if (index != NSNotFound) {
+        if (_actions.count > index) {
+            void (^handler)() = _actionsHandlers[index];
+
+            if (handler) {
+                handler();
+            }
+        }
     }
 }
 
