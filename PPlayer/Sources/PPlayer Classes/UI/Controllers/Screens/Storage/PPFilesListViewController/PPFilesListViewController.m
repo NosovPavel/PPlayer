@@ -71,6 +71,7 @@ typedef NS_ENUM(NSInteger, PPFileType) {
 @private
     BOOL _isSelecting;
     NSMutableArray *_displaingFiles;
+    NSMutableDictionary *_selectedFiles;
 
     UITableView *_filesTableView;
 }
@@ -143,7 +144,7 @@ typedef NS_ENUM(NSInteger, PPFileType) {
 - (void)dealloc {
     _filesTableView = nil;
     _displaingFiles = nil;
-
+    _selectedFiles = nil;
 }
 
 #pragma mark - Layout
@@ -246,6 +247,10 @@ typedef NS_ENUM(NSInteger, PPFileType) {
 
 - (void)_selectingStateChanged {
     [self _setupActualActionsAnimated:YES];
+
+    _selectedFiles = [@{} mutableCopy];
+    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                   withRowAnimation:UITableViewRowAnimationFade];
 }
 
 #pragma mark - UITableView DataSource
@@ -295,13 +300,32 @@ typedef NS_ENUM(NSInteger, PPFileType) {
   willDisplayCell:(UITableViewCell *)cell
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
+
+    if (_isSelecting) {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        if ([_selectedFiles[indexPath] isEqual:currentFile]) {
+            cell.imageView.image = [UIImage imageNamed:@"CellIconCheckMarkFilled.png"];
+        } else {
+            cell.imageView.image = [UIImage imageNamed:@"CellIconCheckMarkEmpty.png"];
+        }
+    } else {
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    }
+
     switch (currentFile.type) {
         case PPFileTypeFile: {
-            //
+            if (!_isSelecting) {
+                cell.imageView.image = [UIImage imageNamed:@"CellIconFile.png"];
+            }
         }
             break;
         case PPFileTypeFolder: {
             [cell.detailTextLabel setText:NSLocalizedString(@"Files folder", nil)];
+
+            if (!_isSelecting) {
+                cell.imageView.image = [UIImage imageNamed:@"CellIconFolder.png"];
+            }
         }
             break;
 
@@ -318,11 +342,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
+    PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
+
     if (_isSelecting) {
+        _selectedFiles[indexPath] ? ([_selectedFiles removeObjectForKey:indexPath]) :
+                (_selectedFiles[indexPath] = currentFile);
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
         return;
     }
 
-    PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
     if (currentFile.type == PPFileTypeFolder) {
         PPFilesListViewController *folderListVC = [PPFilesListViewController controllerWithRootURL:currentFile.url];
         folderListVC.title = currentFile.title;
@@ -333,7 +362,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_isSelecting) {
-        return NO;
+        return YES;
     }
 
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
