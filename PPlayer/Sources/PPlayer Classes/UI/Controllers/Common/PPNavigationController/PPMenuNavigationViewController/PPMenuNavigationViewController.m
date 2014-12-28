@@ -61,6 +61,11 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     }
     return self;
 }
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    return CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.bounds.size.width,
+            self.bounds.size.height + navigationBarMenuHeight), point);
+}
 @end
 
 @interface PPMenuNavigationViewController () {
