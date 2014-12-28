@@ -8,8 +8,8 @@
 //Actions on Storage Controller
 "Import to Library" = "В библиотеку";
 "Delete" = "Удалить";
+"Done" = "Готово";
 "Select items..." = "Отметить элементы...";
-"Cancel" = "Отменить";
 
 //Signs on FileList VC
 "Files folder" = "Папка с файлами";

@@ -230,14 +230,14 @@ typedef NS_ENUM(NSInteger, PPFileType) {
                                                                                                  } title:NSLocalizedString(@"Import to Library", nil)];
     PPNavigationBarMenuViewAction *deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
                                                                                         handler:^{
-                                                                                            //
+                                                                                            [selfRef _deleteSelectedFiles];
                                                                                         } title:NSLocalizedString(@"Delete", nil)];
-    PPNavigationBarMenuViewAction *cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconCancel.png"]
+    PPNavigationBarMenuViewAction *cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDone.png"]
                                                                                         handler:^{
                                                                                             selfRef->_isSelecting = NO;
                                                                                             [selfRef _selectingStateChanged];
                                                                                         }
-                                                                                          title:NSLocalizedString(@"Cancel", nil)];
+                                                                                          title:NSLocalizedString(@"Done", nil)];
 
     [self.storageViewController setNavigationMenuActions:@[importToLibraryAction, deleteAction, cancelAction]
                                                 animated:animated];
@@ -251,6 +251,28 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     _selectedFiles = [@{} mutableCopy];
     [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                    withRowAnimation:UITableViewRowAnimationFade];
+}
+
+#pragma mark - Deleting
+
+- (void)_deleteSelectedFiles {
+    NSMutableArray *selectedIndexPaths = [NSMutableArray array];
+    [_selectedFiles enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *currentIndexPath, PPFileModel *currentFile, BOOL *stop) {
+        NSUInteger index = [_displaingFiles indexOfObject:currentFile];
+
+        if (index != NSNotFound) {
+            [_displaingFiles removeObjectAtIndex:index];
+            [selectedIndexPaths addObject:currentIndexPath];
+            [[NSFileManager defaultManager] removeItemAtURL:currentFile.url error:NULL];
+        }
+    }];
+
+    [_filesTableView beginUpdates];
+    [_filesTableView deleteRowsAtIndexPaths:selectedIndexPaths
+                           withRowAnimation:UITableViewRowAnimationLeft];
+    [_filesTableView endUpdates];
+
+    _selectedFiles = [@{} mutableCopy];
 }
 
 #pragma mark - UITableView DataSource
@@ -347,7 +369,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_isSelecting) {
         _selectedFiles[indexPath] ? ([_selectedFiles removeObjectForKey:indexPath]) :
                 (_selectedFiles[indexPath] = currentFile);
-        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
         return;
     }

@@ -8,8 +8,8 @@
 //Actions on Storage Controller
 "Import to Library" = "Import to Library";
 "Delete" = "Delete";
+"Done" = "Done";
 "Select items..." = "Select items...";
-"Cancel" = "Cancel";
 
 //Signs on FileList VC
 "Files folder" = "Files folder";
