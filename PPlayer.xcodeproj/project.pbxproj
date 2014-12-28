@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A79B13591A502AF70042DD4E /* Common.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A79B13581A502AF70042DD4E /* Common.xcassets */; };
 		A7C448C61A501FB300FE096B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C448C11A501FB300FE096B /* AppDelegate.m */; };
 		A7C448C81A501FB300FE096B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C448C41A501FB300FE096B /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A79B13581A502AF70042DD4E /* Common.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Common.xcassets; sourceTree = "<group>"; };
 		A7C448961A501F1E00FE096B /* PPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7C448C01A501FB300FE096B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A7C448C11A501FB300FE096B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -30,6 +32,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A79B13561A502AF70042DD4E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A79B13571A502AF70042DD4E /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A79B13571A502AF70042DD4E /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				A79B13581A502AF70042DD4E /* Common.xcassets */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		A7C4488D1A501F1E00FE096B = {
 			isa = PBXGroup;
 			children = (
@@ -50,7 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				A7C448BF1A501FB300FE096B /* AppDelegate */,
-				A7C448C51A501FB300FE096B /* Sources */,
+				A79B13561A502AF70042DD4E /* Resources */,
 				A7C448C21A501FB300FE096B /* Other */,
 			);
 			path = PPlayer;
@@ -72,13 +90,6 @@
 				A7C448C41A501FB300FE096B /* main.m */,
 			);
 			path = Other;
-			sourceTree = "<group>";
-		};
-		A7C448C51A501FB300FE096B /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +151,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A79B13591A502AF70042DD4E /* Common.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
