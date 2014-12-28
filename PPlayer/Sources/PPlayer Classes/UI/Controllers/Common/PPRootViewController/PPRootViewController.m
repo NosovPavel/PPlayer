@@ -23,6 +23,8 @@
 #import "PPNavigationController.h"
 #import "PPTabBarController.h"
 
+#import "PPStorageRootViewController.h"
+
 @implementation PPRootViewController {
 @private
     PPTabBarController *_tabBarController;
@@ -50,14 +52,12 @@
     [super designedInit];
 
     //Storage
-    UIViewController *storageRootViewController = [[UIViewController alloc] init];
-    PPNavigationController *storageNavigationController = [[PPNavigationController alloc]
-            initWithRootViewController:storageRootViewController];
+    PPStorageRootViewController *storageRootViewController = [[PPStorageRootViewController alloc] init];
     UITabBarItem *storageItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Storage",
                     nil)
                                                               image:nil
                                                       selectedImage:nil];
-    [storageNavigationController setTabBarItem:storageItem];
+    [storageRootViewController setTabBarItem:storageItem];
 
     //Library
     UIViewController *libraryRootViewController = [[UIViewController alloc] init];
@@ -100,7 +100,7 @@
     [settingsNavigationController setTabBarItem:settingsItem];
 
     PPTabBarController *tabBarController = [[PPTabBarController alloc] init];
-    [tabBarController setViewControllers:@[storageNavigationController, libraryNavigationController,
+    [tabBarController setViewControllers:@[storageRootViewController, libraryNavigationController,
             playlistsNavigationController, playerNavigationController, settingsNavigationController]];
 
     _tabBarController = tabBarController;
