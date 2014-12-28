@@ -99,7 +99,7 @@
     [_filesTableView setFrame:self.view.bounds];
 }
 
-#pragma mark - Internal
+#pragma mark - Actions Setting Up
 
 - (void)_setupActualActionsAnimated:(BOOL)animated {
     _isSelecting ? [self _setupSelectedStateActionsAnimated:animated] : [self _setupUnselectedStateActionsAnimated:animated];
