@@ -19,16 +19,17 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPViewController.h"
-#import "PPStorageRootViewController.h"
+#import "PPNavigationController.h"
+#import "PPNavigationBarMenuView.h"
 
-@interface PPFilesListViewController : PPViewController
-@property(atomic, strong) NSURL *rootURL;
+@interface PPMenuNavigationViewController : PPNavigationController
+@property(atomic, strong, readonly) NSArray *navigationMenuActions; //NSArray of PPNavigationBarMenuViewAction
+- (void)setNavigationMenuActions:(NSArray *)actions animated:(BOOL)animated;
 
 #pragma mark - Init
 
-- (instancetype)initWithRootURL:(NSURL *)rootURL;
+- (void)designedInit;
 
-+ (instancetype)controllerWithRootURL:(NSURL *)rootURL;
+- (void)commonInit;
 
 @end

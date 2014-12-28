@@ -4,3 +4,8 @@
 "Playlists" = "Playlists";
 "Player" = "Player";
 "Settings" = "Settings";
+
+//Actions on Storage Controller
+"Import to Library" = "Import to Library";
+"Delete" = "Delete";
+"Select items..." = "Select items...";

@@ -21,11 +21,41 @@
 
 #import "PPFilesListViewController.h"
 
+@interface PPFilesListViewController () {
+@private
+    BOOL _isSelecting;
+
+    UITableView *_filesTableView;
+}
+@end
+
+@interface PPFilesListViewController (Private)
+@property(atomic, strong, readonly) PPStorageRootViewController *storageViewController;
+@end
+
+@implementation PPFilesListViewController (Private)
+- (PPStorageRootViewController *)storageViewController {
+    if ([self.navigationController isKindOfClass:[PPStorageRootViewController class]]) {
+        return ((PPStorageRootViewController *) self.navigationController);
+    }
+
+    return nil;
+}
+@end
+
 @implementation PPFilesListViewController
 
 #pragma mark - Init
 
 - (void)designedInit {
+    [super designedInit];
+
+    _isSelecting = NO;
+}
+
+- (void)commonInit {
+    [super commonInit];
+
     //
 }
 
@@ -45,8 +75,53 @@
     return [[self alloc] initWithRootURL:rootURL];
 }
 
+- (void)loadView {
+    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+
+    _filesTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    [self.view addSubview:_filesTableView];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self _setupActualActionsAnimated:NO];
+}
+
 - (void)dealloc {
-    //
+    _filesTableView = nil;
+}
+
+#pragma mark - Layout
+
+- (void)performLayout {
+    [super performLayout];
+
+    [_filesTableView setFrame:self.view.bounds];
+}
+
+#pragma mark - Internal
+
+- (void)_setupActualActionsAnimated:(BOOL)animated {
+    _isSelecting ? [self _setupSelectedStateActionsAnimated:animated] : [self _setupUnselectedStateActionsAnimated:animated];
+}
+
+- (void)_setupUnselectedStateActionsAnimated:(BOOL)animated {
+    PPNavigationBarMenuViewAction *selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:nil handler:^{
+        //
+    }                                                                                             title:NSLocalizedString(@"Select items...", nil)];
+
+    [self.storageViewController setNavigationMenuActions:@[selectElementsAction] animated:animated];
+}
+
+- (void)_setupSelectedStateActionsAnimated:(BOOL)animated {
+    PPNavigationBarMenuViewAction *importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:nil handler:^{
+        //
+    }                                                                                              title:NSLocalizedString(@"Import to Library", nil)];
+    PPNavigationBarMenuViewAction *deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:nil handler:^{
+        //
+    }                                                                                     title:NSLocalizedString(@"Delete", nil)];
+
+    [self.storageViewController setNavigationMenuActions:@[importToLibraryAction, deleteAction] animated:animated];
 }
 
 @end

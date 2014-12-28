@@ -4,3 +4,8 @@
 "Playlists" = "Плейлисты";
 "Player" = "Плеер";
 "Settings" = "Настройки";
+
+//Actions on Storage Controller
+"Import to Library" = "В библиотеку";
+"Delete" = "Удалить";
+"Select items..." = "Отметить элементы...";

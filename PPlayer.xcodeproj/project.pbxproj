@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		65CDA0454C178A1C55EDA446 /* TabIconLibrary.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */; };
-		65CDA39A81559CD858B786DC /* PPStorageRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC2C94D0EA8E50A771E6 /* PPStorageRootViewController.m */; };
+		65CDA19FAB2BA2481DF43F35 /* PPNavigationBarMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAADF78AB7AF6617E5B60 /* PPNavigationBarMenuView.m */; };
 		65CDA3AE582DAE41DBEEEEAB /* TabIconStorage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAED186C06508E38B518C /* TabIconStorage@3x.png */; };
 		65CDA3E39F559DCA522B5CD0 /* TabIconStorage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */; };
 		65CDA486F7ADEF5128625768 /* TabIconLibrary@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */; };
@@ -16,9 +16,11 @@
 		65CDA551204F96F6A802EAA4 /* TabIconPlayer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */; };
 		65CDA5971F1B642021E75414 /* TabIconPlayer@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */; };
 		65CDA5A3261E0539091A8F06 /* TabIconLibrary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */; };
+		65CDA63CF91FDA264E06DEAE /* PPStorageRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA2531E3580D21E05E1F4 /* PPStorageRootViewController.m */; };
 		65CDA7B7CC968A05B07A5747 /* TabIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */; };
 		65CDA94CFE9399930B18A078 /* TabIconPlayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */; };
 		65CDA9FFB212ED45AC4DF808 /* TabIconPlaylist.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */; };
+		65CDAAE9341C8B73853C0E7F /* PPMenuNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDACA3E4F72FD9649301C1 /* PPMenuNavigationViewController.m */; };
 		65CDAB3BAF29BADD7C299F79 /* TabIconStorage.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */; };
 		65CDAC507C5036855C4A139D /* PPFilesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */; };
 		65CDAE5CC2BFB203C5333E7E /* TabIconSettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */; };
@@ -36,19 +38,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		65CDA03C30FC2EB3FBE327FF /* PPNavigationBarMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPNavigationBarMenuView.h; sourceTree = "<group>"; };
 		65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@3x.png"; sourceTree = "<group>"; };
 		65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlayer.png; sourceTree = "<group>"; };
+		65CDA2531E3580D21E05E1F4 /* PPStorageRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPStorageRootViewController.m; sourceTree = "<group>"; };
 		65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconLibrary.png; sourceTree = "<group>"; };
 		65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconSettings.png; sourceTree = "<group>"; };
 		65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@3x.png"; sourceTree = "<group>"; };
 		65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconLibrary@2x.png"; sourceTree = "<group>"; };
-		65CDA767B5DB033291334032 /* PPStorageRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPStorageRootViewController.h; sourceTree = "<group>"; };
+		65CDA51847EF265D53C1B0D3 /* PPStorageRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPStorageRootViewController.h; sourceTree = "<group>"; };
 		65CDA88F255C8C043A282CB3 /* PPFilesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFilesListViewController.h; sourceTree = "<group>"; };
 		65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@2x.png"; sourceTree = "<group>"; };
 		65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@2x.png"; sourceTree = "<group>"; };
+		65CDAADF78AB7AF6617E5B60 /* PPNavigationBarMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPNavigationBarMenuView.m; sourceTree = "<group>"; };
+		65CDAAF27ACD3A7FE5725097 /* PPMenuNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMenuNavigationViewController.h; sourceTree = "<group>"; };
 		65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconStorage@2x.png"; sourceTree = "<group>"; };
 		65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@2x.png"; sourceTree = "<group>"; };
-		65CDAC2C94D0EA8E50A771E6 /* PPStorageRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPStorageRootViewController.m; sourceTree = "<group>"; };
+		65CDACA3E4F72FD9649301C1 /* PPMenuNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPMenuNavigationViewController.m; sourceTree = "<group>"; };
 		65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@3x.png"; sourceTree = "<group>"; };
 		65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlaylist.png; sourceTree = "<group>"; };
 		65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesListViewController.m; sourceTree = "<group>"; };
@@ -85,6 +91,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		65CDA1334BD7DF3A89D3B30E /* PPNavigationBarMenuView */ = {
+			isa = PBXGroup;
+			children = (
+				65CDAADF78AB7AF6617E5B60 /* PPNavigationBarMenuView.m */,
+				65CDA03C30FC2EB3FBE327FF /* PPNavigationBarMenuView.h */,
+			);
+			path = PPNavigationBarMenuView;
+			sourceTree = "<group>";
+		};
 		65CDA177E08D002FC36840E6 /* PPlayer Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -97,9 +112,9 @@
 		65CDA309031462E56A864DF9 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				65CDAC2C94D0EA8E50A771E6 /* PPStorageRootViewController.m */,
-				65CDA767B5DB033291334032 /* PPStorageRootViewController.h */,
 				65CDAB12CDFF2E18D792807A /* PPFilesListViewController */,
+				65CDA2531E3580D21E05E1F4 /* PPStorageRootViewController.m */,
+				65CDA51847EF265D53C1B0D3 /* PPStorageRootViewController.h */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -109,6 +124,16 @@
 			children = (
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		65CDA8406857214129502A6A /* PPMenuNavigationViewController */ = {
+			isa = PBXGroup;
+			children = (
+				65CDACA3E4F72FD9649301C1 /* PPMenuNavigationViewController.m */,
+				65CDAAF27ACD3A7FE5725097 /* PPMenuNavigationViewController.h */,
+				65CDA1334BD7DF3A89D3B30E /* PPNavigationBarMenuView */,
+			);
+			path = PPMenuNavigationViewController;
 			sourceTree = "<group>";
 		};
 		65CDAB12CDFF2E18D792807A /* PPFilesListViewController */ = {
@@ -183,6 +208,7 @@
 			children = (
 				A73E445C1A502E29009E8B7C /* PPNavigationController.h */,
 				A73E445D1A502E29009E8B7C /* PPNavigationController.m */,
+				65CDA8406857214129502A6A /* PPMenuNavigationViewController */,
 			);
 			path = PPNavigationController;
 			sourceTree = "<group>";
@@ -421,8 +447,10 @@
 				A7C448C61A501FB300FE096B /* AppDelegate.m in Sources */,
 				A73E44701A502E29009E8B7C /* PPRootViewController.m in Sources */,
 				A73E44711A502E29009E8B7C /* PPTabBarController.m in Sources */,
-				65CDA39A81559CD858B786DC /* PPStorageRootViewController.m in Sources */,
 				65CDAC507C5036855C4A139D /* PPFilesListViewController.m in Sources */,
+				65CDAAE9341C8B73853C0E7F /* PPMenuNavigationViewController.m in Sources */,
+				65CDA19FAB2BA2481DF43F35 /* PPNavigationBarMenuView.m in Sources */,
+				65CDA63CF91FDA264E06DEAE /* PPStorageRootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
