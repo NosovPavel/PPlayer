@@ -10,3 +10,6 @@
 "Delete" = "Удалить";
 "Select items..." = "Отметить элементы...";
 "Cancel" = "Отменить";
+
+//Signs on FileList VC
+"Files folder" = "Папка с файлами";

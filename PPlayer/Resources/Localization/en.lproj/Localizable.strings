@@ -10,3 +10,6 @@
 "Delete" = "Delete";
 "Select items..." = "Select items...";
 "Cancel" = "Cancel";
+
+//Signs on FileList VC
+"Files folder" = "Files folder";

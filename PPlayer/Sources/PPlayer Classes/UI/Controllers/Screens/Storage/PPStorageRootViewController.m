@@ -35,7 +35,11 @@
 - (void)designedInit {
     [super designedInit];
 
-    _filesListViewController = [PPFilesListViewController controllerWithRootURL:nil];
+    NSArray *paths = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
+                                                            inDomains:NSUserDomainMask];
+    NSURL *documentsURL = [paths lastObject];
+
+    _filesListViewController = [PPFilesListViewController controllerWithRootURL:documentsURL];
     _filesListViewController.title = NSLocalizedString(@"Storage", nil);
 
     [self setViewControllers:@[_filesListViewController]];
