@@ -327,9 +327,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
         if ([_selectedFiles[indexPath] isEqual:currentFile]) {
-            cell.imageView.image = [UIImage imageNamed:@"CellIconCheckMarkFilled.png"];
+            cell.imageView.image = [[UIImage imageNamed:@"CellIconCheckMarkFilled.png"]
+                    imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         } else {
-            cell.imageView.image = [UIImage imageNamed:@"CellIconCheckMarkEmpty.png"];
+            cell.imageView.image = [[UIImage imageNamed:@"CellIconCheckMarkEmpty.png"]
+                    imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         }
     } else {
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
