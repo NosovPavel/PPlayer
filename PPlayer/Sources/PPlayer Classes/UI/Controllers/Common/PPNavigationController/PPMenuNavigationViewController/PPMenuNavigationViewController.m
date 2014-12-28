@@ -35,8 +35,7 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 }
 
 - (void)_init {
-    [self setTitleVerticalPositionAdjustment:-(navigationBarMenuHeight)
-                               forBarMetrics:UIBarMetricsDefault];
+    [self setTransform:CGAffineTransformMakeTranslation(0, -(navigationBarMenuHeight))];
 }
 
 - (instancetype)init {
@@ -108,12 +107,12 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     _navigationBarMenuView = [PPNavigationBarMenuView viewWithActions:nil];
 
     [_navigationBarMenuView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-    [_navigationBarMenuView setFrame:CGRectMake(0.0f, self.navigationBar.bounds.size.height - navigationBarMenuHeight,
+    [_navigationBarMenuView setFrame:CGRectMake(0.0f, self.navigationBar.bounds.size.height,
             self.view.bounds.size.width, navigationBarMenuHeight)];
 
     [self.navigationBar setClipsToBounds:NO];
     [self.navigationBar addSubview:_navigationBarMenuView];
-    [self.navigationBar bringSubviewToFront:_navigationBarMenuView];
+    [self.navigationBar sendSubviewToBack:_navigationBarMenuView];
 }
 
 #pragma mark - Setters / Getters

@@ -131,9 +131,6 @@ UIEdgeInsets actionsButtonsTitleInset() {
     if (!_tintingNavBar) {
         _tintingNavBar = [[UINavigationBar alloc] init];
 
-        [_tintingNavBar setTransform:CGAffineTransformMakeRotation(((float) M_PI))];
-        [_tintingNavBar setBackgroundColor:[UIColor clearColor]];
-
         [self addSubview:_tintingNavBar];
         [self sendSubviewToBack:_tintingNavBar];
     }
