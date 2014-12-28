@@ -7,8 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		65CDA0454C178A1C55EDA446 /* TabIconLibrary.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */; };
 		65CDA39A81559CD858B786DC /* PPStorageRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC2C94D0EA8E50A771E6 /* PPStorageRootViewController.m */; };
+		65CDA3AE582DAE41DBEEEEAB /* TabIconStorage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAED186C06508E38B518C /* TabIconStorage@3x.png */; };
+		65CDA3E39F559DCA522B5CD0 /* TabIconStorage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */; };
+		65CDA486F7ADEF5128625768 /* TabIconLibrary@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */; };
+		65CDA4A0F5DDFB777D2E78FB /* TabIconPlaylist@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */; };
+		65CDA551204F96F6A802EAA4 /* TabIconPlayer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */; };
+		65CDA5971F1B642021E75414 /* TabIconPlayer@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */; };
+		65CDA5A3261E0539091A8F06 /* TabIconLibrary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */; };
+		65CDA7B7CC968A05B07A5747 /* TabIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */; };
+		65CDA94CFE9399930B18A078 /* TabIconPlayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */; };
+		65CDA9FFB212ED45AC4DF808 /* TabIconPlaylist.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */; };
+		65CDAB3BAF29BADD7C299F79 /* TabIconStorage.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */; };
 		65CDAC507C5036855C4A139D /* PPFilesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */; };
+		65CDAE5CC2BFB203C5333E7E /* TabIconSettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */; };
+		65CDAFBA93429CA538FD3ED7 /* TabIconPlaylist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */; };
+		65CDAFC2DD458740FE1ED3F0 /* TabIconSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */; };
 		A73E446F1A502E29009E8B7C /* PPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E445D1A502E29009E8B7C /* PPNavigationController.m */; };
 		A73E44701A502E29009E8B7C /* PPRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E44601A502E29009E8B7C /* PPRootViewController.m */; };
 		A73E44711A502E29009E8B7C /* PPTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E44631A502E29009E8B7C /* PPTabBarController.m */; };
@@ -17,13 +32,29 @@
 		A79B13591A502AF70042DD4E /* Common.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A79B13581A502AF70042DD4E /* Common.xcassets */; };
 		A7C448C61A501FB300FE096B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C448C11A501FB300FE096B /* AppDelegate.m */; };
 		A7C448C81A501FB300FE096B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C448C41A501FB300FE096B /* main.m */; };
+		A7F3E7291A504F360018243C /* PPLaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A7F3E7281A504F360018243C /* PPLaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@3x.png"; sourceTree = "<group>"; };
+		65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlayer.png; sourceTree = "<group>"; };
+		65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconLibrary.png; sourceTree = "<group>"; };
+		65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconSettings.png; sourceTree = "<group>"; };
+		65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@3x.png"; sourceTree = "<group>"; };
+		65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconLibrary@2x.png"; sourceTree = "<group>"; };
 		65CDA767B5DB033291334032 /* PPStorageRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPStorageRootViewController.h; sourceTree = "<group>"; };
 		65CDA88F255C8C043A282CB3 /* PPFilesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFilesListViewController.h; sourceTree = "<group>"; };
+		65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@2x.png"; sourceTree = "<group>"; };
+		65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@2x.png"; sourceTree = "<group>"; };
+		65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconStorage@2x.png"; sourceTree = "<group>"; };
+		65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@2x.png"; sourceTree = "<group>"; };
 		65CDAC2C94D0EA8E50A771E6 /* PPStorageRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPStorageRootViewController.m; sourceTree = "<group>"; };
+		65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@3x.png"; sourceTree = "<group>"; };
+		65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlaylist.png; sourceTree = "<group>"; };
 		65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesListViewController.m; sourceTree = "<group>"; };
+		65CDAED186C06508E38B518C /* TabIconStorage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconStorage@3x.png"; sourceTree = "<group>"; };
+		65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconLibrary@3x.png"; sourceTree = "<group>"; };
+		65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconStorage.png; sourceTree = "<group>"; };
 		A73E445C1A502E29009E8B7C /* PPNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPNavigationController.h; sourceTree = "<group>"; };
 		A73E445D1A502E29009E8B7C /* PPNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPNavigationController.m; sourceTree = "<group>"; };
 		A73E445F1A502E29009E8B7C /* PPRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPRootViewController.h; sourceTree = "<group>"; };
@@ -40,6 +71,7 @@
 		A7C448C11A501FB300FE096B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		A7C448C31A501FB300FE096B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A7C448C41A501FB300FE096B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A7F3E7281A504F360018243C /* PPLaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PPLaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +126,28 @@
 				65CDA177E08D002FC36840E6 /* PPlayer Classes */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		65CDAEC5A70746BB17F03817 /* Tab Bar */ = {
+			isa = PBXGroup;
+			children = (
+				65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */,
+				65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */,
+				65CDAED186C06508E38B518C /* TabIconStorage@3x.png */,
+				65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */,
+				65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */,
+				65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */,
+				65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */,
+				65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */,
+				65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */,
+				65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */,
+				65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */,
+				65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */,
+				65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */,
+				65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */,
+				65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */,
+			);
+			path = "Tab Bar";
 			sourceTree = "<group>";
 		};
 		65CDAFB640B99E8F1959D331 /* UI */ = {
@@ -187,6 +241,7 @@
 		A79B13561A502AF70042DD4E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A7F3E7271A504F200018243C /* LaunchScreen */,
 				A73EE0CE1A5032800080A13F /* Localization */,
 				A79B13571A502AF70042DD4E /* Images */,
 			);
@@ -197,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				A79B13581A502AF70042DD4E /* Common.xcassets */,
+				65CDAEC5A70746BB17F03817 /* Tab Bar */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -244,6 +300,14 @@
 				A7C448C41A501FB300FE096B /* main.m */,
 			);
 			path = Other;
+			sourceTree = "<group>";
+		};
+		A7F3E7271A504F200018243C /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				A7F3E7281A504F360018243C /* PPLaunchScreen.xib */,
+			);
+			path = LaunchScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,7 +371,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				A79B13591A502AF70042DD4E /* Common.xcassets in Resources */,
+				A7F3E7291A504F360018243C /* PPLaunchScreen.xib in Resources */,
 				A73EE0D21A5032800080A13F /* Localizable.strings in Resources */,
+				65CDAB3BAF29BADD7C299F79 /* TabIconStorage.png in Resources */,
+				65CDA3E39F559DCA522B5CD0 /* TabIconStorage@2x.png in Resources */,
+				65CDA3AE582DAE41DBEEEEAB /* TabIconStorage@3x.png in Resources */,
+				65CDA486F7ADEF5128625768 /* TabIconLibrary@3x.png in Resources */,
+				65CDA0454C178A1C55EDA446 /* TabIconLibrary.png in Resources */,
+				65CDA5A3261E0539091A8F06 /* TabIconLibrary@2x.png in Resources */,
+				65CDAFBA93429CA538FD3ED7 /* TabIconPlaylist@2x.png in Resources */,
+				65CDA4A0F5DDFB777D2E78FB /* TabIconPlaylist@3x.png in Resources */,
+				65CDA9FFB212ED45AC4DF808 /* TabIconPlaylist.png in Resources */,
+				65CDA551204F96F6A802EAA4 /* TabIconPlayer@2x.png in Resources */,
+				65CDA94CFE9399930B18A078 /* TabIconPlayer.png in Resources */,
+				65CDA5971F1B642021E75414 /* TabIconPlayer@3x.png in Resources */,
+				65CDAFC2DD458740FE1ED3F0 /* TabIconSettings@2x.png in Resources */,
+				65CDAE5CC2BFB203C5333E7E /* TabIconSettings@3x.png in Resources */,
+				65CDA7B7CC968A05B07A5747 /* TabIconSettings.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

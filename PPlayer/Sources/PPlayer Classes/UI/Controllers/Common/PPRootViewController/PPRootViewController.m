@@ -55,7 +55,7 @@
     PPStorageRootViewController *storageRootViewController = [[PPStorageRootViewController alloc] init];
     UITabBarItem *storageItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Storage",
                     nil)
-                                                              image:nil
+                                                              image:[UIImage imageNamed:@"TabIconStorage.png"]
                                                       selectedImage:nil];
     [storageRootViewController setTabBarItem:storageItem];
 
@@ -65,7 +65,7 @@
             initWithRootViewController:libraryRootViewController];
     UITabBarItem *libraryItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Library",
                     nil)
-                                                              image:nil
+                                                              image:[UIImage imageNamed:@"TabIconLibrary.png"]
                                                       selectedImage:nil];
     [libraryNavigationController setTabBarItem:libraryItem];
 
@@ -75,7 +75,7 @@
             initWithRootViewController:playlistsRootViewController];
     UITabBarItem *playlistsItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Playlists",
                     nil)
-                                                                image:nil
+                                                                image:[UIImage imageNamed:@"TabIconPlaylist.png"]
                                                         selectedImage:nil];
     [playlistsNavigationController setTabBarItem:playlistsItem];
 
@@ -85,7 +85,7 @@
             initWithRootViewController:playerRootViewController];
     UITabBarItem *playerItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Player",
                     nil)
-                                                             image:nil
+                                                             image:[UIImage imageNamed:@"TabIconPlayer.png"]
                                                      selectedImage:nil];
     [playerNavigationController setTabBarItem:playerItem];
 
@@ -95,7 +95,7 @@
             initWithRootViewController:settingsRootViewController];
     UITabBarItem *settingsItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings",
                     nil)
-                                                               image:nil
+                                                               image:[UIImage imageNamed:@"TabIconSettings.png"]
                                                        selectedImage:nil];
     [settingsNavigationController setTabBarItem:settingsItem];
 
