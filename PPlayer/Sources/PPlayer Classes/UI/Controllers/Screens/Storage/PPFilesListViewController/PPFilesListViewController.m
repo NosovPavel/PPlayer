@@ -141,6 +141,13 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     [self _setupActualActionsAnimated:NO];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    _isSelecting = NO;
+    [self _setupActualActionsAnimated:NO];
+}
+
 - (void)dealloc {
     _filesTableView = nil;
     _displaingFiles = nil;
