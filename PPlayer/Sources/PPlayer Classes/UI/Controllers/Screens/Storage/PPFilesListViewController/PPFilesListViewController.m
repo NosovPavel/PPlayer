@@ -122,6 +122,10 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     _displaingFiles = nil;
     _selectedFiles = nil;
     _filesProvider = nil;
+    _selectElementsAction = nil;
+    _deleteAction = nil;
+    _cancelAction = nil;
+    _importToLibraryAction = nil;
 }
 
 #pragma mark - Layout
