@@ -34,7 +34,7 @@
 #pragma mark - Init
 
 - (void)_init {
-    _fileManager = [NSFileManager defaultManager];
+    _fileManager = [[NSFileManager alloc] init];
 }
 
 #pragma mark - Lifecycle
@@ -125,7 +125,7 @@
 }
 
 - (void)removeFileAtURL:(NSURL *)url {
-    [[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
+    [_fileManager removeItemAtURL:url error:NULL];
 }
 
 @end
