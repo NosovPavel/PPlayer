@@ -26,6 +26,10 @@
 
 @interface PPLibraryProvider : PPProvider
 
+#pragma mark - Singleton
+
++ (PPLibraryProvider *)sharedLibrary;
+
 #pragma mark - Import
 
 - (void)importFiles:(NSArray *)files

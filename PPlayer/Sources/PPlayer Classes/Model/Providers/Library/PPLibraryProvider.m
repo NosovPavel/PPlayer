@@ -33,7 +33,7 @@
 
 #pragma mark - Preparing
 
-+ (void)initialize {
++ (void)load {
     if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] rootDirectory] absoluteString]]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] rootDirectory] absoluteString]
                                   withIntermediateDirectories:NO
@@ -49,14 +49,28 @@
     NSString *documentsDirectory = [paths lastObject];
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/.Library"];
 
-    return [NSURL fileURLWithPath:dataPath];
+    return [[NSURL alloc] initWithString:dataPath];
 }
 
 + (NSURL *)libraryDBPath {
     NSString *rootPath = [[[self class] rootDirectory] absoluteString];
-    NSString *dataPath = [rootPath stringByAppendingPathComponent:@"/library.sqlite"];
+    NSString *dataPath = [rootPath stringByAppendingPathComponent:@"library.sqlite"];
 
-    return [NSURL fileURLWithPath:dataPath];
+    return [[NSURL alloc] initWithString:dataPath];
+}
+
+#pragma mark - Singleton
+
++ (PPLibraryProvider *)sharedLibrary {
+    static PPLibraryProvider *_instance = nil;
+
+    @synchronized (self) {
+        if (_instance == nil) {
+            _instance = [[self alloc] init];
+        }
+    }
+
+    return _instance;
 }
 
 #pragma mark - Init
@@ -87,7 +101,6 @@
 #pragma mark - Internal
 
 - (void)importFile:(PPFileModel *)file {
-
 }
 
 #pragma mark - Import
@@ -96,51 +109,59 @@
   withProgressBlock:(void (^)(float progress))progressBlock
  andCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        __block float progress = 0.0f;
-        dispatch_group_t importGroup = dispatch_group_create();
-        [files enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
-            if ([currentFile isKindOfClass:[PPFileModel class]]) {
-                float currentPart = 1.0f / (float) files.count;
+    __block float percent = 0.0f;
 
-                dispatch_group_enter(importGroup);
-                if (currentFile.type == PPFileTypeFolder) {
-                    NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
-                    [selfRef importFiles:filesModelsAtURL
-                       withProgressBlock:^(float partProgress) {
-                           // :c its wrong, but anyway...
-                           progress += currentPart * partProgress;
-                           if (progressBlock) {
-                               progressBlock(progress);
-                           }
+    dispatch_group_t importGroup = dispatch_group_create();
+
+    NSMutableArray *reallyFiles = [NSMutableArray array];
+    [files enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
+        if ([currentFile isKindOfClass:[PPFileModel class]]) {
+            [reallyFiles addObject:currentFile];
+        }
+    }];
+
+    float overall = (float) reallyFiles.count;
+    float onePart = (1.0f / overall);
+
+    [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
+        dispatch_group_enter(importGroup);
+        dispatch_barrier_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (currentFile.type == PPFileTypeFolder) {
+                NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
+                [selfRef importFiles:filesModelsAtURL
+                   withProgressBlock:^(float partProgress) {
+                       //percent += partProgress * onePart;
+                       NSLog(@"Importing...%f", partProgress * onePart);
+                       if (progressBlock) {
+                           progressBlock(percent);
                        }
-                      andCompletionBlock:^{
-                          dispatch_group_leave(importGroup);
-                      }];
-                } else {
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        progress += currentPart;
+                   }
+                  andCompletionBlock:^{
+                      if (progressBlock) {
+                          progressBlock(percent);
+                      }
+                      dispatch_group_leave(importGroup);
+                  }];
+            } else {
+                percent += onePart;
 
-                        if (currentFile.type == PPFileTypeFileAudio) {
-                            //import file
-                            [selfRef importFile:currentFile];
-                        }
-
-                        if (progressBlock) {
-                            progressBlock(progress);
-                        }
-
-                        dispatch_group_leave(importGroup);
-                    });
+                if (currentFile.type == PPFileTypeFileAudio) {
+                    [selfRef importFile:currentFile];
                 }
-            }
-        }];
 
-        dispatch_group_notify(importGroup, dispatch_get_main_queue(), ^{
-            if (block) {
-                block();
+                if (progressBlock) {
+                    progressBlock(percent);
+                }
+
+                dispatch_group_leave(importGroup);
             }
         });
+    }];
+
+    dispatch_group_notify(importGroup, dispatch_get_main_queue(), ^{
+        if (block) {
+            block();
+        }
     });
 }
 

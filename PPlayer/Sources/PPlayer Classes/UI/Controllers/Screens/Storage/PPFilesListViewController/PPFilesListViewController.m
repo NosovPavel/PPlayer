@@ -21,6 +21,7 @@
 
 #import "PPFilesListViewController.h"
 #import "PPFilesProvider.h"
+#import "PPLibraryProvider.h"
 
 static const CGFloat cellsHeight = 60.0f;
 
@@ -168,7 +169,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     if (!_importToLibraryAction) {
         _importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconToLibrary.png"]
                                                                        handler:^{
-                                                                           //
+                                                                           [selfRef _importSelectedFiles];
                                                                        } title:NSLocalizedString(@"Import to Library", nil)];
     }
     if (!_deleteAction) {
@@ -258,6 +259,40 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     _selectedFiles = [@{} mutableCopy];
 
     [self _updateActionsEnabledState];
+}
+
+#pragma mark - Importing
+
+- (void)_importSelectedFiles {
+    NSMutableArray *selectedIndexPaths = [NSMutableArray array];
+    NSMutableArray *filesToImport = [NSMutableArray array];
+    [_selectedFiles enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *currentIndexPath, PPFileModel *currentFile, BOOL *stop) {
+        NSUInteger index = [_displaingFiles indexOfObject:currentFile];
+
+        if (index != NSNotFound) {
+            [_displaingFiles removeObjectAtIndex:index];
+
+            [filesToImport addObject:currentFile];
+            [selectedIndexPaths addObject:currentIndexPath];
+        }
+    }];
+
+    [_filesTableView beginUpdates];
+    [_filesTableView deleteRowsAtIndexPaths:selectedIndexPaths
+                           withRowAnimation:UITableViewRowAnimationLeft];
+    [_filesTableView endUpdates];
+
+    _selectedFiles = [@{} mutableCopy];
+
+    [self _updateActionsEnabledState];
+
+    [[PPLibraryProvider sharedLibrary] importFiles:filesToImport
+                                 withProgressBlock:^(float progress) {
+                                     //NSLog(@"Importing...%f", progress);
+                                 }
+                                andCompletionBlock:^{
+                                    NSLog(@"Completed.");
+                                }];
 }
 
 #pragma mark - UITableView DataSource

@@ -66,7 +66,7 @@
                                                         error:NULL];
     }
 
-    return [NSURL fileURLWithPath:dataPath];
+    return [[NSURL alloc] initWithString:dataPath];
 }
 
 - (NSArray *)filesModelsAtURL:(NSURL *)rootURL {
