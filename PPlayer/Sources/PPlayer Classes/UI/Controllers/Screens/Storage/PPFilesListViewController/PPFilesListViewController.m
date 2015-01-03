@@ -249,6 +249,8 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     [_filesTableView endUpdates];
 
     _selectedFiles = [@{} mutableCopy];
+
+    [self _updateActionsEnabledState];
 }
 
 #pragma mark - UITableView DataSource
