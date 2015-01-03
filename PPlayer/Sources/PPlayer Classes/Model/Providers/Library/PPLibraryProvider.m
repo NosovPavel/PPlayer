@@ -105,7 +105,7 @@
 
                 dispatch_group_enter(importGroup);
                 if (currentFile.type == PPFileTypeFolder) {
-                    NSArray *filesModelsAtURL = [_filesProvider filesModelsAtURL:currentFile.url];
+                    NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
                     [selfRef importFiles:filesModelsAtURL
                        withProgressBlock:^(float partProgress) {
                            // :c its wrong, but anyway...
