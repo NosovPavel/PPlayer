@@ -72,9 +72,6 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 - (void)commonInit {
     [super commonInit];
-
-    _isSelecting = NO;
-    [self _selectingStateChanged];
 }
 
 #pragma mark - Lifecycle
@@ -139,6 +136,9 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 #pragma mark - Files Management
 
 - (void)_reloadFilesList {
+    _isSelecting = NO;
+    [self _selectingStateChanged];
+
     _displaingFiles = [[_filesProvider filesModelsAtURL:_rootURL] mutableCopy];
     [_filesTableView reloadData];
 }
