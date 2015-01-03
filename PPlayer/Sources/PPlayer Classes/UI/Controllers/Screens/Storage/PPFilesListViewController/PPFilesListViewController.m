@@ -72,6 +72,8 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     BOOL _isSelecting;
     NSMutableArray *_displaingFiles;
     NSMutableDictionary *_selectedFiles;
+    PPNavigationBarMenuViewAction *_selectElementsAction;
+    PPNavigationBarMenuViewAction *_importToLibraryAction, *_deleteAction, *_cancelAction;
 
     UITableView *_filesTableView;
 }
@@ -220,34 +222,67 @@ typedef NS_ENUM(NSInteger, PPFileType) {
 
 - (void)_setupUnselectedStateActionsAnimated:(BOOL)animated {
     __block typeof(self) selfRef = self;
-    PPNavigationBarMenuViewAction *selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconSelect.png"]
-                                                                                                handler:^{
-                                                                                                    selfRef->_isSelecting = YES;
-                                                                                                    [selfRef _selectingStateChanged];
-                                                                                                } title:NSLocalizedString(@"Select items...", nil)];
+    if (!_selectElementsAction) {
+        _selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconSelect.png"]
+                                                                      handler:^{
+                                                                          selfRef->_isSelecting = YES;
+                                                                          [selfRef _selectingStateChanged];
+                                                                      } title:NSLocalizedString(@"Select items...", nil)];
+    }
 
-    [self.storageViewController setNavigationMenuActions:@[selectElementsAction] animated:animated];
+    [self _updateActionsEnabledState];
+    [self.storageViewController setNavigationMenuActions:@[_selectElementsAction] animated:animated];
 }
 
 - (void)_setupSelectedStateActionsAnimated:(BOOL)animated {
     __block typeof(self) selfRef = self;
-    PPNavigationBarMenuViewAction *importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconToLibrary.png"]
-                                                                                                 handler:^{
-                                                                                                     //
-                                                                                                 } title:NSLocalizedString(@"Import to Library", nil)];
-    PPNavigationBarMenuViewAction *deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                                                        handler:^{
-                                                                                            [selfRef _deleteSelectedFiles];
-                                                                                        } title:NSLocalizedString(@"Delete", nil)];
-    PPNavigationBarMenuViewAction *cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDone.png"]
-                                                                                        handler:^{
-                                                                                            selfRef->_isSelecting = NO;
-                                                                                            [selfRef _selectingStateChanged];
-                                                                                        }
-                                                                                          title:NSLocalizedString(@"Done", nil)];
+    if (!_importToLibraryAction) {
+        _importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconToLibrary.png"]
+                                                                       handler:^{
+                                                                           //
+                                                                       } title:NSLocalizedString(@"Import to Library", nil)];
+    }
+    if (!_deleteAction) {
+        _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
+                                                              handler:^{
+                                                                  [selfRef _deleteSelectedFiles];
+                                                              } title:NSLocalizedString(@"Delete", nil)];
+    }
+    if (!_cancelAction) {
+        _cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDone.png"]
+                                                              handler:^{
+                                                                  selfRef->_isSelecting = NO;
+                                                                  [selfRef _selectingStateChanged];
+                                                              }
+                                                                title:NSLocalizedString(@"Done", nil)];
+    }
 
-    [self.storageViewController setNavigationMenuActions:@[importToLibraryAction, deleteAction, cancelAction]
+    [self _updateActionsEnabledState];
+    [self.storageViewController setNavigationMenuActions:@[_importToLibraryAction, _deleteAction, _cancelAction]
                                                 animated:animated];
+}
+
+#pragma mark - Navbar Actions Enabled State
+
+- (void)_updateActionsEnabledState {
+    if (_isSelecting) {
+        _selectElementsAction.enabled = NO;
+        _cancelAction.enabled = YES;
+
+        if (_selectedFiles.count > 0) {
+            _deleteAction.enabled = YES;
+            _importToLibraryAction.enabled = YES;
+        } else {
+            _deleteAction.enabled = NO;
+            _importToLibraryAction.enabled = NO;
+        }
+    } else {
+        _selectElementsAction.enabled = YES;
+
+        _cancelAction.enabled = NO;
+        _deleteAction.enabled = NO;
+        _importToLibraryAction.enabled = NO;
+    }
 }
 
 #pragma mark - Selecting State Changing
@@ -379,6 +414,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         _selectedFiles[indexPath] ? ([_selectedFiles removeObjectForKey:indexPath]) :
                 (_selectedFiles[indexPath] = currentFile);
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+
+        [self _updateActionsEnabledState];
 
         return;
     }

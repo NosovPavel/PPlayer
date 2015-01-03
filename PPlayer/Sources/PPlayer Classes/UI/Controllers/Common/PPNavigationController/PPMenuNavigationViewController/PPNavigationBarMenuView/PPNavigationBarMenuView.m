@@ -32,9 +32,9 @@ UIEdgeInsets actionsButtonsTitleInset() {
     //Data
     NSArray *_actions;
     NSMutableArray *_actionsHandlers;
+    NSMutableArray *_actionsButtons;
 
     //Visual
-    NSMutableArray *_actionsButtons;
     UINavigationBar *_tintingNavBar;
 }
 @end
@@ -48,8 +48,10 @@ UIEdgeInsets actionsButtonsTitleInset() {
 }
 
 - (void)setActions:(NSArray *)actions animated:(BOOL)animated {
+    [self _resetObservations];
+
     //TODO:
-    //Do it animated if need
+    //Do it animated when need
     _actions = actions;
     [self _updateActionsButtons];
 }
@@ -70,6 +72,8 @@ UIEdgeInsets actionsButtonsTitleInset() {
 }
 
 - (void)dealloc {
+    [self _resetObservations];
+
     _actions = nil;
     _actionsButtons = nil;
     _actionsHandlers = nil;
@@ -78,25 +82,37 @@ UIEdgeInsets actionsButtonsTitleInset() {
 
 #pragma mark - Internal
 
-- (void)_updateActionsButtons {
-    _actionsButtons = [NSMutableArray array];
-    _actionsHandlers = [NSMutableArray array];
+- (void)_resetObservations {
+    [_actions enumerateObjectsUsingBlock:^(PPNavigationBarMenuViewAction *currentAction, NSUInteger idx, BOOL *stop) {
+        [currentAction removeObserver:self forKeyPath:@"enabled"];
+    }];
+}
 
+- (void)_resetSubviews {
     [self.subviews enumerateObjectsUsingBlock:^(UIView *currentSubview, NSUInteger idx, BOOL *stop) {
         if ([currentSubview isKindOfClass:[UIButton class]]) {
             [currentSubview removeFromSuperview];
         }
     }];
+}
+
+- (void)_updateActionsButtons {
+    [self _resetSubviews];
+
+    _actionsButtons = [NSMutableArray array];
+    _actionsHandlers = [NSMutableArray array];
 
     [_actions enumerateObjectsUsingBlock:^(PPNavigationBarMenuViewAction *currentAction, NSUInteger idx, BOOL *stop) {
         if ([currentAction isKindOfClass:[PPNavigationBarMenuViewAction class]]) {
+            [currentAction addObserver:self
+                            forKeyPath:@"enabled"
+                               options:NSKeyValueObservingOptionNew
+                               context:NULL];
+
             UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [actionButton setTitle:currentAction.title forState:UIControlStateNormal];
             [actionButton setImage:[currentAction.icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                           forState:UIControlStateNormal];
-            [actionButton setTitleColor:[self tintColor]
-                               forState:UIControlStateNormal];
-            [actionButton setTintColor:[self tintColor]];
             [actionButton.titleLabel setFont:[UIFont systemFontOfSize:actionsButtonsFontSize]];
             [actionButton setTitleEdgeInsets:actionsButtonsTitleInset()];
             [actionButton addTarget:self
@@ -107,10 +123,27 @@ UIEdgeInsets actionsButtonsTitleInset() {
 
             [_actionsButtons addObject:actionButton];
             [_actionsHandlers addObject:currentAction.handler];
+
+            [self _updateActionButtonState:currentAction];
         }
     }];
 
     [self layoutSubviews];
+}
+
+- (void)_updateActionButtonState:(PPNavigationBarMenuViewAction *)action {
+    NSUInteger indexOfHandler = [_actionsHandlers indexOfObject:action.handler];
+    if (indexOfHandler != NSNotFound) {
+        UIButton *actionButton = _actionsButtons[indexOfHandler];
+
+        BOOL enabled = action.enabled;
+        UIColor *tintColor = enabled ? [self tintColor] : [UIColor lightGrayColor];
+
+        [actionButton setUserInteractionEnabled:enabled];
+        [actionButton setTintColor:tintColor];
+        [actionButton setTitleColor:tintColor
+                           forState:UIControlStateNormal];
+    }
 }
 
 #pragma mark - Layout
@@ -158,6 +191,16 @@ UIEdgeInsets actionsButtonsTitleInset() {
     }
 }
 
+#pragma mark - Observing
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([_actions containsObject:object] &&
+            [object isKindOfClass:[PPNavigationBarMenuViewAction class]] &&
+            [keyPath isEqualToString:@"enabled"]) {
+        [self _updateActionButtonState:object];
+    }
+}
+
 @end
 
 @implementation PPNavigationBarMenuViewAction
@@ -170,6 +213,7 @@ UIEdgeInsets actionsButtonsTitleInset() {
         self.icon = icon;
         self.handler = handler;
         self.title = title;
+        self.enabled = YES;
     }
 
     return self;

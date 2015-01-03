@@ -37,6 +37,7 @@
 @property(atomic, strong) void (^handler)();
 @property(atomic, strong) NSString *title;
 @property(atomic, strong) UIImage *icon;
+@property(atomic) BOOL enabled;
 
 - (instancetype)initWithIcon:(UIImage *)icon handler:(void (^)())handler title:(NSString *)title;
 
