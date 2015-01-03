@@ -106,9 +106,7 @@
                                                       type:type];
 
         if (fileModel.isSupportedToPlay) {
-            while (![[fileModel.title stringByDeletingPathExtension] isEqualToString:fileModel.title]) {
-                fileModel.title = [fileModel.title stringByDeletingPathExtension];
-            }
+            fileModel.title = [fileModel.title stringByDeletingPathExtension];
         }
 
         fileModel.title = [fileModel.title stringByRemovingPercentEncoding];
