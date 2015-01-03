@@ -1,0 +1,99 @@
+//
+//  Copyright © 2014 Alexander Orlov
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+
+#import "PPFilesProvider.h"
+
+@interface PPFilesProvider () {
+@private
+    NSFileManager *_fileManager;
+}
+@end
+
+@implementation PPFilesProvider
+
+#pragma mark - Init
+
+- (void)_init {
+    _fileManager = [NSFileManager defaultManager];
+}
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self _init];
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    _fileManager = nil;
+}
+
+#pragma mark - Interface
+
+- (NSArray *)filesModelsAtURL:(NSURL *)rootURL {
+    NSMutableArray *resultArray = [NSMutableArray array];
+    NSArray *filesList = [_fileManager contentsOfDirectoryAtURL:rootURL
+                                     includingPropertiesForKeys:nil
+                                                        options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                          error:NULL];
+    NSMutableArray *directoriesOnly = [NSMutableArray array];
+    [filesList enumerateObjectsUsingBlock:^(NSURL *currentURL, NSUInteger idx, BOOL *stop) {
+        PPFileType type;
+
+        NSNumber *isDirectory;
+        BOOL success = [currentURL getResourceValue:&isDirectory
+                                             forKey:NSURLIsDirectoryKey
+                                              error:nil];
+
+        if (success && [isDirectory boolValue]) {
+            type = PPFileTypeFolder;
+        } else {
+            type = PPFileTypeFile;
+        }
+
+        NSString *name = [NSString stringWithFormat:@"%@", [[currentURL absoluteString] lastPathComponent]];
+        while (![[name stringByDeletingPathExtension] isEqualToString:name]) {
+            name = [name stringByDeletingPathExtension];
+        }
+        name = [name stringByRemovingPercentEncoding];
+
+        PPFileModel *fileModel = [PPFileModel modelWithUrl:currentURL
+                                                     title:name
+                                                      type:type];
+
+        if (type == PPFileTypeFolder) {
+            [directoriesOnly addObject:fileModel];
+        } else {
+            [resultArray addObject:fileModel];
+        }
+    }];
+
+    [resultArray insertObjects:directoriesOnly
+                     atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, directoriesOnly.count)]];
+
+    return [resultArray copy];
+}
+
+@end

@@ -20,61 +20,27 @@
 //  THE SOFTWARE.
 
 #import "PPFilesListViewController.h"
+#import "PPFilesProvider.h"
 
 static const CGFloat cellsHeight = 60.0f;
 
 static NSString *fileCellIdentifier = @"fileCellIdentifier";
 static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
-typedef NS_ENUM(NSInteger, PPFileType) {
-    PPFileTypeUnknown = -1,
-
-    PPFileTypeFile,
-    PPFileTypeFolder
-};
-
-@interface PPFileModel : NSObject
-@property(atomic, strong) NSURL *url;
-@property(atomic, strong) NSString *title;
-@property(atomic) PPFileType type;
-
-#pragma mark - Init
-
-- (instancetype)initWithUrl:(NSURL *)url title:(NSString *)title type:(PPFileType)type;
-
-+ (instancetype)modelWithUrl:(NSURL *)url title:(NSString *)title type:(PPFileType)type;
-
-@end
-
-@implementation PPFileModel
-
-#pragma mark - Init
-
-- (instancetype)initWithUrl:(NSURL *)url title:(NSString *)title type:(PPFileType)type {
-    self = [super init];
-    if (self) {
-        self.url = url;
-        self.title = title;
-        self.type = type;
-    }
-
-    return self;
-}
-
-+ (instancetype)modelWithUrl:(NSURL *)url title:(NSString *)title type:(PPFileType)type {
-    return [[self alloc] initWithUrl:url title:title type:type];
-}
-
-@end
-
 @interface PPFilesListViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
+    //Data
     BOOL _isSelecting;
+
     NSMutableArray *_displaingFiles;
     NSMutableDictionary *_selectedFiles;
+
     PPNavigationBarMenuViewAction *_selectElementsAction;
     PPNavigationBarMenuViewAction *_importToLibraryAction, *_deleteAction, *_cancelAction;
 
+    PPFilesProvider *_filesProvider;
+
+    //Visual
     UITableView *_filesTableView;
 }
 @end
@@ -101,6 +67,7 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     [super designedInit];
 
     _isSelecting = NO;
+    _filesProvider = [PPFilesProvider new];
 }
 
 - (void)commonInit {
@@ -154,6 +121,7 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     _filesTableView = nil;
     _displaingFiles = nil;
     _selectedFiles = nil;
+    _filesProvider = nil;
 }
 
 #pragma mark - Layout
@@ -170,45 +138,7 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     _isSelecting = NO;
     [self _selectingStateChanged];
 
-    _displaingFiles = [NSMutableArray array];
-    NSArray *filesList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:_rootURL
-                                                       includingPropertiesForKeys:nil
-                                                                          options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                            error:NULL];
-    NSMutableArray *directoriesOnly = [NSMutableArray array];
-    [filesList enumerateObjectsUsingBlock:^(NSURL *currentURL, NSUInteger idx, BOOL *stop) {
-        PPFileType type;
-
-        NSNumber *isDirectory;
-        BOOL success = [currentURL getResourceValue:&isDirectory
-                                             forKey:NSURLIsDirectoryKey
-                                              error:nil];
-
-        if (success && [isDirectory boolValue]) {
-            type = PPFileTypeFolder;
-        } else {
-            type = PPFileTypeFile;
-        }
-
-        NSString *name = [NSString stringWithFormat:@"%@", [[currentURL absoluteString] lastPathComponent]];
-        while (![[name stringByDeletingPathExtension] isEqualToString:name]) {
-            name = [name stringByDeletingPathExtension];
-        }
-        name = [name stringByRemovingPercentEncoding];
-
-        PPFileModel *fileModel = [PPFileModel modelWithUrl:currentURL
-                                                     title:name
-                                                      type:type];
-
-        if (type == PPFileTypeFolder) {
-            [directoriesOnly addObject:fileModel];
-        } else {
-            [_displaingFiles addObject:fileModel];
-        }
-    }];
-
-    [_displaingFiles insertObjects:directoriesOnly
-                         atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, directoriesOnly.count)]];
+    _displaingFiles = [[_filesProvider filesModelsAtURL:_rootURL] mutableCopy];
 
     [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                    withRowAnimation:UITableViewRowAnimationLeft];
