@@ -196,7 +196,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
                                                 animated:animated];
 }
 
-#pragma mark - Navbar Actions Enabled State
+#pragma mark - Navigation Bar Actions Enabled State
 
 - (void)_updateActionsEnabledState {
     if (_isSelecting) {
@@ -205,7 +205,18 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
         if (_selectedFiles.count > 0) {
             _deleteAction.enabled = YES;
-            _importToLibraryAction.enabled = YES;
+
+            __block BOOL selectedFilesContainsNonAudio = NO;
+            [_selectedFiles enumerateKeysAndObjectsUsingBlock:^(id key, PPFileModel *currentFile, BOOL *stop) {
+                if ([currentFile isKindOfClass:[PPFileModel class]]) {
+                    if (!currentFile.isSupportedToPlay) {
+                        selectedFilesContainsNonAudio = YES;
+                        *stop = YES;
+                    }
+                }
+            }];
+
+            _importToLibraryAction.enabled = !selectedFilesContainsNonAudio;
         } else {
             _deleteAction.enabled = NO;
             _importToLibraryAction.enabled = NO;
@@ -264,6 +275,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
     switch (currentFile.type) {
+        case PPFileTypeFileAudio:
         case PPFileTypeFile: {
             cell = [tableView dequeueReusableCellWithIdentifier:fileCellIdentifier];
             if (!cell) {
@@ -319,6 +331,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         case PPFileTypeFile: {
             if (!_isSelecting) {
                 cell.imageView.image = [UIImage imageNamed:@"CellIconFile.png"];
+            }
+        }
+            break;
+        case PPFileTypeFileAudio: {
+            if (!_isSelecting) {
+                cell.imageView.image = [UIImage imageNamed:@"CellIconFileAudio.png"];
             }
         }
             break;

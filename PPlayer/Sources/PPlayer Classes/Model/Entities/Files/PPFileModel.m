@@ -40,4 +40,12 @@
     return [[self alloc] initWithUrl:url title:title type:type];
 }
 
+#pragma mark - Setters / Getters
+
+- (BOOL)isSupportedToPlay {
+    return self.type == PPFileTypeFileAudio ||
+            self.type == PPFileTypeFolder;
+
+}
+
 @end

@@ -24,14 +24,17 @@
 typedef NS_ENUM(NSInteger, PPFileType) {
     PPFileTypeUnknown = -1,
 
+    PPFileTypeFolder,
     PPFileTypeFile,
-    PPFileTypeFolder
+
+    PPFileTypeFileAudio
 };
 
 @interface PPFileModel : PPModel
 @property(atomic, strong) NSURL *url;
 @property(atomic, strong) NSString *title;
 @property(atomic) PPFileType type;
+@property(atomic, readonly, getter=isSupportedToPlay) BOOL supportedToPlay;
 
 #pragma mark - Init
 

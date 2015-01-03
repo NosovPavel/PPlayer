@@ -21,6 +21,8 @@
 
 #import "PPFilesProvider.h"
 
+#import <MobileCoreServices/MobileCoreServices.h>
+
 @interface PPFilesProvider () {
 @private
     NSFileManager *_fileManager;
@@ -71,17 +73,30 @@
             type = PPFileTypeFolder;
         } else {
             type = PPFileTypeFile;
+
+            NSString *file = [[currentURL absoluteString] copy];
+            CFStringRef fileExtension = (__bridge CFStringRef) [file pathExtension];
+            CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+
+            if (UTTypeConformsTo(fileUTI, kUTTypeAudio)) {
+                type = PPFileTypeFileAudio;
+            }
+
+            CFRelease(fileUTI);
         }
 
         NSString *name = [NSString stringWithFormat:@"%@", [[currentURL absoluteString] lastPathComponent]];
-        while (![[name stringByDeletingPathExtension] isEqualToString:name]) {
-            name = [name stringByDeletingPathExtension];
-        }
-        name = [name stringByRemovingPercentEncoding];
-
         PPFileModel *fileModel = [PPFileModel modelWithUrl:currentURL
                                                      title:name
                                                       type:type];
+
+        if (fileModel.isSupportedToPlay) {
+            while (![[fileModel.title stringByDeletingPathExtension] isEqualToString:fileModel.title]) {
+                fileModel.title = [fileModel.title stringByDeletingPathExtension];
+            }
+        }
+
+        fileModel.title = [fileModel.title stringByRemovingPercentEncoding];
 
         if (type == PPFileTypeFolder) {
             [directoriesOnly addObject:fileModel];

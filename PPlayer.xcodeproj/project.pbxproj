@@ -10,7 +10,9 @@
 		65CDA0454C178A1C55EDA446 /* TabIconLibrary.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */; };
 		65CDA056E0EDDFF2892C32CE /* NavMenuIconCancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA647CF198E2D3C6DCB4A /* NavMenuIconCancel.png */; };
 		65CDA0BDE6B3061FEBD07D39 /* CellIconCheckMarkEmpty.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA251D8EE2851570C0399 /* CellIconCheckMarkEmpty.png */; };
+		65CDA1384BD6163003FD7489 /* CellIconFileAudio.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8A650365238CF698EDC /* CellIconFileAudio.png */; };
 		65CDA19FAB2BA2481DF43F35 /* PPNavigationBarMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAADF78AB7AF6617E5B60 /* PPNavigationBarMenuView.m */; };
+		65CDA2A0882585EEF098F8B6 /* CellIconFileAudio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAE38E0962A8D185D4701 /* CellIconFileAudio@2x.png */; };
 		65CDA2B87C8A765001E2ED11 /* CellIconCheckMarkFilled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA65BACB4376C6D58897C /* CellIconCheckMarkFilled@2x.png */; };
 		65CDA37C02244B776B9F7DFC /* NavMenuIconDone.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA465F1FE2FE5E349CDA1 /* NavMenuIconDone.png */; };
 		65CDA37CCA46D4175255310D /* NavMenuIconDone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA68114A3279D44980273 /* NavMenuIconDone@2x.png */; };
@@ -27,6 +29,7 @@
 		65CDA5971F1B642021E75414 /* TabIconPlayer@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */; };
 		65CDA5A3261E0539091A8F06 /* TabIconLibrary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */; };
 		65CDA63CF91FDA264E06DEAE /* PPStorageRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA2531E3580D21E05E1F4 /* PPStorageRootViewController.m */; };
+		65CDA67140AB0FCFEEAA8A82 /* CellIconFileAudio@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA1F57283751AA87D1476 /* CellIconFileAudio@3x.png */; };
 		65CDA7B7CC968A05B07A5747 /* TabIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */; };
 		65CDA850869CC9BF039BD1E5 /* NavMenuIconCancel@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF1408DDACAF696C3352 /* NavMenuIconCancel@3x.png */; };
 		65CDA86105D57C9F97DAFAC1 /* CellIconCheckMarkEmpty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */; };
@@ -69,6 +72,7 @@
 		65CDA0262E0AE569F66DDC2E /* CellIconCheckMarkFilled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconCheckMarkFilled.png; sourceTree = "<group>"; };
 		65CDA03C30FC2EB3FBE327FF /* PPNavigationBarMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPNavigationBarMenuView.h; sourceTree = "<group>"; };
 		65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@3x.png"; sourceTree = "<group>"; };
+		65CDA1F57283751AA87D1476 /* CellIconFileAudio@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFileAudio@3x.png"; sourceTree = "<group>"; };
 		65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlayer.png; sourceTree = "<group>"; };
 		65CDA244CA75B1D27F875E84 /* PPProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPProvider.h; sourceTree = "<group>"; };
 		65CDA251D8EE2851570C0399 /* CellIconCheckMarkEmpty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconCheckMarkEmpty.png; sourceTree = "<group>"; };
@@ -92,6 +96,7 @@
 		65CDA8209C5981398E65176A /* CellIconFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconFile.png; sourceTree = "<group>"; };
 		65CDA88B2CFB64E225A4D878 /* PPFilesProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFilesProvider.h; sourceTree = "<group>"; };
 		65CDA88F255C8C043A282CB3 /* PPFilesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFilesListViewController.h; sourceTree = "<group>"; };
+		65CDA8A650365238CF698EDC /* CellIconFileAudio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconFileAudio.png; sourceTree = "<group>"; };
 		65CDA8F044977C6F11C26F98 /* CellIconFile@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFile@3x.png"; sourceTree = "<group>"; };
 		65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@2x.png"; sourceTree = "<group>"; };
 		65CDA98E737B5636BC61C4BF /* CellIconFolder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFolder@3x.png"; sourceTree = "<group>"; };
@@ -111,6 +116,7 @@
 		65CDADA1759F7CD6F582450C /* PPFileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFileModel.h; sourceTree = "<group>"; };
 		65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconCheckMarkEmpty@3x.png"; sourceTree = "<group>"; };
 		65CDAE38C76ED5933195559C /* CellIconCheckMarkEmpty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconCheckMarkEmpty@2x.png"; sourceTree = "<group>"; };
+		65CDAE38E0962A8D185D4701 /* CellIconFileAudio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFileAudio@2x.png"; sourceTree = "<group>"; };
 		65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlaylist.png; sourceTree = "<group>"; };
 		65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesListViewController.m; sourceTree = "<group>"; };
 		65CDAED186C06508E38B518C /* TabIconStorage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconStorage@3x.png"; sourceTree = "<group>"; };
@@ -266,6 +272,9 @@
 				65CDA6492E7508D5C0E49DAD /* CellIconCheckMarkFilled@3x.png */,
 				65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */,
 				65CDAE38C76ED5933195559C /* CellIconCheckMarkEmpty@2x.png */,
+				65CDA8A650365238CF698EDC /* CellIconFileAudio.png */,
+				65CDAE38E0962A8D185D4701 /* CellIconFileAudio@2x.png */,
+				65CDA1F57283751AA87D1476 /* CellIconFileAudio@3x.png */,
 			);
 			path = "Files List";
 			sourceTree = "<group>";
@@ -586,6 +595,9 @@
 				65CDA37CCA46D4175255310D /* NavMenuIconDone@2x.png in Resources */,
 				65CDA37C02244B776B9F7DFC /* NavMenuIconDone.png in Resources */,
 				65CDA9E71B7796A77133002F /* NavMenuIconDone@3x.png in Resources */,
+				65CDA1384BD6163003FD7489 /* CellIconFileAudio.png in Resources */,
+				65CDA2A0882585EEF098F8B6 /* CellIconFileAudio@2x.png in Resources */,
+				65CDA67140AB0FCFEEAA8A82 /* CellIconFileAudio@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
