@@ -28,13 +28,21 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)          application:(UIApplication *)application
+didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     PPRootViewController *rootViewController = [[PPRootViewController alloc] init];
 
     [self setWindow:[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
     [[self window] setRootViewController:rootViewController];
     [[self window] makeKeyAndVisible];
 
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
     return YES;
 }
 

@@ -54,6 +54,21 @@
 
 #pragma mark - Interface
 
++ (NSURL *)urlInboxRoot {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths lastObject];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/Inbox"];
+
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath
+                                  withIntermediateDirectories:NO
+                                                   attributes:nil
+                                                        error:NULL];
+    }
+
+    return [NSURL fileURLWithPath:dataPath];
+}
+
 - (NSArray *)filesModelsAtURL:(NSURL *)rootURL {
     NSMutableArray *resultArray = [NSMutableArray array];
     NSArray *filesList = [_fileManager contentsOfDirectoryAtURL:rootURL

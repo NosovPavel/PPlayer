@@ -4,6 +4,19 @@
 	<dict>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>en</string>
+		<key>CFBundleDocumentTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeIconFiles</key>
+				<array/>
+				<key>CFBundleTypeName</key>
+				<string>All</string>
+				<key>LSItemContentTypes</key>
+				<array>
+					<string>public.item</string>
+				</array>
+			</dict>
+		</array>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -19,7 +32,7 @@
 		<key>CFBundleSignature</key>
 		<string>????</string>
 		<key>CFBundleVersion</key>
-		<string>195</string>
+		<string>201</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>UILaunchStoryboardName</key>

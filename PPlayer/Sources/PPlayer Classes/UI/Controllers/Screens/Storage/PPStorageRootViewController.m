@@ -22,6 +22,8 @@
 #import "PPStorageRootViewController.h"
 #import "PPFilesListViewController.h"
 
+#import "PPFilesProvider.h"
+
 @interface PPStorageRootViewController () {
 @private
     PPFilesListViewController *_filesListViewController;
@@ -35,11 +37,7 @@
 - (void)designedInit {
     [super designedInit];
 
-    NSArray *paths = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
-                                                            inDomains:NSUserDomainMask];
-    NSURL *documentsURL = [paths lastObject];
-
-    _filesListViewController = [PPFilesListViewController controllerWithRootURL:documentsURL];
+    _filesListViewController = [PPFilesListViewController controllerWithRootURL:[PPFilesProvider urlInboxRoot]];
     _filesListViewController.title = NSLocalizedString(@"Storage", nil);
 
     [self setViewControllers:@[_filesListViewController]];

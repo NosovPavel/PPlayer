@@ -24,6 +24,7 @@
 
 @interface PPFilesProvider : PPProvider
 
++ (NSURL *)urlInboxRoot;
 - (NSArray *)filesModelsAtURL:(NSURL *)rootURL;
 
 @end
