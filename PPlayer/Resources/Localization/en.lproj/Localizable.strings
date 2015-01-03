@@ -6,7 +6,7 @@
 "Settings" = "Settings";
 
 //Actions on Storage Controller
-"Import to Library" = "Import to Library";
+"Import to Library" = "Import";
 "Delete" = "Delete";
 "Done" = "Done";
 "Select items..." = "Select items...";

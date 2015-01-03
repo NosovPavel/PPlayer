@@ -145,7 +145,7 @@ typedef NS_ENUM(NSInteger, PPFileType) {
     [super viewWillDisappear:animated];
 
     _isSelecting = NO;
-    [self _setupActualActionsAnimated:NO];
+    [self _selectingStateChanged];
 }
 
 - (void)dealloc {
