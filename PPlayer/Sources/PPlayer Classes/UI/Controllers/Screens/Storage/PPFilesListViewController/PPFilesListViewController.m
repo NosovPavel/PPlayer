@@ -249,8 +249,9 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
         if (index != NSNotFound) {
             [_displaingFiles removeObjectAtIndex:index];
+            [_filesProvider removeFileAtURL:currentFile.url];
+
             [selectedIndexPaths addObject:currentIndexPath];
-            [[NSFileManager defaultManager] removeItemAtURL:currentFile.url error:NULL];
         }
     }];
 

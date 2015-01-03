@@ -27,4 +27,6 @@
 + (NSURL *)urlInboxRoot;
 - (NSArray *)filesModelsAtURL:(NSURL *)rootURL;
 
+- (void)removeFileAtURL:(NSURL *)url;
+
 @end

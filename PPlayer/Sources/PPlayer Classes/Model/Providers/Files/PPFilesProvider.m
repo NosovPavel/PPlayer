@@ -126,4 +126,8 @@
     return [resultArray copy];
 }
 
+- (void)removeFileAtURL:(NSURL *)url {
+    [[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
+}
+
 @end
