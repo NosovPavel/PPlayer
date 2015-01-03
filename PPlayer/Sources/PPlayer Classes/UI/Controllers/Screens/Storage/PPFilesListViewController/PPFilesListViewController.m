@@ -73,8 +73,8 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 - (void)commonInit {
     [super commonInit];
 
-    //Load files if we can
-    [self _reloadFilesList];
+    _isSelecting = NO;
+    [self _selectingStateChanged];
 }
 
 #pragma mark - Lifecycle
@@ -105,9 +105,9 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     [self.view addSubview:_filesTableView];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self _setupActualActionsAnimated:NO];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self _reloadFilesList];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -139,13 +139,8 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 #pragma mark - Files Management
 
 - (void)_reloadFilesList {
-    _isSelecting = NO;
-    [self _selectingStateChanged];
-
     _displaingFiles = [[_filesProvider filesModelsAtURL:_rootURL] mutableCopy];
-
-    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-                   withRowAnimation:UITableViewRowAnimationLeft];
+    [_filesTableView reloadData];
 }
 
 #pragma mark - Actions Setting Up
