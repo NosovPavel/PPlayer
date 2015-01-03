@@ -20,14 +20,17 @@
 //  THE SOFTWARE.
 
 #import "PPProvider.h"
+#import "PPFilesProvider.h"
+
+#import "PPLibraryTrackModel.h"
 
 @interface PPLibraryProvider : PPProvider
 
 #pragma mark - Import
 
-- (void)importFilesURLs:(NSArray *)filesURLs
-      withProgressBlock:(void (^)(float progress))progressBlock
-     andCompletionBlock:(void (^)())block;
+- (void)importFiles:(NSArray *)files
+  withProgressBlock:(void (^)(float progress))progressBlock
+ andCompletionBlock:(void (^)())block;
 
 #pragma mark - Tracks
 

@@ -25,7 +25,7 @@
 @interface PPLibraryProvider () {
 @private
     FMDatabaseQueue *_libraryDBQueue;
-    NSFileManager *_fileManager;
+    PPFilesProvider *_filesProvider;
 }
 @end
 
@@ -62,7 +62,7 @@
 #pragma mark - Init
 
 - (void)_init {
-    _fileManager = [[NSFileManager alloc] init];
+    _filesProvider = [[PPFilesProvider alloc] init];
     _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[self class] libraryDBPath] absoluteString]];
 }
 
@@ -81,19 +81,67 @@
     [_libraryDBQueue close];
 
     _libraryDBQueue = nil;
-    _fileManager = nil;
+    _filesProvider = nil;
 }
 
 #pragma mark - Internal
 
-#pragma mark - Interface
-#pragma mark -
+- (void)importFile:(PPFileModel *)file {
+
+}
+
 #pragma mark - Import
 
-- (void)importFilesURLs:(NSArray *)filesURLs
-      withProgressBlock:(void (^)(float progress))progressBlock
-     andCompletionBlock:(void (^)())block {
+- (void)importFiles:(NSArray *)files
+  withProgressBlock:(void (^)(float progress))progressBlock
+ andCompletionBlock:(void (^)())block {
+    __block typeof(self) selfRef = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __block float progress = 0.0f;
+        dispatch_group_t importGroup = dispatch_group_create();
+        [files enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
+            if ([currentFile isKindOfClass:[PPFileModel class]]) {
+                float currentPart = 1.0f / (float) files.count;
 
+                dispatch_group_enter(importGroup);
+                if (currentFile.type == PPFileTypeFolder) {
+                    NSArray *filesModelsAtURL = [_filesProvider filesModelsAtURL:currentFile.url];
+                    [selfRef importFiles:filesModelsAtURL
+                       withProgressBlock:^(float partProgress) {
+                           // :c its wrong, but anyway...
+                           progress += currentPart * partProgress;
+                           if (progressBlock) {
+                               progressBlock(progress);
+                           }
+                       }
+                      andCompletionBlock:^{
+                          dispatch_group_leave(importGroup);
+                      }];
+                } else {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        progress += currentPart;
+
+                        if (currentFile.type == PPFileTypeFileAudio) {
+                            //import file
+                            [selfRef importFile:currentFile];
+                        }
+
+                        if (progressBlock) {
+                            progressBlock(progress);
+                        }
+
+                        dispatch_group_leave(importGroup);
+                    });
+                }
+            }
+        }];
+
+        dispatch_group_notify(importGroup, dispatch_get_main_queue(), ^{
+            if (block) {
+                block();
+            }
+        });
+    });
 }
 
 #pragma mark - Tracks
@@ -101,6 +149,5 @@
 - (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block {
 
 }
-
 
 @end
