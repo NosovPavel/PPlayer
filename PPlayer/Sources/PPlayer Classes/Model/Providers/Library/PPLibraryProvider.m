@@ -21,6 +21,7 @@
 
 #import "PPLibraryProvider.h"
 #import "FMDB.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface PPLibraryProvider () {
 @private
@@ -100,7 +101,29 @@
 
 #pragma mark - Internal
 
-- (void)importFile:(PPFileModel *)file {
+- (void)_importFile:(PPFileModel *)file withCompletionBlock:(void (^)())block {
+    dispatch_barrier_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:file.url options:nil];
+
+        NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
+        NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
+        NSArray *albumNames = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
+        NSArray *genres = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyType keySpace:AVMetadataKeySpaceCommon];
+
+        AVMetadataItem *title = [titles firstObject];
+        AVMetadataItem *artist = [artists firstObject];
+        AVMetadataItem *albumName = [albumNames firstObject];
+        AVMetadataItem *genre = [genres firstObject];
+
+        NSString *currentSongTitle = (NSString *) [title.value copyWithZone:nil];
+        NSString *currentSongArtist = (NSString *) [artist.value copyWithZone:nil];
+        NSString *currentSongAlbumName = (NSString *) [albumName.value copyWithZone:nil];
+        NSString *currentSongGenre = (NSString *) [genre.value copyWithZone:nil];
+
+        if (block) {
+            block();
+        }
+    });
 }
 
 #pragma mark - Import
@@ -157,18 +180,16 @@
                 parts++;
                 percent += onePart;
 
-                if (currentFile.type == PPFileTypeFileAudio) {
-                    [selfRef importFile:currentFile];
-                }
+                [selfRef _importFile:currentFile withCompletionBlock:^{
+                    float percentSnapshot = percent;
+                    if (progressBlock) {
+                        dispatch_barrier_async(dispatch_get_main_queue(), ^{
+                            progressBlock(percentSnapshot);
+                        });
+                    }
 
-                float percentSnapshot = percent;
-                if (progressBlock) {
-                    dispatch_barrier_async(dispatch_get_main_queue(), ^{
-                        progressBlock(percentSnapshot);
-                    });
-                }
-
-                dispatch_group_leave(importGroup);
+                    dispatch_group_leave(importGroup);
+                }];
             }
         });
     }];

@@ -22,20 +22,19 @@
 #import "PPLibraryAlbumModel.h"
 
 @implementation PPLibraryAlbumModel
-- (instancetype)initWithId:(int64_t)id title:(NSString *)title year:(int32_t)year artistModel:(PPLibraryArtistModel *)artistModel {
+- (instancetype)initWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel {
     self = [super init];
     if (self) {
         _id = id;
         self.title = title;
-        self.year = year;
         self.artistModel = artistModel;
     }
 
     return self;
 }
 
-+ (instancetype)modelWithId:(int64_t)id title:(NSString *)title year:(int32_t)year artistModel:(PPLibraryArtistModel *)artistModel {
-    return [[self alloc] initWithId:id title:title year:year artistModel:artistModel];
++ (instancetype)modelWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel {
+    return [[self alloc] initWithId:id title:title artistModel:artistModel];
 }
 
 @end

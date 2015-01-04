@@ -23,12 +23,11 @@
 #import "PPLibraryArtistModel.h"
 
 @interface PPLibraryAlbumModel : PPLibraryItemModel
-@property(atomic) int32_t year;
 @property(atomic, strong) PPLibraryArtistModel *artistModel;
 
-- (instancetype)initWithId:(int64_t)id title:(NSString *)title year:(int32_t)year artistModel:(PPLibraryArtistModel *)artistModel;
+- (instancetype)initWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel;
 
-+ (instancetype)modelWithId:(int64_t)id title:(NSString *)title year:(int32_t)year artistModel:(PPLibraryArtistModel *)artistModel;
++ (instancetype)modelWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel;
 
 
 @end
