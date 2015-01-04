@@ -126,12 +126,21 @@
         return -1;
     }
 
-    [database executeUpdate:@"create table if not exists genres(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
+    [database executeUpdate:@"create table if not exists genres(title TEXT NOT NULL)"];
     [database executeUpdate:@"CREATE UNIQUE INDEX if not exists genres_idx ON genres(title)"];
 
-    [database executeUpdate:@"insert or REPLACE into genres(title) values (?)", genreModel.title];
+    [database executeUpdate:@"insert or IGNORE into genres(title) values (?)", genreModel.title];
 
-    return [database lastInsertRowId];
+    FMResultSet *resultSet = [database executeQuery:@"SELECT rowid FROM genres WHERE title = ?", genreModel.title];
+
+    int64_t resultID = -1;
+    while ([resultSet next]) {
+        resultID = [resultSet longLongIntForColumn:@"rowid"];
+        break;
+    }
+    [resultSet close];
+
+    return resultID;
 }
 
 - (int64_t)_createArtist:(PPLibraryArtistModel *)artistModel inDatabase:(FMDatabase *)database {
@@ -139,12 +148,21 @@
         return -1;
     }
 
-    [database executeUpdate:@"create table if not exists artists(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
+    [database executeUpdate:@"create table if not exists artists(title TEXT NOT NULL)"];
     [database executeUpdate:@"CREATE UNIQUE INDEX if not exists artists_idx ON artists(title)"];
 
-    [database executeUpdate:@"insert or REPLACE into artists(title) values (?)", artistModel.title];
+    [database executeUpdate:@"insert or IGNORE into artists(title) values (?)", artistModel.title];
 
-    return [database lastInsertRowId];
+    FMResultSet *resultSet = [database executeQuery:@"SELECT rowid FROM artists WHERE title = ?", artistModel.title];
+
+    int64_t resultID = -1;
+    while ([resultSet next]) {
+        resultID = [resultSet longLongIntForColumn:@"rowid"];
+        break;
+    }
+    [resultSet close];
+
+    return resultID;
 }
 
 - (int64_t)_createAlbum:(PPLibraryAlbumModel *)albumModel inDatabase:(FMDatabase *)database {
@@ -158,12 +176,21 @@
         return -1;
     }
 
-    [database executeUpdate:@"create table if not exists albums(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL)"];
+    [database executeUpdate:@"create table if not exists albums(title TEXT NOT NULL, artist_id INTEGER NOT NULL)"];
     [database executeUpdate:@"CREATE UNIQUE INDEX if not exists albums_idx ON albums(title, artist_id)"];
 
-    [database executeUpdate:@"insert or REPLACE into albums(title, artist_id) values (?, ?)", albumModel.title, @(createdArtistID)];
+    [database executeUpdate:@"insert or IGNORE into albums(title, artist_id) values (?, ?)", albumModel.title, @(createdArtistID)];
 
-    return [database lastInsertRowId];
+    FMResultSet *resultSet = [database executeQuery:@"SELECT rowid FROM albums WHERE title = ? AND artist_id = ?", albumModel.title, @(createdArtistID)];
+
+    int64_t resultID = -1;
+    while ([resultSet next]) {
+        resultID = [resultSet longLongIntForColumn:@"rowid"];
+        break;
+    }
+    [resultSet close];
+
+    return resultID;
 }
 
 - (int64_t)_createTrack:(PPLibraryTrackModel *)trackModel inDatabase:(FMDatabase *)database {
@@ -177,16 +204,25 @@
         return -1;
     }
 
-    [database executeUpdate:@"create table if not exists tracks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL, album_id INTEGER NOT NULL, genre_id INTEGER NOT NULL)"];
+    [database executeUpdate:@"create table if not exists tracks(title TEXT NOT NULL, artist_id INTEGER NOT NULL, album_id INTEGER NOT NULL, genre_id INTEGER NOT NULL)"];
     [database executeUpdate:@"CREATE UNIQUE INDEX if not exists tracks_idx ON tracks(title, artist_id)"];
 
-    [database executeUpdate:@"insert or REPLACE into tracks(title, artist_id, album_id, genre_id) values (?, ?, ?, ?)",
+    [database executeUpdate:@"insert or IGNORE into tracks(title, artist_id, album_id, genre_id) values (?, ?, ?, ?)",
                             trackModel.title,
                             @(createdArtistID),
                             @(createdAlbumID),
                             @(createdGenreID)];
 
-    return [database lastInsertRowId];
+    FMResultSet *resultSet = [database executeQuery:@"SELECT rowid FROM tracks WHERE title = ? AND artist_id = ? AND album_id = ? AND genre_id = ?", trackModel.title, @(createdArtistID), @(createdAlbumID), @(createdGenreID)];
+
+    int64_t resultID = -1;
+    while ([resultSet next]) {
+        resultID = [resultSet longLongIntForColumn:@"rowid"];
+        break;
+    }
+    [resultSet close];
+
+    return resultID;
 }
 
 - (void)_moveTrackToLibrary:(PPFileModel *)track withID:(int64_t)trackID {

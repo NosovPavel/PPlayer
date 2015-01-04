@@ -129,6 +129,10 @@
 }
 
 - (void)moveFileFromURL:(NSURL *)srcUrl toURL:(NSURL *)destUrl {
+    if ([_fileManager fileExistsAtPath:[destUrl path]]) {
+        [self removeFileAtURL:destUrl];
+    }
+
     [_fileManager moveItemAtURL:srcUrl toURL:destUrl error:NULL];
 }
 
