@@ -290,7 +290,6 @@
                                            genreModel:genreModel];
         [_libraryDBQueue inDatabase:^(FMDatabase *db) {
             int64_t createdTrackID = [self _createTrack:trackModel inDatabase:db];
-            NSLog(@"Created ID == %lld", createdTrackID);
             if (createdTrackID >= 0) {
                 [self _moveTrackToLibrary:file withID:createdTrackID];
             }

@@ -37,6 +37,7 @@
 		65CDA7B7CC968A05B07A5747 /* TabIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */; };
 		65CDA850869CC9BF039BD1E5 /* NavMenuIconCancel@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF1408DDACAF696C3352 /* NavMenuIconCancel@3x.png */; };
 		65CDA86105D57C9F97DAFAC1 /* CellIconCheckMarkEmpty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */; };
+		65CDA864B1743002EFC1EA11 /* LLACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */; };
 		65CDA91EFF4DE2B481E31060 /* NavMenuIconToLibrary@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAC7451B5A4B5F8897390 /* NavMenuIconToLibrary@3x.png */; };
 		65CDA94CFE9399930B18A078 /* TabIconPlayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */; };
 		65CDA979B6C8B8182D4227FE /* CellIconFolder.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA434A87EF62B917CF1C4 /* CellIconFolder.png */; };
@@ -134,8 +135,10 @@
 		65CDAB5734ACD96E9FD87E96 /* PPProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPProvider.m; sourceTree = "<group>"; };
 		65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@2x.png"; sourceTree = "<group>"; };
 		65CDAC7451B5A4B5F8897390 /* NavMenuIconToLibrary@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconToLibrary@3x.png"; sourceTree = "<group>"; };
+		65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLACircularProgressView.m; sourceTree = "<group>"; };
 		65CDACA3E4F72FD9649301C1 /* PPMenuNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPMenuNavigationViewController.m; sourceTree = "<group>"; };
 		65CDACAFA39C5DD0C7A9E877 /* PPLibraryItemModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryItemModel.h; sourceTree = "<group>"; };
+		65CDACE30F253AE9F5F66E1D /* LLACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLACircularProgressView.h; sourceTree = "<group>"; };
 		65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@3x.png"; sourceTree = "<group>"; };
 		65CDAD787A6D49FF9C50290D /* PPLibraryAlbumModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryAlbumModel.h; sourceTree = "<group>"; };
 		65CDADA1759F7CD6F582450C /* PPFileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFileModel.h; sourceTree = "<group>"; };
@@ -401,6 +404,15 @@
 			path = "Tab Bar";
 			sourceTree = "<group>";
 		};
+		65CDAEF8D8CEF84527C6B427 /* LLACircularProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				65CDACE30F253AE9F5F66E1D /* LLACircularProgressView.h */,
+				65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */,
+			);
+			path = LLACircularProgressView;
+			sourceTree = "<group>";
+		};
 		65CDAFB640B99E8F1959D331 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -535,6 +547,7 @@
 			isa = PBXGroup;
 			children = (
 				A7B83EC41A586746008E6979 /* FMDB */,
+				65CDAEF8D8CEF84527C6B427 /* LLACircularProgressView */,
 			);
 			path = "3rd Party";
 			sourceTree = "<group>";
@@ -787,6 +800,7 @@
 				65CDA194219F867A44F6FF65 /* PPLibraryAlbumModel.m in Sources */,
 				65CDA6B24115C6C4A5E89C64 /* PPLibraryArtistModel.m in Sources */,
 				65CDAB59331C3E70C2A5B82E /* PPLibraryTrackModel.m in Sources */,
+				65CDA864B1743002EFC1EA11 /* LLACircularProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
