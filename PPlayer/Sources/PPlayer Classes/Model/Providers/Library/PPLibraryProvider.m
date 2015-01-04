@@ -135,7 +135,7 @@
 
                        float percentSnapshot = percent;
                        if (progressBlock) {
-                           dispatch_async(dispatch_get_main_queue(), ^{
+                           dispatch_barrier_async(dispatch_get_main_queue(), ^{
                                progressBlock(percentSnapshot);
                            });
                        }
@@ -146,7 +146,7 @@
 
                       float percentSnapshot = percent;
                       if (progressBlock) {
-                          dispatch_async(dispatch_get_main_queue(), ^{
+                          dispatch_barrier_async(dispatch_get_main_queue(), ^{
                               progressBlock(percentSnapshot);
                           });
                       }
@@ -163,7 +163,7 @@
 
                 float percentSnapshot = percent;
                 if (progressBlock) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    dispatch_barrier_async(dispatch_get_main_queue(), ^{
                         progressBlock(percentSnapshot);
                     });
                 }
