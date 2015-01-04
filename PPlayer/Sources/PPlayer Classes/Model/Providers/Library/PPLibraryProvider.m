@@ -132,15 +132,23 @@
                 [selfRef importFiles:filesModelsAtURL
                    withProgressBlock:^(float partProgress) {
                        percent = (parts + partProgress) * onePart;
+
+                       float percentSnapshot = percent;
                        if (progressBlock) {
-                           progressBlock(percent);
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                               progressBlock(percentSnapshot);
+                           });
                        }
                    }
                   andCompletionBlock:^{
                       parts++;
                       percent = parts * onePart;
+
+                      float percentSnapshot = percent;
                       if (progressBlock) {
-                          progressBlock(percent);
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              progressBlock(percentSnapshot);
+                          });
                       }
 
                       dispatch_group_leave(importGroup);
@@ -153,8 +161,11 @@
                     [selfRef importFile:currentFile];
                 }
 
+                float percentSnapshot = percent;
                 if (progressBlock) {
-                    progressBlock(percent);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        progressBlock(percentSnapshot);
+                    });
                 }
 
                 dispatch_group_leave(importGroup);
