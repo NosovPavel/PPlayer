@@ -13,3 +13,9 @@
 
 //Signs on FileList VC
 "Files folder" = "Files folder";
+
+//Import titles
+"Unknown genre" = "Unknown genre";
+"Unknown artist" = "Unknown artist";
+"Unknown album" = "Unknown album";
+"Unknown track" = "Unknown track";

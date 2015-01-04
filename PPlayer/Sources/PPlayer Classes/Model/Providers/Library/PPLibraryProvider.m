@@ -65,14 +65,19 @@
     NSString *documentsDirectory = [paths lastObject];
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/.Library"];
 
-    return [[NSURL alloc] initWithString:dataPath];
+    return [NSURL fileURLWithPath:dataPath];
 }
 
 + (NSURL *)libraryDBPath {
-    NSString *rootPath = [[[self class] rootDirectory] absoluteString];
-    NSString *dataPath = [rootPath stringByAppendingPathComponent:@"library.sqlite"];
+    NSURL *libraryURL = [[[self class] rootDirectory] URLByAppendingPathComponent:@"library.sqlite"];
 
-    return [[NSURL alloc] initWithString:dataPath];
+    return libraryURL;
+}
+
++ (NSURL *)trackPathForID:(int64_t)trackID {
+    NSURL *trackURL = [[[self class] rootDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%lld.pptrack", trackID]];
+
+    return trackURL;
 }
 
 #pragma mark - Singleton
@@ -93,7 +98,7 @@
 
 - (void)_init {
     _filesProvider = [[PPFilesProvider alloc] init];
-    _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[self class] libraryDBPath] absoluteString]];
+    _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[self class] libraryDBPath] path]];
 }
 
 #pragma mark - Lifecycle
@@ -116,7 +121,92 @@
 
 #pragma mark - Internal
 
+- (int64_t)_createGenre:(PPLibraryGenreModel *)genreModel inDatabase:(FMDatabase *)database {
+    if (!genreModel.title) {
+        return -1;
+    }
+
+    [database executeUpdate:@"create table if not exists genres(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists genres_idx ON genres(id)"];
+
+    [database executeUpdate:@"insert or REPLACE into genres(title) values (?)", genreModel.title];
+
+    return [database lastInsertRowId];
+}
+
+- (int64_t)_createArtist:(PPLibraryArtistModel *)artistModel inDatabase:(FMDatabase *)database {
+    if (!artistModel.title) {
+        return -1;
+    }
+
+    [database executeUpdate:@"create table if not exists artists(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists artists_idx ON artists(id)"];
+
+    [database executeUpdate:@"insert or REPLACE into artists(title) values (?)", artistModel.title];
+
+    return [database lastInsertRowId];
+}
+
+- (int64_t)_createAlbum:(PPLibraryAlbumModel *)albumModel inDatabase:(FMDatabase *)database {
+    if (!albumModel.title) {
+        return -1;
+    }
+
+    int64_t createdArtistID = [self _createArtist:albumModel.artistModel inDatabase:database];
+
+    if (createdArtistID < 0) {
+        return -1;
+    }
+
+    [database executeUpdate:@"create table if not exists albums(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists albums_idx ON albums(id)"];
+
+    [database executeUpdate:@"insert or REPLACE into albums(title, artist_id) values (?, ?)", albumModel.title, @(createdArtistID)];
+
+    return [database lastInsertRowId];
+}
+
+- (int64_t)_createTrack:(PPLibraryTrackModel *)trackModel inDatabase:(FMDatabase *)database {
+    int64_t createdGenreID = [self _createGenre:trackModel.genreModel inDatabase:database];
+    int64_t createdArtistID = [self _createArtist:trackModel.artistModel inDatabase:database];
+    int64_t createdAlbumID = [self _createAlbum:trackModel.albumModel inDatabase:database];
+
+    if (createdGenreID < 0 ||
+            createdAlbumID < 0 ||
+            createdArtistID < 0) {
+        return -1;
+    }
+
+    [database executeUpdate:@"create table if not exists tracks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL, album_id INTEGER NOT NULL, genre_id INTEGER NOT NULL)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists tracks_idx ON tracks(id)"];
+
+    [database executeUpdate:@"insert or REPLACE into tracks(title, artist_id, album_id, genre_id) values (?, ?, ?, ?)",
+                            trackModel.title,
+                            @(createdArtistID),
+                            @(createdAlbumID),
+                            @(createdGenreID)];
+
+    return [database lastInsertRowId];
+}
+
+- (void)_moveTrackToLibrary:(PPFileModel *)track withID:(int64_t)trackID {
+    NSURL *fromURL = track.url;
+    NSURL *toURL = [[self class] trackPathForID:trackID];
+
+    NSLog(@"Move %@ to %@", [track.url path], toURL);
+
+    [_filesProvider moveFileFromURL:fromURL toURL:toURL];
+}
+
 - (void)_importFile:(PPFileModel *)file withCompletionBlock:(void (^)())block {
+    if (!file.type == PPFileTypeFileAudio) {
+        if (block) {
+            block();
+        }
+
+        return;
+    }
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:file.url options:nil];
 
@@ -135,9 +225,45 @@
         NSString *currentSongAlbumName = [(NSString *) [albumName.value copyWithZone:nil] fixedEncodingString];
         NSString *currentSongGenre = [(NSString *) [genre.value copyWithZone:nil] fixedEncodingString];
 
-        if (block) {
-            block();
+        PPLibraryGenreModel *genreModel;
+        PPLibraryAlbumModel *albumModel;
+        PPLibraryArtistModel *artistModel;
+        PPLibraryTrackModel *trackModel;
+
+        if (!currentSongGenre) {
+            currentSongGenre = NSLocalizedString(@"Unknown genre", nil);
         }
+
+        if (!currentSongArtist) {
+            currentSongArtist = NSLocalizedString(@"Unknown artist", nil);
+        }
+
+        if (!currentSongAlbumName) {
+            currentSongAlbumName = NSLocalizedString(@"Unknown album", nil);
+        }
+
+        if (!currentSongTitle) {
+            currentSongTitle = NSLocalizedString(@"Unknown track", nil);
+        }
+
+        genreModel = [PPLibraryGenreModel modelWithId:-1 title:currentSongGenre];
+        artistModel = [PPLibraryArtistModel modelWithId:-1 title:currentSongArtist];
+        albumModel = [PPLibraryAlbumModel modelWithId:-1 title:currentSongAlbumName
+                                          artistModel:artistModel];
+        trackModel = [PPLibraryTrackModel modelWithId:-1 title:currentSongTitle
+                                          artistModel:artistModel
+                                           albumModel:albumModel
+                                           genreModel:genreModel];
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            int64_t createdTrackID = [self _createTrack:trackModel inDatabase:db];
+            if (createdTrackID >= 0) {
+                [self _moveTrackToLibrary:file withID:createdTrackID];
+            }
+
+            if (block) {
+                block();
+            }
+        }];
     });
 }
 

@@ -29,4 +29,6 @@
 
 - (void)removeFileAtURL:(NSURL *)url;
 
+- (void)moveFileFromURL:(NSURL *)srcUrl toURL:(NSURL *)destUrl;
+
 @end

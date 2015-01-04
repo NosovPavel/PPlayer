@@ -13,3 +13,9 @@
 
 //Signs on FileList VC
 "Files folder" = "Папка с файлами";
+
+//Import titles
+"Unknown genre" = "Неизвестный жанр";
+"Unknown artist" = "Неизвестный исполнитель";
+"Unknown album" = "Неизвестный альбом";
+"Unknown track" = "Неизвестный трек";

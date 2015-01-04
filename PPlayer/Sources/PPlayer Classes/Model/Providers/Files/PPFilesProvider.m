@@ -66,7 +66,7 @@
                                                         error:NULL];
     }
 
-    return [[NSURL alloc] initWithString:dataPath];
+    return [NSURL fileURLWithPath:dataPath];
 }
 
 - (NSArray *)filesModelsAtURL:(NSURL *)rootURL {
@@ -126,6 +126,10 @@
 
 - (void)removeFileAtURL:(NSURL *)url {
     [_fileManager removeItemAtURL:url error:NULL];
+}
+
+- (void)moveFileFromURL:(NSURL *)srcUrl toURL:(NSURL *)destUrl {
+    [_fileManager moveItemAtURL:srcUrl toURL:destUrl error:NULL];
 }
 
 @end
