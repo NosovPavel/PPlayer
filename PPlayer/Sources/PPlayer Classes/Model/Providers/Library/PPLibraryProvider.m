@@ -122,7 +122,7 @@
 
     float overall = (float) reallyFiles.count;
     float onePart = (1.0f / overall);
-    __block int parts = 0;
+    __block float parts = 0;
 
     [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
         dispatch_group_enter(importGroup);
@@ -131,14 +131,14 @@
                 NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
                 [selfRef importFiles:filesModelsAtURL
                    withProgressBlock:^(float partProgress) {
-                       percent = ((float) parts + partProgress) * onePart;
+                       percent = (parts + partProgress) * onePart;
                        if (progressBlock) {
                            progressBlock(percent);
                        }
                    }
                   andCompletionBlock:^{
                       parts++;
-                      percent = (float) parts * onePart;
+                      percent = parts * onePart;
                       if (progressBlock) {
                           progressBlock(percent);
                       }
