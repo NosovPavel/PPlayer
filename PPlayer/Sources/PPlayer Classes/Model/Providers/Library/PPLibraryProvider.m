@@ -193,8 +193,6 @@
     NSURL *fromURL = track.url;
     NSURL *toURL = [[self class] trackPathForID:trackID];
 
-    NSLog(@"Move %@ to %@", [track.url path], toURL);
-
     [_filesProvider moveFileFromURL:fromURL toURL:toURL];
 }
 
