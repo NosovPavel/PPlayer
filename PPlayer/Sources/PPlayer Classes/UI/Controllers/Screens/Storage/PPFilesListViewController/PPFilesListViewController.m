@@ -279,7 +279,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     [_filesTableView beginUpdates];
     [_filesTableView deleteRowsAtIndexPaths:selectedIndexPaths
-                           withRowAnimation:UITableViewRowAnimationLeft];
+                           withRowAnimation:UITableViewRowAnimationFade];
     [_filesTableView endUpdates];
 
     _selectedFiles = [@{} mutableCopy];
