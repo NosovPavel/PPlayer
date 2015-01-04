@@ -31,6 +31,17 @@
 
 @implementation PPFilesProvider
 
+#pragma mark - Preparing
+
++ (void)load {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] urlInboxRoot] path]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] urlInboxRoot] path]
+                                  withIntermediateDirectories:NO
+                                                   attributes:nil
+                                                        error:NULL];
+    }
+}
+
 #pragma mark - Init
 
 - (void)_init {
@@ -58,13 +69,6 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths lastObject];
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/Inbox"];
-
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath
-                                  withIntermediateDirectories:NO
-                                                   attributes:nil
-                                                        error:NULL];
-    }
 
     return [NSURL fileURLWithPath:dataPath];
 }
