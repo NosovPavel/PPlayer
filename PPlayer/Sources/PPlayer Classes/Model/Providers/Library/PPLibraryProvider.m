@@ -159,7 +159,7 @@
     }];
 
     float overall = (float) reallyFiles.count;
-    float onePart = (1.0f / overall);
+    float onePartPercent = (1.0f / overall);
     __block float parts = 0;
 
     [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
@@ -170,7 +170,7 @@
                 [selfRef importFiles:filesModelsAtURL
                    withProgressBlock:^(float partProgress) {
                        dispatch_async(dispatch_get_main_queue(), ^{
-                           percent = (parts + partProgress) * onePart;
+                           percent = (parts + partProgress) * onePartPercent;
 
                            float percentSnapshot = percent;
                            if (progressBlock) {
@@ -181,7 +181,7 @@
                   andCompletionBlock:^{
                       dispatch_async(dispatch_get_main_queue(), ^{
                           parts++;
-                          percent = parts * onePart;
+                          percent = parts * onePartPercent;
 
                           float percentSnapshot = percent;
                           if (progressBlock) {
@@ -195,7 +195,7 @@
                 [selfRef _importFile:currentFile withCompletionBlock:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
                         parts++;
-                        percent = parts * onePart;
+                        percent = parts * onePartPercent;
 
                         float percentSnapshot = percent;
                         if (progressBlock) {
