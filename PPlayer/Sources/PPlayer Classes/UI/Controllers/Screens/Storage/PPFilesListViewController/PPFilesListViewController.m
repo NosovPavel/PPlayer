@@ -23,10 +23,64 @@
 #import "PPFilesProvider.h"
 #import "PPLibraryProvider.h"
 
+#import "LLACircularProgressView.h"
+
 static const CGFloat cellsHeight = 60.0f;
+static const CGFloat progressViewSize = 60.0f;
 
 static NSString *fileCellIdentifier = @"fileCellIdentifier";
 static NSString *folderCellIdentifier = @"folderCellIdentifier";
+
+@interface PPProgressView : UIView {
+@private
+    LLACircularProgressView *_progressView;
+}
+- (void)setProgress:(float)progress animated:(BOOL)animated;
+@end
+
+@implementation PPProgressView
+
+#pragma mark - Init
+
+- (void)_init {
+    _progressView = [[LLACircularProgressView alloc] initWithFrame:CGRectZero];
+
+    [self addSubview:_progressView];
+}
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self _init];
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    _progressView = nil;
+}
+
+#pragma mark - Interface
+
+- (void)setProgress:(float)progress animated:(BOOL)animated {
+    [_progressView setProgress:progress animated:animated];
+}
+
+#pragma mark - Layout
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    [_progressView setFrame:CGRectMake(0, 0, progressViewSize, progressViewSize)];
+    [_progressView setCenter:[self convertPoint:self.center fromView:self.superview]];
+    [_progressView setCenter:CGPointMake(_progressView.center.x, _progressView.center.y - progressViewSize / 4.0f)];
+    [_progressView setBackgroundColor:[self backgroundColor]];
+}
+
+@end
 
 @interface PPFilesListViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
@@ -286,12 +340,32 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     [self _updateActionsEnabledState];
 
+    __block PPProgressView *progressView = [[PPProgressView alloc] init];
+    [progressView setBackgroundColor:[UIColor clearColor]];
+
+    __block UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Importing", nil)
+                                                                message:NSLocalizedString(@"Importing_message", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:nil
+                                                      otherButtonTitles:nil];
+
+    @try {
+        [alertView setValue:progressView forKey:[NSString stringWithFormat:@"accessoryView"]];
+    } @catch (NSException *execption) {
+        //
+    }
+
+    [alertView show];
+
     [[PPLibraryProvider sharedLibrary] importFiles:filesToImport
                                  withProgressBlock:^(float progress) {
-                                     NSLog(@"Importing...%f", progress);
+                                     [progressView setProgress:progress animated:YES];
                                  }
                                 andCompletionBlock:^{
-                                    NSLog(@"Completed.");
+                                    [alertView dismissWithClickedButtonIndex:-1 animated:YES];
+
+                                    alertView = nil;
+                                    progressView = nil;
                                 }];
 }
 

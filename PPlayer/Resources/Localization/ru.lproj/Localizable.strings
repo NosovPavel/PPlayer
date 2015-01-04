@@ -19,3 +19,7 @@
 "Unknown artist" = "Неизвестный исполнитель";
 "Unknown album" = "Неизвестный альбом";
 "Unknown track" = "Неизвестный трек";
+
+//Import alert
+"Importing" = "Импортирование";
+"Importing_message" = "Perfect Player импортирует ваши файлы в библиотеку";

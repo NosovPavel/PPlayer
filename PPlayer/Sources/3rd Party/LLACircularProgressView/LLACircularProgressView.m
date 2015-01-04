@@ -63,12 +63,12 @@
     CGContextSetStrokeColorWithColor(ctx, self.progressTintColor.CGColor);
     CGContextStrokeEllipseInRect(ctx, CGRectInset(self.bounds, 1, 1));
 
-    CGRect stopRect;
-    stopRect.origin.x = CGRectGetMidX(self.bounds) - self.bounds.size.width / 8;
-    stopRect.origin.y = CGRectGetMidY(self.bounds) - self.bounds.size.height / 8;
-    stopRect.size.width = self.bounds.size.width / 4;
-    stopRect.size.height = self.bounds.size.height / 4;
-    CGContextFillRect(ctx, CGRectIntegral(stopRect));
+//    CGRect stopRect;
+//    stopRect.origin.x = CGRectGetMidX(self.bounds) - self.bounds.size.width / 8;
+//    stopRect.origin.y = CGRectGetMidY(self.bounds) - self.bounds.size.height / 8;
+//    stopRect.size.width = self.bounds.size.width / 4;
+//    stopRect.size.height = self.bounds.size.height / 4;
+//    CGContextFillRect(ctx, CGRectIntegral(stopRect));
 }
 
 #pragma mark - Accessors
@@ -82,7 +82,7 @@
         if (animated) {
             CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             animation.fromValue = self.progress == 0 ? @0 : nil;
-            animation.toValue = [NSNumber numberWithFloat:progress];
+            animation.toValue = @(progress);
             animation.duration = 1;
             self.progressLayer.strokeEnd = progress;
             [self.progressLayer addAnimation:animation forKey:@"animation"];

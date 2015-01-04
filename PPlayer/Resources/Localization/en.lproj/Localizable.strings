@@ -19,3 +19,7 @@
 "Unknown artist" = "Unknown artist";
 "Unknown album" = "Unknown album";
 "Unknown track" = "Unknown track";
+
+//Import alert
+"Importing" = "Importing";
+"Importing_message" = "Perfect Player is now importing files into your library";
