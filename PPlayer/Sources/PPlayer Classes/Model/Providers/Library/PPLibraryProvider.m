@@ -127,7 +127,7 @@
     }
 
     [database executeUpdate:@"create table if not exists genres(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
-    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists genres_idx ON genres(id)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists genres_idx ON genres(title)"];
 
     [database executeUpdate:@"insert or REPLACE into genres(title) values (?)", genreModel.title];
 
@@ -140,7 +140,7 @@
     }
 
     [database executeUpdate:@"create table if not exists artists(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
-    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists artists_idx ON artists(id)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists artists_idx ON artists(title)"];
 
     [database executeUpdate:@"insert or REPLACE into artists(title) values (?)", artistModel.title];
 
@@ -159,7 +159,7 @@
     }
 
     [database executeUpdate:@"create table if not exists albums(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL)"];
-    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists albums_idx ON albums(id)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists albums_idx ON albums(title, artist_id)"];
 
     [database executeUpdate:@"insert or REPLACE into albums(title, artist_id) values (?, ?)", albumModel.title, @(createdArtistID)];
 
@@ -178,7 +178,7 @@
     }
 
     [database executeUpdate:@"create table if not exists tracks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL, album_id INTEGER NOT NULL, genre_id INTEGER NOT NULL)"];
-    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists tracks_idx ON tracks(id)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists tracks_idx ON tracks(title, artist_id)"];
 
     [database executeUpdate:@"insert or REPLACE into tracks(title, artist_id, album_id, genre_id) values (?, ?, ?, ?)",
                             trackModel.title,
