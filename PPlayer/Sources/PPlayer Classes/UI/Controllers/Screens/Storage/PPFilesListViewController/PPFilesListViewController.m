@@ -288,7 +288,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     [[PPLibraryProvider sharedLibrary] importFiles:filesToImport
                                  withProgressBlock:^(float progress) {
-                                     //NSLog(@"Importing...%f", progress);
+                                     NSLog(@"Importing...%f", progress);
                                  }
                                 andCompletionBlock:^{
                                     NSLog(@"Completed.");

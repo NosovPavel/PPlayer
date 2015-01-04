@@ -122,6 +122,7 @@
 
     float overall = (float) reallyFiles.count;
     float onePart = (1.0f / overall);
+    __block int parts = 0;
 
     [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
         dispatch_group_enter(importGroup);
@@ -130,19 +131,22 @@
                 NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
                 [selfRef importFiles:filesModelsAtURL
                    withProgressBlock:^(float partProgress) {
-                       //percent += partProgress * onePart;
-                       NSLog(@"Importing...%f", partProgress * onePart);
+                       percent = ((float) parts + partProgress) * onePart;
                        if (progressBlock) {
                            progressBlock(percent);
                        }
                    }
                   andCompletionBlock:^{
+                      parts++;
+                      percent = (float) parts * onePart;
                       if (progressBlock) {
                           progressBlock(percent);
                       }
+
                       dispatch_group_leave(importGroup);
                   }];
             } else {
+                parts++;
                 percent += onePart;
 
                 if (currentFile.type == PPFileTypeFileAudio) {
