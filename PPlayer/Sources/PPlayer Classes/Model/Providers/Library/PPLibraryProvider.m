@@ -23,6 +23,21 @@
 #import "FMDB.h"
 #import <AVFoundation/AVFoundation.h>
 
+@interface NSString (AVMetadataItemEncodingFixing)
+- (NSString *)fixedEncodingString;
+@end
+
+@implementation NSString (AVMetadataItemEncodingFixing)
+- (NSString *)fixedEncodingString {
+    if ([self canBeConvertedToEncoding:NSWindowsCP1252StringEncoding]) {
+        const char *cString = [self cStringUsingEncoding:NSWindowsCP1252StringEncoding];
+        return [NSString stringWithCString:cString encoding:NSWindowsCP1251StringEncoding];
+    }
+
+    return self;
+}
+@end
+
 @interface PPLibraryProvider () {
 @private
     FMDatabaseQueue *_libraryDBQueue;
@@ -102,7 +117,7 @@
 #pragma mark - Internal
 
 - (void)_importFile:(PPFileModel *)file withCompletionBlock:(void (^)())block {
-    dispatch_barrier_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:file.url options:nil];
 
         NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
@@ -115,10 +130,10 @@
         AVMetadataItem *albumName = [albumNames firstObject];
         AVMetadataItem *genre = [genres firstObject];
 
-        NSString *currentSongTitle = (NSString *) [title.value copyWithZone:nil];
-        NSString *currentSongArtist = (NSString *) [artist.value copyWithZone:nil];
-        NSString *currentSongAlbumName = (NSString *) [albumName.value copyWithZone:nil];
-        NSString *currentSongGenre = (NSString *) [genre.value copyWithZone:nil];
+        NSString *currentSongTitle = [(NSString *) [title.value copyWithZone:nil] fixedEncodingString];
+        NSString *currentSongArtist = [(NSString *) [artist.value copyWithZone:nil] fixedEncodingString];
+        NSString *currentSongAlbumName = [(NSString *) [albumName.value copyWithZone:nil] fixedEncodingString];
+        NSString *currentSongGenre = [(NSString *) [genre.value copyWithZone:nil] fixedEncodingString];
 
         if (block) {
             block();
@@ -149,46 +164,46 @@
 
     [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
         dispatch_group_enter(importGroup);
-        dispatch_barrier_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (currentFile.type == PPFileTypeFolder) {
                 NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
                 [selfRef importFiles:filesModelsAtURL
                    withProgressBlock:^(float partProgress) {
-                       percent = (parts + partProgress) * onePart;
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                           percent = (parts + partProgress) * onePart;
 
-                       float percentSnapshot = percent;
-                       if (progressBlock) {
-                           dispatch_barrier_async(dispatch_get_main_queue(), ^{
+                           float percentSnapshot = percent;
+                           if (progressBlock) {
                                progressBlock(percentSnapshot);
-                           });
-                       }
+                           }
+                       });
                    }
                   andCompletionBlock:^{
-                      parts++;
-                      percent = parts * onePart;
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          parts++;
+                          percent = parts * onePart;
 
-                      float percentSnapshot = percent;
-                      if (progressBlock) {
-                          dispatch_barrier_async(dispatch_get_main_queue(), ^{
+                          float percentSnapshot = percent;
+                          if (progressBlock) {
                               progressBlock(percentSnapshot);
-                          });
-                      }
+                          }
 
-                      dispatch_group_leave(importGroup);
+                          dispatch_group_leave(importGroup);
+                      });
                   }];
             } else {
-                parts++;
-                percent += onePart;
-
                 [selfRef _importFile:currentFile withCompletionBlock:^{
-                    float percentSnapshot = percent;
-                    if (progressBlock) {
-                        dispatch_barrier_async(dispatch_get_main_queue(), ^{
-                            progressBlock(percentSnapshot);
-                        });
-                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        parts++;
+                        percent = parts * onePart;
 
-                    dispatch_group_leave(importGroup);
+                        float percentSnapshot = percent;
+                        if (progressBlock) {
+                            progressBlock(percentSnapshot);
+                        }
+
+                        dispatch_group_leave(importGroup);
+                    });
                 }];
             }
         });
