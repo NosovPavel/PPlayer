@@ -341,6 +341,8 @@
                    }
                   andCompletionBlock:^{
                       dispatch_async(dispatch_get_main_queue(), ^{
+                          [_filesProvider removeFileAtURL:currentFile.url];
+
                           parts++;
                           percent = parts * onePartPercent;
 
