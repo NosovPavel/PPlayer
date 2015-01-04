@@ -50,8 +50,8 @@
 #pragma mark - Preparing
 
 + (void)load {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] rootDirectory] absoluteString]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] rootDirectory] absoluteString]
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] rootDirectory] path]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] rootDirectory] path]
                                   withIntermediateDirectories:NO
                                                    attributes:nil
                                                         error:NULL];
@@ -254,6 +254,7 @@
                                            genreModel:genreModel];
         [_libraryDBQueue inDatabase:^(FMDatabase *db) {
             int64_t createdTrackID = [self _createTrack:trackModel inDatabase:db];
+            NSLog(@"Created ID == %lld", createdTrackID);
             if (createdTrackID >= 0) {
                 [self _moveTrackToLibrary:file withID:createdTrackID];
             }
