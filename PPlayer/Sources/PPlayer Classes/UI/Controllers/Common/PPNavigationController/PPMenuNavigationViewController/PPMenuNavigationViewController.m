@@ -113,9 +113,16 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 #pragma mark - Layout
 
 - (void)layoutSubviews {
+    [self sizeToFit];
     [super layoutSubviews];
 
-    [_navigationBar setFrame:CGRectMake(0.0f, 0.0f,
+    self.clipsToBounds = NO;
+
+    [self setFrame:CGRectMake(self.frame.origin.x, 0.0f,
+            self.bounds.size.width,
+            self.bounds.size.height)];
+
+    [_navigationBar setFrame:CGRectMake(0.0f, [UIApplication sharedApplication].statusBarFrame.size.height,
             self.bounds.size.width,
             self.bounds.size.height - (_menuHidden ?: navigationBarMenuHeight))];
     [_navigationBarMenuView setFrame:CGRectMake(0.0f, _navigationBar.frame.origin.y + _navigationBar.bounds.size.height - (_menuHidden ? navigationBarMenuHeight : 0.0f),
@@ -127,7 +134,6 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 - (void)setMenuHidden:(BOOL)hidden animated:(BOOL)animated {
     _menuHidden = hidden;
     [UIView animateWithDuration:animated ? (1.0f / 3.0f) : 0.0f animations:^{
-        [self sizeToFit];
         [self layoutSubviews];
     }                completion:nil];
 }
