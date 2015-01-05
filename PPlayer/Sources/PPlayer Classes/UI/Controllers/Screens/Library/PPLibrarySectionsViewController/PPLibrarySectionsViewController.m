@@ -117,26 +117,31 @@ static NSString *sectionCellIdentifier = @"fileCellIdentifier";
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    cell.textLabel.text = @"";
+    cell.imageView.image = nil;
+
     switch (indexPath.section) {
         case 0: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Artists", nil);
+                    cell.imageView.image = [UIImage imageNamed:@"CellIconLibrarySectionsArtists.png"];
                 }
                     break;
 
                 case 1: {
                     cell.textLabel.text = NSLocalizedString(@"Albums", nil);
+                    cell.imageView.image = [UIImage imageNamed:@"CellIconLibrarySectionsAlbums.png"];
                 }
                     break;
 
                 case 2: {
                     cell.textLabel.text = NSLocalizedString(@"Genres", nil);
+                    cell.imageView.image = [UIImage imageNamed:@"CellIconLibrarySectionsGenres.png"];
                 }
                     break;
 
                 default: {
-                    cell.textLabel.text = @"";
                 }
                     break;
             }
@@ -147,10 +152,10 @@ static NSString *sectionCellIdentifier = @"fileCellIdentifier";
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"All songs", nil);
+                    cell.imageView.image = [UIImage imageNamed:@"CellIconLibrarySectionsAllSongs.png"];
                 }
                     break;
                 default: {
-                    cell.textLabel.text = @"";
                 }
                     break;
             }
@@ -158,7 +163,6 @@ static NSString *sectionCellIdentifier = @"fileCellIdentifier";
             break;
 
         default: {
-            cell.textLabel.text = @"";
         }
             break;
     }
@@ -167,6 +171,5 @@ static NSString *sectionCellIdentifier = @"fileCellIdentifier";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
 
 @end
