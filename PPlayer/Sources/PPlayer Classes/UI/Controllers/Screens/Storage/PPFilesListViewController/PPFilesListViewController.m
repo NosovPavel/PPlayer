@@ -357,7 +357,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     [alertView show];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0f / 3.0f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [[PPLibraryProvider sharedLibrary] importFiles:filesToImport
                                      withProgressBlock:^(float progress) {
                                          [progressView setProgress:progress animated:YES];
