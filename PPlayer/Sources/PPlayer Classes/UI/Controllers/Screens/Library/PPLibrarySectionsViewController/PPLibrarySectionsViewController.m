@@ -24,7 +24,7 @@
 static const CGFloat cellsHeight = 60.0f;
 static NSString *sectionCellIdentifier = @"fileCellIdentifier";
 
-@interface PPLibrarySectionsViewController () {
+@interface PPLibrarySectionsViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
     //Visual
     UITableView *_sectionsTableView;
@@ -32,4 +32,141 @@ static NSString *sectionCellIdentifier = @"fileCellIdentifier";
 @end
 
 @implementation PPLibrarySectionsViewController
+
+#pragma mark - Init
+
+- (void)designedInit {
+    [super designedInit];
+}
+
+- (void)commonInit {
+    [super commonInit];
+}
+
+#pragma mark - Lifecycle
+
+- (void)loadView {
+    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+
+    _sectionsTableView = [[UITableView alloc] initWithFrame:self.view.bounds
+                                                      style:UITableViewStyleGrouped];
+    _sectionsTableView.dataSource = self;
+    _sectionsTableView.delegate = self;
+    _sectionsTableView.rowHeight = cellsHeight;
+
+    [self.view addSubview:_sectionsTableView];
+}
+
+- (void)dealloc {
+    _sectionsTableView = nil;
+}
+
+#pragma mark - Layout
+
+- (void)performLayout {
+    [super performLayout];
+    [_sectionsTableView setFrame:self.view.bounds];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    switch (section) {
+        case 0: {
+            return 3;
+        }
+
+        case 1: {
+            return 1;
+        }
+
+        default: {
+            return 0;
+        }
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sectionCellIdentifier];
+
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                      reuseIdentifier:sectionCellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        return NSLocalizedString(@"Sections", nil);
+    }
+
+    if (section == 1) {
+        return NSLocalizedString(@"Without sections", nil);
+    }
+
+    return nil;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.section) {
+        case 0: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Artists", nil);
+                }
+                    break;
+
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Albums", nil);
+                }
+                    break;
+
+                case 2: {
+                    cell.textLabel.text = NSLocalizedString(@"Genres", nil);
+                }
+                    break;
+
+                default: {
+                    cell.textLabel.text = @"";
+                }
+                    break;
+            }
+        }
+            break;
+
+        case 1: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"All songs", nil);
+                }
+                    break;
+                default: {
+                    cell.textLabel.text = @"";
+                }
+                    break;
+            }
+        }
+            break;
+
+        default: {
+            cell.textLabel.text = @"";
+        }
+            break;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
 @end

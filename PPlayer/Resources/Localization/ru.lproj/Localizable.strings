@@ -23,3 +23,11 @@
 //Import alert
 "Importing" = "Импортирование";
 "Importing_message" = "Perfect Player импортирует ваши файлы в библиотеку";
+
+//Library
+"Sections" = "Разделы";
+"Without sections" = "Без разделов";
+"Artists" = "Исполнители";
+"Albums" = "Альбомы";
+"Genres" = "Жанры";
+"All songs" = "Все песни";

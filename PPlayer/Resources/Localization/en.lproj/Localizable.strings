@@ -23,3 +23,11 @@
 //Import alert
 "Importing" = "Importing";
 "Importing_message" = "Perfect Player is now importing files into your library";
+
+//Library
+"Sections" = "Sections";
+"Without sections" = "Without sections";
+"Artists" = "Artists";
+"Albums" = "Albums";
+"Genres" = "Genres";
+"All songs" = "All songs";
