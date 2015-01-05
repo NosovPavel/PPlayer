@@ -70,6 +70,7 @@
 		65CDAE0B152F9EA74CDC0B2F /* CellIconLibrarySectionsGenres@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA0172DAF051C9C2FD3FD /* CellIconLibrarySectionsGenres@3x.png */; };
 		65CDAE1086FCC3388C24B401 /* PPLibraryItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA7D333D29D78B519EF15 /* PPLibraryItemModel.m */; };
 		65CDAE5CC2BFB203C5333E7E /* TabIconSettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */; };
+		65CDAE9431C5978EFEAF75DB /* PPLibraryAllSongsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA239CC46E92C313CC2F9 /* PPLibraryAllSongsListViewController.m */; };
 		65CDAEB0997A618628E5A052 /* CellIconLibrarySectionsGenres.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF26A70C986A71C33969 /* CellIconLibrarySectionsGenres.png */; };
 		65CDAF267F023F65D5772073 /* PPFileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA9EE55DCAAC0CEF528D1 /* PPFileModel.m */; };
 		65CDAF340C06B80364C97A5A /* CellIconLibrarySectionsAlbums.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA08715F707071FC6887C /* CellIconLibrarySectionsAlbums.png */; };
@@ -105,6 +106,7 @@
 		65CDA0E154167848700E464B /* PPLibraryGenreModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryGenreModel.m; sourceTree = "<group>"; };
 		65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@3x.png"; sourceTree = "<group>"; };
 		65CDA20580AF365292B4DEB7 /* TabIconPlayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlayer.png; sourceTree = "<group>"; };
+		65CDA239CC46E92C313CC2F9 /* PPLibraryAllSongsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryAllSongsListViewController.m; sourceTree = "<group>"; };
 		65CDA244CA75B1D27F875E84 /* PPProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPProvider.h; sourceTree = "<group>"; };
 		65CDA251D8EE2851570C0399 /* CellIconCheckMarkEmpty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconCheckMarkEmpty.png; sourceTree = "<group>"; };
 		65CDA2531E3580D21E05E1F4 /* PPStorageRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPStorageRootViewController.m; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		65CDA33962723992F5C22BE8 /* CellIconFileAudio@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFileAudio@3x.png"; sourceTree = "<group>"; };
 		65CDA3668AA954566E2D099E /* PPLibraryRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryRootViewController.m; sourceTree = "<group>"; };
 		65CDA36E4385907B148E998B /* CellIconFile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFile@2x.png"; sourceTree = "<group>"; };
+		65CDA3C19C4284F6D360F725 /* PPLibraryAllSongsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryAllSongsListViewController.h; sourceTree = "<group>"; };
 		65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@3x.png"; sourceTree = "<group>"; };
 		65CDA3D1E264811EBC735A72 /* PPModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPModel.m; sourceTree = "<group>"; };
 		65CDA41D62DD04BEA30A06F5 /* NavMenuIconToLibrary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NavMenuIconToLibrary.png; sourceTree = "<group>"; };
@@ -282,6 +285,7 @@
 				65CDAED574AD91E76289873A /* PPLibrarySectionsViewController */,
 				65CDA3668AA954566E2D099E /* PPLibraryRootViewController.m */,
 				65CDAF3A38D593D8EDAD3430 /* PPLibraryRootViewController.h */,
+				65CDAE6FC95ABB62D71D026D /* PPLibraryAllSongsListViewController */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -440,6 +444,15 @@
 				65CDA42E4E75F3329C9EA0F5 /* CellIconLibrarySectionsAlbums@2x.png */,
 			);
 			path = "Library Sections";
+			sourceTree = "<group>";
+		};
+		65CDAE6FC95ABB62D71D026D /* PPLibraryAllSongsListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				65CDA239CC46E92C313CC2F9 /* PPLibraryAllSongsListViewController.m */,
+				65CDA3C19C4284F6D360F725 /* PPLibraryAllSongsListViewController.h */,
+			);
+			path = PPLibraryAllSongsListViewController;
 			sourceTree = "<group>";
 		};
 		65CDAEC5A70746BB17F03817 /* Tab Bar */ = {
@@ -885,6 +898,7 @@
 				65CDA864B1743002EFC1EA11 /* LLACircularProgressView.m in Sources */,
 				65CDAE03C27D8F78FD6CE062 /* PPLibraryRootViewController.m in Sources */,
 				65CDAD1DCFB3C23E87124D05 /* PPLibrarySectionsViewController.m in Sources */,
+				65CDAE9431C5978EFEAF75DB /* PPLibraryAllSongsListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

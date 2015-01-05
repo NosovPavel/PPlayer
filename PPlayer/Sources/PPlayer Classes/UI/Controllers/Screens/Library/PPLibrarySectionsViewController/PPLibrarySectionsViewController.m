@@ -21,8 +21,10 @@
 
 #import "PPLibrarySectionsViewController.h"
 
+#import "PPLibraryAllSongsListViewController.h"
+
 static const CGFloat cellsHeight = 60.0f;
-static NSString *sectionCellIdentifier = @"fileCellIdentifier";
+static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
 
 @interface PPLibrarySectionsViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
@@ -170,6 +172,52 @@ static NSString *sectionCellIdentifier = @"fileCellIdentifier";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    switch (indexPath.section) {
+        case 0: {
+            switch (indexPath.row) {
+                case 0: {
+                    //Artists
+                }
+                    break;
+
+                case 1: {
+                    //Albums
+                }
+                    break;
+
+                case 2: {
+                    //Genres
+                }
+                    break;
+
+                default: {
+                }
+                    break;
+            }
+        }
+            break;
+
+        case 1: {
+            switch (indexPath.row) {
+                case 0: {
+                    PPLibraryAllSongsListViewController *songsListViewController = [[PPLibraryAllSongsListViewController alloc] init];
+                    songsListViewController.title = NSLocalizedString(@"All songs", nil);
+
+                    [self.navigationController pushViewController:songsListViewController animated:YES];
+                }
+                    break;
+                default: {
+                }
+                    break;
+            }
+        }
+            break;
+
+        default: {
+        }
+            break;
+    }
 }
 
 @end
