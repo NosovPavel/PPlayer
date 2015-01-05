@@ -59,16 +59,6 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     SEL selector = [anInvocation selector];
 
-    if (selector == @selector(sizeThatFits:) ||
-            selector == @selector(init) ||
-            selector == @selector(initWithFrame:) ||
-            selector == @selector(initWithCoder:) ||
-            selector == @selector(layoutSubviews) ||
-            selector == @selector(setClipsToBounds:)) {
-        [anInvocation invokeWithTarget:self];
-        return;
-    }
-
     if ([_navigationBar respondsToSelector:selector]) {
         [anInvocation invokeWithTarget:_navigationBar];
     } else {
