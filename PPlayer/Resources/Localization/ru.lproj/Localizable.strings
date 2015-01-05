@@ -31,3 +31,6 @@
 "Albums" = "Альбомы";
 "Genres" = "Жанры";
 "All songs" = "Все песни";
+
+//All songs screen
+"Refreshing..." = "Обновление...";
