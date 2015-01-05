@@ -48,6 +48,11 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     return amendedSize;
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    return CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.bounds.size.width,
+            self.bounds.size.height + [UIApplication sharedApplication].statusBarFrame.size.height), point);
+}
+
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
     NSMethodSignature *signature = [super methodSignatureForSelector:selector];
     if (!signature) {
@@ -137,7 +142,6 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
         [self layoutSubviews];
     }                completion:nil];
 }
-
 
 @end
 
