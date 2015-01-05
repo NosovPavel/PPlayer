@@ -119,7 +119,7 @@
     _filesProvider = nil;
 }
 
-#pragma mark - Internal
+#pragma mark - Creating
 
 - (int64_t)_createGenre:(PPLibraryGenreModel *)genreModel inDatabase:(FMDatabase *)database {
     if (!genreModel.title) {
@@ -225,12 +225,16 @@
     return resultID;
 }
 
+#pragma mark - Files
+
 - (void)_moveTrackToLibrary:(PPFileModel *)track withID:(int64_t)trackID {
     NSURL *fromURL = track.url;
     NSURL *toURL = [[self class] trackPathForID:trackID];
 
     [_filesProvider moveFileFromURL:fromURL toURL:toURL];
 }
+
+#pragma mark - Import
 
 - (void)_importFile:(PPFileModel *)file withCompletionBlock:(void (^)())block {
     if (!file.type == PPFileTypeFileAudio) {
@@ -300,8 +304,6 @@
         }];
     });
 }
-
-#pragma mark - Import
 
 - (void)importFiles:(NSArray *)files
   withProgressBlock:(void (^)(float progress))progressBlock
