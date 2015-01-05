@@ -21,7 +21,6 @@
 
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryProvider.h"
-#import "PPMenuNavigationViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static const CGFloat leftImageShift = 16.5f;
@@ -180,7 +179,7 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-#pragma mark - Overriding Logic
+#pragma mark - PPSelectableActionsViewController Logic
 
 - (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
     return NO;
