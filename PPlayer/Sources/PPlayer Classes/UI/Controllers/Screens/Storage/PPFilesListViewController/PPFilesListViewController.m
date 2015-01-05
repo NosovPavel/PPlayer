@@ -191,11 +191,11 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 #pragma mark - Files Management
 
 - (void)_reloadFilesList {
-    _isSelecting = NO;
-    [self _selectingStateChanged];
-
     _displaingFiles = [[_filesProvider filesModelsAtURL:_rootURL] mutableCopy];
     [_filesTableView reloadData];
+
+    _isSelecting = NO;
+    [self _selectingStateChanged];
 }
 
 #pragma mark - Actions Setting Up
@@ -272,7 +272,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
             _importToLibraryAction.enabled = NO;
         }
     } else {
-        _selectElementsAction.enabled = YES;
+        _selectElementsAction.enabled = _displaingFiles.count > 0;
 
         _cancelAction.enabled = NO;
         _deleteAction.enabled = NO;
