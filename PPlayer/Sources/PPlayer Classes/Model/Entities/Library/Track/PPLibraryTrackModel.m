@@ -22,12 +22,11 @@
 #import "PPLibraryTrackModel.h"
 
 @implementation PPLibraryTrackModel
-- (instancetype)initWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel {
+- (instancetype)initWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel {
     self = [super init];
     if (self) {
         _id = id;
         self.title = title;
-        self.artistModel = artistModel;
         self.albumModel = albumModel;
         self.genreModel = genreModel;
     }
@@ -35,8 +34,8 @@
     return self;
 }
 
-+ (instancetype)modelWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel {
-    return [[self alloc] initWithId:id title:title artistModel:artistModel albumModel:albumModel genreModel:genreModel];
++ (instancetype)modelWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel {
+    return [[self alloc] initWithId:id title:title albumModel:albumModel genreModel:genreModel];
 }
 
 @end

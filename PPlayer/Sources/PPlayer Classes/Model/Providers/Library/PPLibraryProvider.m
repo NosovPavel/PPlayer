@@ -195,25 +195,22 @@
 
 - (int64_t)_createTrack:(PPLibraryTrackModel *)trackModel inDatabase:(FMDatabase *)database {
     int64_t createdGenreID = [self _createGenre:trackModel.genreModel inDatabase:database];
-    int64_t createdArtistID = [self _createArtist:trackModel.artistModel inDatabase:database];
     int64_t createdAlbumID = [self _createAlbum:trackModel.albumModel inDatabase:database];
 
     if (createdGenreID < 0 ||
-            createdAlbumID < 0 ||
-            createdArtistID < 0) {
+            createdAlbumID < 0) {
         return -1;
     }
 
-    [database executeUpdate:@"create table if not exists tracks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, artist_id INTEGER NOT NULL, album_id INTEGER NOT NULL, genre_id INTEGER NOT NULL)"];
-    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists tracks_idx ON tracks(title, artist_id)"];
+    [database executeUpdate:@"create table if not exists tracks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL, album_id INTEGER NOT NULL, genre_id INTEGER NOT NULL)"];
+    [database executeUpdate:@"CREATE UNIQUE INDEX if not exists tracks_idx ON tracks(title, album_id)"];
 
-    [database executeUpdate:@"insert or IGNORE into tracks(title, artist_id, album_id, genre_id) values (?, ?, ?, ?)",
+    [database executeUpdate:@"insert or IGNORE into tracks(title, album_id, genre_id) values (?, ?, ?)",
                             trackModel.title,
-                            @(createdArtistID),
                             @(createdAlbumID),
                             @(createdGenreID)];
 
-    FMResultSet *resultSet = [database executeQuery:@"SELECT id FROM tracks WHERE title = ? AND artist_id = ? AND album_id = ? AND genre_id = ?", trackModel.title, @(createdArtistID), @(createdAlbumID), @(createdGenreID)];
+    FMResultSet *resultSet = [database executeQuery:@"SELECT id FROM tracks WHERE title = ? AND album_id = ? AND genre_id = ?", trackModel.title, @(createdAlbumID), @(createdGenreID)];
 
     int64_t resultID = -1;
     while ([resultSet next]) {
@@ -289,7 +286,6 @@
         albumModel = [PPLibraryAlbumModel modelWithId:-1 title:currentSongAlbumName
                                           artistModel:artistModel];
         trackModel = [PPLibraryTrackModel modelWithId:-1 title:currentSongTitle
-                                          artistModel:artistModel
                                            albumModel:albumModel
                                            genreModel:genreModel];
         [_libraryDBQueue inDatabase:^(FMDatabase *db) {
@@ -385,19 +381,15 @@
 - (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block {
     [_libraryDBQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *resultSet = [db executeQuery:@"SELECT tracks.id as track_id, tracks.title as track_title, \n"
-                "artists.id as track_artist_id, artists.title as track_artist_title, \n"
                 "albums.id as track_album_id, albums.title as track_album_title, albums.artist_id as track_album_artist_id, artists.title as track_album_artist_title,\n"
                 "genres.id as track_genre_id, genres.title as track_genre_title\n"
                 "FROM tracks, artists, albums, genres\n"
-                "WHERE tracks.artist_id = artists.id AND tracks.album_id = albums.id AND albums.artist_id = artists.id AND tracks.genre_id = genres.id"];
+                "WHERE tracks.album_id = albums.id AND albums.artist_id = artists.id AND tracks.genre_id = genres.id"];
 
         NSMutableArray *tracks = [NSMutableArray array];
         while ([resultSet next]) {
             int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
             NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
-
-            int64_t trackArtistID = [resultSet longLongIntForColumn:@"track_artist_id"];
-            NSString *trackArtistTitle = [resultSet stringForColumn:@"track_artist_title"];
 
             int64_t trackGenreID = [resultSet longLongIntForColumn:@"track_genre_id"];
             NSString *trackGenreTitle = [resultSet stringForColumn:@"track_genre_title"];
@@ -408,12 +400,10 @@
             NSString *trackAlbumTitle = [resultSet stringForColumn:@"track_album_title"];
 
             PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:trackGenreID title:trackGenreTitle];
-            PPLibraryArtistModel *artistModel = [PPLibraryArtistModel modelWithId:trackArtistID title:trackArtistTitle];
             PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:trackAlbumID title:trackAlbumTitle
                                                                    artistModel:[PPLibraryArtistModel modelWithId:trackAlbumArtistID
                                                                                                            title:trackAlbumArtistTitle]];
             PPLibraryTrackModel *trackModel = [PPLibraryTrackModel modelWithId:trackID title:trackTitle
-                                                                   artistModel:artistModel
                                                                     albumModel:albumModel
                                                                     genreModel:genreModel];
 

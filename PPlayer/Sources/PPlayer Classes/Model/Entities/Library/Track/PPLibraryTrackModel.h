@@ -25,12 +25,11 @@
 #import "PPLibraryGenreModel.h"
 
 @interface PPLibraryTrackModel : PPLibraryItemModel
-@property(atomic, strong) PPLibraryArtistModel *artistModel;
 @property(atomic, strong) PPLibraryAlbumModel *albumModel;
 @property(atomic, strong) PPLibraryGenreModel *genreModel;
 
-- (instancetype)initWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
+- (instancetype)initWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
 
-+ (instancetype)modelWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
++ (instancetype)modelWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
 
 @end
