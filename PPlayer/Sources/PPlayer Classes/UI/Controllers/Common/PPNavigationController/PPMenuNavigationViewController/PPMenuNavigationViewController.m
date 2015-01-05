@@ -175,3 +175,13 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 }
 
 @end
+
+@implementation UIViewController (PPMenuNavigationViewController)
+- (PPMenuNavigationViewController *)menuNavigationViewController {
+    if (![self.navigationController isKindOfClass:[PPMenuNavigationViewController class]]) {
+        return nil;
+    }
+
+    return ((PPMenuNavigationViewController *) self.navigationController);
+}
+@end

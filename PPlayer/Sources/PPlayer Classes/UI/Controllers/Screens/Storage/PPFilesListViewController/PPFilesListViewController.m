@@ -44,7 +44,6 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 - (void)_init {
     _progressView = [[LLACircularProgressView alloc] initWithFrame:CGRectZero];
-
     [self addSubview:_progressView];
 }
 
@@ -97,20 +96,6 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     //Visual
     UITableView *_filesTableView;
-}
-@end
-
-@interface PPFilesListViewController (Private)
-@property(atomic, strong, readonly) PPStorageRootViewController *storageViewController;
-@end
-
-@implementation PPFilesListViewController (Private)
-- (PPStorageRootViewController *)storageViewController {
-    if ([self.navigationController isKindOfClass:[PPStorageRootViewController class]]) {
-        return ((PPStorageRootViewController *) self.navigationController);
-    }
-
-    return nil;
 }
 @end
 
@@ -215,7 +200,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     }
 
     [self _updateActionsEnabledState];
-    [self.storageViewController setNavigationMenuActions:@[_selectElementsAction] animated:animated];
+    [self.menuNavigationViewController setNavigationMenuActions:@[_selectElementsAction] animated:animated];
 }
 
 - (void)_setupSelectedStateActionsAnimated:(BOOL)animated {
@@ -242,7 +227,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     }
 
     [self _updateActionsEnabledState];
-    [self.storageViewController setNavigationMenuActions:@[_importToLibraryAction, _deleteAction, _cancelAction]
+    [self.menuNavigationViewController setNavigationMenuActions:@[_importToLibraryAction, _deleteAction, _cancelAction]
                                                 animated:animated];
 }
 
@@ -485,7 +470,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         PPFilesListViewController *folderListVC = [PPFilesListViewController controllerWithRootURL:currentFile.url];
         folderListVC.title = currentFile.title;
 
-        [self.storageViewController pushViewController:folderListVC animated:YES];
+        [self.menuNavigationViewController pushViewController:folderListVC animated:YES];
     }
 }
 

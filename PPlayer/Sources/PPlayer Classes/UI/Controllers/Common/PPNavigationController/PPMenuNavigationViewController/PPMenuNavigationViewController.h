@@ -35,3 +35,7 @@
 - (void)setMenuHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
+
+@interface UIViewController (PPMenuNavigationViewController)
+@property(atomic, strong, readonly) PPMenuNavigationViewController *menuNavigationViewController;
+@end

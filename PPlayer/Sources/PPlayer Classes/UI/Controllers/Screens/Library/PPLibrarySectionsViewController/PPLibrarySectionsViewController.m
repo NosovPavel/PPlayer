@@ -21,5 +21,15 @@
 
 #import "PPLibrarySectionsViewController.h"
 
+static const CGFloat cellsHeight = 60.0f;
+static NSString *sectionCellIdentifier = @"fileCellIdentifier";
+
+@interface PPLibrarySectionsViewController () {
+@private
+    //Visual
+    UITableView *_sectionsTableView;
+}
+@end
+
 @implementation PPLibrarySectionsViewController
 @end
