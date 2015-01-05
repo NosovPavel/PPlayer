@@ -19,10 +19,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPViewController.h"
+#import "PPSelectableActionsViewController.h"
 #import "PPStorageRootViewController.h"
 
-@interface PPFilesListViewController : PPViewController
+@interface PPFilesListViewController : PPSelectableActionsViewController
 @property(atomic, strong) NSURL *rootURL;
 
 #pragma mark - Init

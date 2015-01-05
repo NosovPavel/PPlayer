@@ -68,7 +68,7 @@
                                                                } title:NSLocalizedString(@"Refreshing...", nil)];
     }
 
-    [self _updateActionsEnabledState];
+    [self updateActionsState];
     [self.menuNavigationViewController setNavigationMenuActions:@[_loadingAction] animated:animated];
 }
 
@@ -83,7 +83,7 @@
                                                                       } title:NSLocalizedString(@"Select items...", nil)];
     }
 
-    [self _updateActionsEnabledState];
+    [self updateActionsState];
     [self.menuNavigationViewController setNavigationMenuActions:@[_selectElementsAction] animated:animated];
 }
 
@@ -100,14 +100,14 @@
                                                                 title:NSLocalizedString(@"Done", nil)];
     }
 
-    [self _updateActionsEnabledState];
+    [self updateActionsState];
     [self.menuNavigationViewController setNavigationMenuActions:[_actionsWhenSelected arrayByAddingObject:_cancelAction]
                                                        animated:animated];
 }
 
 #pragma mark - Navigation Bar Actions Enabled State
 
-- (void)_updateActionsEnabledState {
+- (void)updateActionsState {
     if (_isLoading) {
         _loadingAction.enabled = NO;
 

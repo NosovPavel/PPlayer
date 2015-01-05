@@ -83,14 +83,11 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 @interface PPFilesListViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
-    //Data
-    BOOL _isSelecting;
-
+    BOOL nowSelectFiles;
     NSMutableArray *_displaingFiles;
     NSMutableDictionary *_selectedFiles;
 
-    PPNavigationBarMenuViewAction *_selectElementsAction;
-    PPNavigationBarMenuViewAction *_importToLibraryAction, *_deleteAction, *_cancelAction;
+    PPNavigationBarMenuViewAction *_importToLibraryAction, *_deleteAction;
 
     PPFilesProvider *_filesProvider;
 
@@ -106,8 +103,17 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 - (void)designedInit {
     [super designedInit];
 
-    _isSelecting = NO;
     _filesProvider = [PPFilesProvider new];
+
+    _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
+                                                          handler:^{
+                                                              [self _deleteSelectedFiles];
+                                                          } title:NSLocalizedString(@"Delete", nil)];
+    _importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconToLibrary.png"]
+                                                                   handler:^{
+                                                                       [self _importSelectedFiles];
+                                                                   } title:NSLocalizedString(@"Import to Library", nil)];
+    _actionsWhenSelected = @[_importToLibraryAction, _deleteAction];
 }
 
 - (void)commonInit {
@@ -149,9 +155,6 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
-    _isSelecting = NO;
-    [self _selectingStateChanged];
 }
 
 - (void)dealloc {
@@ -159,9 +162,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     _displaingFiles = nil;
     _selectedFiles = nil;
     _filesProvider = nil;
-    _selectElementsAction = nil;
     _deleteAction = nil;
-    _cancelAction = nil;
     _importToLibraryAction = nil;
 }
 
@@ -176,103 +177,14 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 #pragma mark - Files Management
 
 - (void)_reloadFilesList {
+    _isLoading = YES;
+    [self updateActions];
+
     _displaingFiles = [[_filesProvider filesModelsAtURL:_rootURL] mutableCopy];
-    [_filesTableView reloadData];
+    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 
-    _isSelecting = NO;
-    [self _selectingStateChanged];
-}
-
-#pragma mark - Actions Setting Up
-
-- (void)_setupActualActionsAnimated:(BOOL)animated {
-    _isSelecting ? [self _setupSelectedStateActionsAnimated:animated] : [self _setupUnselectedStateActionsAnimated:animated];
-}
-
-- (void)_setupUnselectedStateActionsAnimated:(BOOL)animated {
-    __block typeof(self) selfRef = self;
-    if (!_selectElementsAction) {
-        _selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconSelect.png"]
-                                                                      handler:^{
-                                                                          selfRef->_isSelecting = YES;
-                                                                          [selfRef _selectingStateChanged];
-                                                                      } title:NSLocalizedString(@"Select items...", nil)];
-    }
-
-    [self _updateActionsEnabledState];
-    [self.menuNavigationViewController setNavigationMenuActions:@[_selectElementsAction] animated:animated];
-}
-
-- (void)_setupSelectedStateActionsAnimated:(BOOL)animated {
-    __block typeof(self) selfRef = self;
-    if (!_importToLibraryAction) {
-        _importToLibraryAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconToLibrary.png"]
-                                                                       handler:^{
-                                                                           [selfRef _importSelectedFiles];
-                                                                       } title:NSLocalizedString(@"Import to Library", nil)];
-    }
-    if (!_deleteAction) {
-        _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                              handler:^{
-                                                                  [selfRef _deleteSelectedFiles];
-                                                              } title:NSLocalizedString(@"Delete", nil)];
-    }
-    if (!_cancelAction) {
-        _cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDone.png"]
-                                                              handler:^{
-                                                                  selfRef->_isSelecting = NO;
-                                                                  [selfRef _selectingStateChanged];
-                                                              }
-                                                                title:NSLocalizedString(@"Done", nil)];
-    }
-
-    [self _updateActionsEnabledState];
-    [self.menuNavigationViewController setNavigationMenuActions:@[_importToLibraryAction, _deleteAction, _cancelAction]
-                                                animated:animated];
-}
-
-#pragma mark - Navigation Bar Actions Enabled State
-
-- (void)_updateActionsEnabledState {
-    if (_isSelecting) {
-        _selectElementsAction.enabled = NO;
-        _cancelAction.enabled = YES;
-
-        if (_selectedFiles.count > 0) {
-            _deleteAction.enabled = YES;
-
-            __block BOOL selectedFilesContainsNonAudio = NO;
-            [_selectedFiles enumerateKeysAndObjectsUsingBlock:^(id key, PPFileModel *currentFile, BOOL *stop) {
-                if ([currentFile isKindOfClass:[PPFileModel class]]) {
-                    if (!currentFile.isSupportedToPlay) {
-                        selectedFilesContainsNonAudio = YES;
-                        *stop = YES;
-                    }
-                }
-            }];
-
-            _importToLibraryAction.enabled = !selectedFilesContainsNonAudio;
-        } else {
-            _deleteAction.enabled = NO;
-            _importToLibraryAction.enabled = NO;
-        }
-    } else {
-        _selectElementsAction.enabled = _displaingFiles.count > 0;
-
-        _cancelAction.enabled = NO;
-        _deleteAction.enabled = NO;
-        _importToLibraryAction.enabled = NO;
-    }
-}
-
-#pragma mark - Selecting State Changing
-
-- (void)_selectingStateChanged {
-    [self _setupActualActionsAnimated:YES];
-
-    _selectedFiles = [@{} mutableCopy];
-    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-                   withRowAnimation:UITableViewRowAnimationFade];
+    _isLoading = NO;
+    [self updateActions];
 }
 
 #pragma mark - Deleting
@@ -297,7 +209,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     _selectedFiles = [@{} mutableCopy];
 
-    [self _updateActionsEnabledState];
+    [self updateActionsState];
 }
 
 #pragma mark - Importing
@@ -323,7 +235,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
     _selectedFiles = [@{} mutableCopy];
 
-    [self _updateActionsEnabledState];
+    [self updateActionsState];
 
     __block PPProgressView *progressView = [[PPProgressView alloc] init];
     [progressView setBackgroundColor:[UIColor clearColor]];
@@ -405,7 +317,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
 
-    if (_isSelecting) {
+    if (nowSelectFiles) {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
         if ([_selectedFiles[indexPath] isEqual:currentFile]) {
@@ -421,13 +333,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     switch (currentFile.type) {
         case PPFileTypeFile: {
-            if (!_isSelecting) {
+            if (!nowSelectFiles) {
                 cell.imageView.image = [UIImage imageNamed:@"CellIconFile.png"];
             }
         }
             break;
         case PPFileTypeFileAudio: {
-            if (!_isSelecting) {
+            if (!nowSelectFiles) {
                 cell.imageView.image = [UIImage imageNamed:@"CellIconFileAudio.png"];
             }
         }
@@ -435,7 +347,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         case PPFileTypeFolder: {
             [cell.detailTextLabel setText:NSLocalizedString(@"Files folder", nil)];
 
-            if (!_isSelecting) {
+            if (!nowSelectFiles) {
                 cell.imageView.image = [UIImage imageNamed:@"CellIconFolder.png"];
             }
         }
@@ -456,12 +368,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
 
-    if (_isSelecting) {
+    if (nowSelectFiles) {
         _selectedFiles[indexPath] ? ([_selectedFiles removeObjectForKey:indexPath]) :
                 (_selectedFiles[indexPath] = currentFile);
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
-        [self _updateActionsEnabledState];
+        [self updateActionsState];
 
         return;
     }
@@ -475,12 +387,61 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (_isSelecting) {
+    if (nowSelectFiles) {
         return YES;
     }
 
     PPFileModel *currentFile = _displaingFiles[((NSUInteger) indexPath.row)];
     return currentFile.type == PPFileTypeFolder;
 }
+
+#pragma mark -
+
+- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
+    if ([action isEqual:_deleteAction]) {
+        return _selectedFiles.count > 0;
+    }
+
+    if ([action isEqual:_importToLibraryAction]) {
+        __block BOOL selectedFilesContainsNonAudio = NO;
+        [_selectedFiles enumerateKeysAndObjectsUsingBlock:^(id key, PPFileModel *currentFile, BOOL *stop) {
+            if ([currentFile isKindOfClass:[PPFileModel class]]) {
+                if (!currentFile.isSupportedToPlay) {
+                    selectedFilesContainsNonAudio = YES;
+                    *stop = YES;
+                }
+            }
+        }];
+
+        return (_selectedFiles.count > 0) && (!selectedFilesContainsNonAudio);
+    }
+
+    return [super canPerformAction:action];
+}
+
+- (BOOL)canPerformSelection {
+    return _displaingFiles.count > 0;
+}
+
+- (void)selectTapped {
+    [super selectTapped];
+
+    nowSelectFiles = YES;
+
+    _selectedFiles = [@{} mutableCopy];
+    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                   withRowAnimation:UITableViewRowAnimationFade];
+}
+
+- (void)doneTapped {
+    [super doneTapped];
+
+    nowSelectFiles = NO;
+
+    _selectedFiles = [@{} mutableCopy];
+    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                   withRowAnimation:UITableViewRowAnimationFade];
+}
+
 
 @end

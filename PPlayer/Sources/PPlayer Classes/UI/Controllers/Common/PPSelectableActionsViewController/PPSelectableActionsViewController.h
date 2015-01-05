@@ -30,6 +30,8 @@
 
 - (void)updateActions;
 
+- (void)updateActionsState;
+
 - (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action;
 
 - (BOOL)canPerformSelection;
