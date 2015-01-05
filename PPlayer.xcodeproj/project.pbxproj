@@ -37,6 +37,7 @@
 		65CDA551204F96F6A802EAA4 /* TabIconPlayer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */; };
 		65CDA57BE45278DA6AF04359 /* CellIconFolder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAAEDC88376F40A700A3D /* CellIconFolder@2x.png */; };
 		65CDA58D7C457841C849CEF1 /* CellIconFile.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8209C5981398E65176A /* CellIconFile.png */; };
+		65CDA594312CD5917B8B4A81 /* PPSelectableActionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA721BA61352E5DAB320A /* PPSelectableActionsViewController.m */; };
 		65CDA5971F1B642021E75414 /* TabIconPlayer@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */; };
 		65CDA5A3261E0539091A8F06 /* TabIconLibrary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA43678B1EC6A5C3D95F6 /* TabIconLibrary@2x.png */; };
 		65CDA63CF91FDA264E06DEAE /* PPStorageRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA2531E3580D21E05E1F4 /* PPStorageRootViewController.m */; };
@@ -64,7 +65,6 @@
 		65CDAAB955B1E322BBFF129F /* CellIconFolder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA98E737B5636BC61C4BF /* CellIconFolder@3x.png */; };
 		65CDAAD81048C40A5877E7D0 /* CellIconCheckMarkEmpty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAE38C76ED5933195559C /* CellIconCheckMarkEmpty@2x.png */; };
 		65CDAAE9341C8B73853C0E7F /* PPMenuNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDACA3E4F72FD9649301C1 /* PPMenuNavigationViewController.m */; };
-		65CDAAEC064C36B648FED6CD /* PPSelectableActionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA850A73FFE97F32F1B23 /* PPSelectableActionsViewController.m */; };
 		65CDAB3BAF29BADD7C299F79 /* TabIconStorage.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */; };
 		65CDAB59331C3E70C2A5B82E /* PPLibraryTrackModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA85E2CA2295D8AF54AFC /* PPLibraryTrackModel.m */; };
 		65CDABA93627B7B412A8B609 /* NavMenuIconCancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA31C3AB8F64745B2708A /* NavMenuIconCancel@2x.png */; };
@@ -153,10 +153,10 @@
 		65CDA67E39070531ED665BB7 /* PPLibraryGenreModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryGenreModel.h; sourceTree = "<group>"; };
 		65CDA68114A3279D44980273 /* NavMenuIconDone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconDone@2x.png"; sourceTree = "<group>"; };
 		65CDA6E9B03DEE5170902ABB /* PPLibraryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryProvider.m; sourceTree = "<group>"; };
+		65CDA721BA61352E5DAB320A /* PPSelectableActionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPSelectableActionsViewController.m; sourceTree = "<group>"; };
 		65CDA730B600220C32574B44 /* NavMenuIconToLibrary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconToLibrary@2x.png"; sourceTree = "<group>"; };
 		65CDA7D333D29D78B519EF15 /* PPLibraryItemModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryItemModel.m; sourceTree = "<group>"; };
 		65CDA8209C5981398E65176A /* CellIconFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconFile.png; sourceTree = "<group>"; };
-		65CDA850A73FFE97F32F1B23 /* PPSelectableActionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPSelectableActionsViewController.m; sourceTree = "<group>"; };
 		65CDA85E2CA2295D8AF54AFC /* PPLibraryTrackModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryTrackModel.m; sourceTree = "<group>"; };
 		65CDA88B2CFB64E225A4D878 /* PPFilesProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFilesProvider.h; sourceTree = "<group>"; };
 		65CDA88F255C8C043A282CB3 /* PPFilesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFilesListViewController.h; sourceTree = "<group>"; };
@@ -180,7 +180,6 @@
 		65CDAB5734ACD96E9FD87E96 /* PPProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPProvider.m; sourceTree = "<group>"; };
 		65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@2x.png"; sourceTree = "<group>"; };
 		65CDAC7451B5A4B5F8897390 /* NavMenuIconToLibrary@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconToLibrary@3x.png"; sourceTree = "<group>"; };
-		65CDAC75E6E374D4EA059C6D /* PPSelectableActionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPSelectableActionsViewController.h; sourceTree = "<group>"; };
 		65CDAC881C0141BD88C3AA73 /* PPLibrarySectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibrarySectionsViewController.h; sourceTree = "<group>"; };
 		65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLACircularProgressView.m; sourceTree = "<group>"; };
 		65CDACA3E4F72FD9649301C1 /* PPMenuNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPMenuNavigationViewController.m; sourceTree = "<group>"; };
@@ -206,6 +205,7 @@
 		65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconLibrary@3x.png"; sourceTree = "<group>"; };
 		65CDAF989A55704CFAB57B0B /* CellIconLibrarySectionsArtists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconLibrarySectionsArtists.png; sourceTree = "<group>"; };
 		65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconStorage.png; sourceTree = "<group>"; };
+		65CDAFCADEE9D46A6ACD7ED2 /* PPSelectableActionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPSelectableActionsViewController.h; sourceTree = "<group>"; };
 		A73E445C1A502E29009E8B7C /* PPNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPNavigationController.h; sourceTree = "<group>"; };
 		A73E445D1A502E29009E8B7C /* PPNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPNavigationController.m; sourceTree = "<group>"; };
 		A73E445F1A502E29009E8B7C /* PPRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPRootViewController.h; sourceTree = "<group>"; };
@@ -394,6 +394,15 @@
 			path = Library;
 			sourceTree = "<group>";
 		};
+		65CDA9469D747FF4E44CBD91 /* PPSelectableActionsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				65CDA721BA61352E5DAB320A /* PPSelectableActionsViewController.m */,
+				65CDAFCADEE9D46A6ACD7ED2 /* PPSelectableActionsViewController.h */,
+			);
+			path = PPSelectableActionsViewController;
+			sourceTree = "<group>";
+		};
 		65CDAA1E7545F02A2F05A42C /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -410,15 +419,6 @@
 				65CDA00F5FCAE1E19FA4D132 /* PPLibraryArtistModel.h */,
 			);
 			path = Artist;
-			sourceTree = "<group>";
-		};
-		65CDAA914E5F76ADADE05265 /* PPSelectableActionsViewController */ = {
-			isa = PBXGroup;
-			children = (
-				65CDA850A73FFE97F32F1B23 /* PPSelectableActionsViewController.m */,
-				65CDAC75E6E374D4EA059C6D /* PPSelectableActionsViewController.h */,
-			);
-			path = PPSelectableActionsViewController;
 			sourceTree = "<group>";
 		};
 		65CDAB12CDFF2E18D792807A /* PPFilesListViewController */ = {
@@ -573,6 +573,7 @@
 				A73E445B1A502E29009E8B7C /* PPNavigationController */,
 				A73E445E1A502E29009E8B7C /* PPRootViewController */,
 				A73E44611A502E29009E8B7C /* PPTabBarController */,
+				65CDA9469D747FF4E44CBD91 /* PPSelectableActionsViewController */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -627,7 +628,6 @@
 			children = (
 				65CDA309031462E56A864DF9 /* Storage */,
 				65CDA40D6AD849EBDCEB793F /* Library */,
-				65CDAA914E5F76ADADE05265 /* PPSelectableActionsViewController */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -956,7 +956,7 @@
 				65CDAE03C27D8F78FD6CE062 /* PPLibraryRootViewController.m in Sources */,
 				65CDAD1DCFB3C23E87124D05 /* PPLibrarySectionsViewController.m in Sources */,
 				65CDAE9431C5978EFEAF75DB /* PPLibraryAllSongsListViewController.m in Sources */,
-				65CDAAEC064C36B648FED6CD /* PPSelectableActionsViewController.m in Sources */,
+				65CDA594312CD5917B8B4A81 /* PPSelectableActionsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
