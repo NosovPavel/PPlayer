@@ -383,7 +383,48 @@
 #pragma mark - Tracks
 
 - (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block {
+    [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT tracks.id as track_id, tracks.title as track_title, \n"
+                "artists.id as track_artist_id, artists.title as track_artist_title, \n"
+                "albums.id as track_album_id, albums.title as track_album_title, albums.artist_id as track_album_artist_id, artists.title as track_album_artist_title,\n"
+                "genres.id as track_genre_id, genres.title as track_genre_title\n"
+                "FROM tracks, artists, albums, genres\n"
+                "WHERE tracks.artist_id = artists.id AND tracks.album_id = albums.id AND albums.artist_id = artists.id AND tracks.genre_id = genres.id"];
 
+        NSMutableArray *tracks = [NSMutableArray array];
+        while ([resultSet next]) {
+            int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
+            NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
+
+            int64_t trackArtistID = [resultSet longLongIntForColumn:@"track_artist_id"];
+            NSString *trackArtistTitle = [resultSet stringForColumn:@"track_artist_title"];
+
+            int64_t trackGenreID = [resultSet longLongIntForColumn:@"track_genre_id"];
+            NSString *trackGenreTitle = [resultSet stringForColumn:@"track_genre_title"];
+
+            int64_t trackAlbumArtistID = [resultSet longLongIntForColumn:@"track_album_artist_id"];
+            NSString *trackAlbumArtistTitle = [resultSet stringForColumn:@"track_album_artist_title"];
+            int64_t trackAlbumID = [resultSet longLongIntForColumn:@"track_album_id"];
+            NSString *trackAlbumTitle = [resultSet stringForColumn:@"track_album_title"];
+
+            PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:trackGenreID title:trackGenreTitle];
+            PPLibraryArtistModel *artistModel = [PPLibraryArtistModel modelWithId:trackArtistID title:trackArtistTitle];
+            PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:trackAlbumID title:trackAlbumTitle
+                                                                   artistModel:[PPLibraryArtistModel modelWithId:trackAlbumArtistID
+                                                                                                           title:trackAlbumArtistTitle]];
+            PPLibraryTrackModel *trackModel = [PPLibraryTrackModel modelWithId:trackID title:trackTitle
+                                                                   artistModel:artistModel
+                                                                    albumModel:albumModel
+                                                                    genreModel:genreModel];
+
+            [tracks addObject:trackModel];
+        }
+        [resultSet close];
+
+        if (block) {
+            block([tracks copy]);
+        }
+    }];
 }
 
 @end
