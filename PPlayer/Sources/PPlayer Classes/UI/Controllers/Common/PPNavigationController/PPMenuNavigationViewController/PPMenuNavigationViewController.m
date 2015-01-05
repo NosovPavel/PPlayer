@@ -76,13 +76,6 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     return self;
 }
 
-#pragma mark - Layout
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [self setTransform:CGAffineTransformMakeTranslation(0, -(_menuHidden ?: navigationBarMenuHeight))];
-}
-
 #pragma mark - Hack more
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
@@ -94,11 +87,14 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 
 - (void)setExtraSizeHidden:(BOOL)hidden animated:(BOOL)animated {
     _menuHidden = hidden;
-    [UIView animateWithDuration:animated ?: 1.0f / 3.0f
+    [UIView   animateWithDuration:animated ? (1.0f / 3.0f) : 0.0f
                      animations:^{
-                         [self layoutSubviews];
-                     } completion:nil];
-}
+                         [self sizeToFit];
+                         [self setTransform:CGAffineTransformMakeTranslation(0, -(_menuHidden ?: navigationBarMenuHeight))];
+                     } completion:^(BOOL c) {
+                //
+            }];
+};
 
 @end
 
@@ -168,7 +164,7 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     PPNavigationBar *navBar = (PPNavigationBar *) self.navigationBar;
     [navBar setExtraSizeHidden:hidden animated:animated];
 
-    [UIView animateWithDuration:animated ? 1.0f / 3.0f : 0.0f animations:^{
+    [UIView animateWithDuration:animated ? (1.0f / 3.0f) : 0.0f animations:^{
         [_navigationBarMenuView setAlpha:hidden ? 0.0f : 1.0f];
         [_navigationBarMenuView setUserInteractionEnabled:!hidden];
     }                completion:nil];

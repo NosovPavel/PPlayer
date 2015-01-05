@@ -24,12 +24,14 @@
 		65CDA37C02244B776B9F7DFC /* NavMenuIconDone.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA465F1FE2FE5E349CDA1 /* NavMenuIconDone.png */; };
 		65CDA37CCA46D4175255310D /* NavMenuIconDone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA68114A3279D44980273 /* NavMenuIconDone@2x.png */; };
 		65CDA3AE582DAE41DBEEEEAB /* TabIconStorage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAED186C06508E38B518C /* TabIconStorage@3x.png */; };
+		65CDA3B73F08AD3E930670EB /* ArtworkPlaceHolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAA818C414D1FA6693C1E /* ArtworkPlaceHolderIcon.png */; };
 		65CDA3E39F559DCA522B5CD0 /* TabIconStorage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */; };
 		65CDA431C7B2221529A5C958 /* CellIconFile@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8F044977C6F11C26F98 /* CellIconFile@3x.png */; };
 		65CDA4593B974ADE50F938E8 /* CellIconCheckMarkFilled.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA0262E0AE569F66DDC2E /* CellIconCheckMarkFilled.png */; };
 		65CDA486F7ADEF5128625768 /* TabIconLibrary@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */; };
 		65CDA4A0F5DDFB777D2E78FB /* TabIconPlaylist@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */; };
 		65CDA4E1C2672CE14613B59A /* PPLibraryGenreModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA0E154167848700E464B /* PPLibraryGenreModel.m */; };
+		65CDA530D53381B3BB2B38C1 /* ArtworkPlaceHolderBig.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA32E413022B00FCDAC4D /* ArtworkPlaceHolderBig.png */; };
 		65CDA5335098AFAC7451BA05 /* NavMenuIconToLibrary.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA41D62DD04BEA30A06F5 /* NavMenuIconToLibrary.png */; };
 		65CDA5476DA9C882903DAADC /* CellIconLibrarySectionsAlbums@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA42E4E75F3329C9EA0F5 /* CellIconLibrarySectionsAlbums@2x.png */; };
 		65CDA551204F96F6A802EAA4 /* TabIconPlayer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA8F863BB5C43BEB21182 /* TabIconPlayer@2x.png */; };
@@ -42,6 +44,7 @@
 		65CDA6B24115C6C4A5E89C64 /* PPLibraryArtistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA49EA6F166F8EDE14365 /* PPLibraryArtistModel.m */; };
 		65CDA786712D3C7430C72A97 /* CellIconLibrarySectionsAllSongs@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAA2D33E1340472BAC753 /* CellIconLibrarySectionsAllSongs@3x.png */; };
 		65CDA7B7CC968A05B07A5747 /* TabIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA26FB8D787BD4294CBEE /* TabIconSettings.png */; };
+		65CDA7D92AB7A3C5AA87FD57 /* ArtworkPlaceHolderBig@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAD4EB643370A2EA983A9 /* ArtworkPlaceHolderBig@2x.png */; };
 		65CDA850869CC9BF039BD1E5 /* NavMenuIconCancel@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF1408DDACAF696C3352 /* NavMenuIconCancel@3x.png */; };
 		65CDA86105D57C9F97DAFAC1 /* CellIconCheckMarkEmpty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */; };
 		65CDA864B1743002EFC1EA11 /* LLACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */; };
@@ -66,14 +69,17 @@
 		65CDAD1DCFB3C23E87124D05 /* PPLibrarySectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAAB4632FF6F8F9F84996 /* PPLibrarySectionsViewController.m */; };
 		65CDAD2B9B3DAB713A8A09D1 /* CellIconCheckMarkFilled@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA6492E7508D5C0E49DAD /* CellIconCheckMarkFilled@3x.png */; };
 		65CDAD73977D3CBC5364D382 /* PPModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA3D1E264811EBC735A72 /* PPModel.m */; };
+		65CDADABB7F22C1C931FC707 /* ArtworkPlaceHolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADCE3EFA431CDDA82934 /* ArtworkPlaceHolderIcon@3x.png */; };
 		65CDAE03C27D8F78FD6CE062 /* PPLibraryRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA3668AA954566E2D099E /* PPLibraryRootViewController.m */; };
 		65CDAE0B152F9EA74CDC0B2F /* CellIconLibrarySectionsGenres@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA0172DAF051C9C2FD3FD /* CellIconLibrarySectionsGenres@3x.png */; };
 		65CDAE1086FCC3388C24B401 /* PPLibraryItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA7D333D29D78B519EF15 /* PPLibraryItemModel.m */; };
 		65CDAE5CC2BFB203C5333E7E /* TabIconSettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA19917D7858BA7D895F8 /* TabIconSettings@3x.png */; };
 		65CDAE9431C5978EFEAF75DB /* PPLibraryAllSongsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA239CC46E92C313CC2F9 /* PPLibraryAllSongsListViewController.m */; };
+		65CDAEB04CD16B54B1AB36AA /* ArtworkPlaceHolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADE97BC964D53938BDD9 /* ArtworkPlaceHolderIcon@2x.png */; };
 		65CDAEB0997A618628E5A052 /* CellIconLibrarySectionsGenres.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF26A70C986A71C33969 /* CellIconLibrarySectionsGenres.png */; };
 		65CDAF267F023F65D5772073 /* PPFileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA9EE55DCAAC0CEF528D1 /* PPFileModel.m */; };
 		65CDAF340C06B80364C97A5A /* CellIconLibrarySectionsAlbums.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA08715F707071FC6887C /* CellIconLibrarySectionsAlbums.png */; };
+		65CDAF35F2E53AAF85DE7CEA /* ArtworkPlaceHolderBig@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA4CEFA4E9125940A59BC /* ArtworkPlaceHolderBig@3x.png */; };
 		65CDAFBA93429CA538FD3ED7 /* TabIconPlaylist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */; };
 		65CDAFC2DD458740FE1ED3F0 /* TabIconSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */; };
 		A73E446F1A502E29009E8B7C /* PPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73E445D1A502E29009E8B7C /* PPNavigationController.m */; };
@@ -116,6 +122,7 @@
 		65CDA2B73E8071A63EC266B8 /* CellIconLibrarySectionsAllSongs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconLibrarySectionsAllSongs.png; sourceTree = "<group>"; };
 		65CDA2F0CEB6842DF933D399 /* CellIconLibrarySectionsArtists@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconLibrarySectionsArtists@3x.png"; sourceTree = "<group>"; };
 		65CDA31C3AB8F64745B2708A /* NavMenuIconCancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconCancel@2x.png"; sourceTree = "<group>"; };
+		65CDA32E413022B00FCDAC4D /* ArtworkPlaceHolderBig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ArtworkPlaceHolderBig.png; sourceTree = "<group>"; };
 		65CDA33962723992F5C22BE8 /* CellIconFileAudio@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFileAudio@3x.png"; sourceTree = "<group>"; };
 		65CDA3668AA954566E2D099E /* PPLibraryRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryRootViewController.m; sourceTree = "<group>"; };
 		65CDA36E4385907B148E998B /* CellIconFile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFile@2x.png"; sourceTree = "<group>"; };
@@ -129,6 +136,7 @@
 		65CDA465F1FE2FE5E349CDA1 /* NavMenuIconDone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NavMenuIconDone.png; sourceTree = "<group>"; };
 		65CDA477CA2A3D8F55FAB7D2 /* PPLibraryAlbumModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryAlbumModel.m; sourceTree = "<group>"; };
 		65CDA49EA6F166F8EDE14365 /* PPLibraryArtistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryArtistModel.m; sourceTree = "<group>"; };
+		65CDA4CEFA4E9125940A59BC /* ArtworkPlaceHolderBig@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ArtworkPlaceHolderBig@3x.png"; sourceTree = "<group>"; };
 		65CDA51847EF265D53C1B0D3 /* PPStorageRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPStorageRootViewController.h; sourceTree = "<group>"; };
 		65CDA53D8C05C0EAB4484F99 /* CellIconFileAudio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFileAudio@2x.png"; sourceTree = "<group>"; };
 		65CDA5A549DD4A927B52CD82 /* CellIconLibrarySectionsAllSongs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconLibrarySectionsAllSongs@2x.png"; sourceTree = "<group>"; };
@@ -153,6 +161,7 @@
 		65CDA9EE55DCAAC0CEF528D1 /* PPFileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFileModel.m; sourceTree = "<group>"; };
 		65CDAA2D33E1340472BAC753 /* CellIconLibrarySectionsAllSongs@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconLibrarySectionsAllSongs@3x.png"; sourceTree = "<group>"; };
 		65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@2x.png"; sourceTree = "<group>"; };
+		65CDAA818C414D1FA6693C1E /* ArtworkPlaceHolderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ArtworkPlaceHolderIcon.png; sourceTree = "<group>"; };
 		65CDAAB4632FF6F8F9F84996 /* PPLibrarySectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibrarySectionsViewController.m; sourceTree = "<group>"; };
 		65CDAADF78AB7AF6617E5B60 /* PPNavigationBarMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPNavigationBarMenuView.m; sourceTree = "<group>"; };
 		65CDAAEBD49412A5ECA374B4 /* PPFilesProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesProvider.m; sourceTree = "<group>"; };
@@ -169,9 +178,12 @@
 		65CDACAFA39C5DD0C7A9E877 /* PPLibraryItemModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryItemModel.h; sourceTree = "<group>"; };
 		65CDACE30F253AE9F5F66E1D /* LLACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLACircularProgressView.h; sourceTree = "<group>"; };
 		65CDACFDF0AE390923965320 /* TabIconPlayer@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlayer@3x.png"; sourceTree = "<group>"; };
+		65CDAD4EB643370A2EA983A9 /* ArtworkPlaceHolderBig@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ArtworkPlaceHolderBig@2x.png"; sourceTree = "<group>"; };
 		65CDAD787A6D49FF9C50290D /* PPLibraryAlbumModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryAlbumModel.h; sourceTree = "<group>"; };
 		65CDAD8A81914ED72D8BDFDE /* CellIconLibrarySectionsGenres@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconLibrarySectionsGenres@2x.png"; sourceTree = "<group>"; };
 		65CDADA1759F7CD6F582450C /* PPFileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFileModel.h; sourceTree = "<group>"; };
+		65CDADCE3EFA431CDDA82934 /* ArtworkPlaceHolderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ArtworkPlaceHolderIcon@3x.png"; sourceTree = "<group>"; };
+		65CDADE97BC964D53938BDD9 /* ArtworkPlaceHolderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ArtworkPlaceHolderIcon@2x.png"; sourceTree = "<group>"; };
 		65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconCheckMarkEmpty@3x.png"; sourceTree = "<group>"; };
 		65CDAE38C76ED5933195559C /* CellIconCheckMarkEmpty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconCheckMarkEmpty@2x.png"; sourceTree = "<group>"; };
 		65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlaylist.png; sourceTree = "<group>"; };
@@ -297,6 +309,19 @@
 				65CDAD7455FB33E2743DD828 /* Library Sections */,
 			);
 			path = "Cells Icons";
+			sourceTree = "<group>";
+		};
+		65CDA4DF6536E65064BAB7A6 /* Artworks */ = {
+			isa = PBXGroup;
+			children = (
+				65CDA4CEFA4E9125940A59BC /* ArtworkPlaceHolderBig@3x.png */,
+				65CDAD4EB643370A2EA983A9 /* ArtworkPlaceHolderBig@2x.png */,
+				65CDA32E413022B00FCDAC4D /* ArtworkPlaceHolderBig.png */,
+				65CDADE97BC964D53938BDD9 /* ArtworkPlaceHolderIcon@2x.png */,
+				65CDAA818C414D1FA6693C1E /* ArtworkPlaceHolderIcon.png */,
+				65CDADCE3EFA431CDDA82934 /* ArtworkPlaceHolderIcon@3x.png */,
+			);
+			path = Artworks;
 			sourceTree = "<group>";
 		};
 		65CDA5749B8D303127BE15C3 /* Track */ = {
@@ -613,6 +638,7 @@
 				65CDAEC5A70746BB17F03817 /* Tab Bar */,
 				A7CE278B1A5090130074806E /* Bottom Nav Menu */,
 				65CDA4415F698EB668E86764 /* Cells Icons */,
+				65CDA4DF6536E65064BAB7A6 /* Artworks */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -843,6 +869,12 @@
 				65CDA140F44122887932C6BD /* CellIconFileAudio.png in Resources */,
 				65CDA18A5C45535D728D7350 /* CellIconFileAudio@3x.png in Resources */,
 				65CDA21A613BE351E19E84A0 /* CellIconFileAudio@2x.png in Resources */,
+				65CDAF35F2E53AAF85DE7CEA /* ArtworkPlaceHolderBig@3x.png in Resources */,
+				65CDA7D92AB7A3C5AA87FD57 /* ArtworkPlaceHolderBig@2x.png in Resources */,
+				65CDA530D53381B3BB2B38C1 /* ArtworkPlaceHolderBig.png in Resources */,
+				65CDAEB04CD16B54B1AB36AA /* ArtworkPlaceHolderIcon@2x.png in Resources */,
+				65CDA3B73F08AD3E930670EB /* ArtworkPlaceHolderIcon.png in Resources */,
+				65CDADABB7F22C1C931FC707 /* ArtworkPlaceHolderIcon@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

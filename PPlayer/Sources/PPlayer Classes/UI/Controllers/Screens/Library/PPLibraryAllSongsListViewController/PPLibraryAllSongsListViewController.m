@@ -21,9 +21,37 @@
 
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPMenuNavigationViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
+static const CGFloat leftImageShift = 16.5f;
+static const CGFloat leftTextShift = 5.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
+
+@interface PPLibraryAllSongsCell : UITableViewCell
+@end
+
+@implementation PPLibraryAllSongsCell
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    CGRect imageViewFrame = self.imageView.frame;
+    imageViewFrame.origin.x -= leftImageShift;
+    self.imageView.frame = imageViewFrame;
+
+    CGRect titleViewFrame = self.textLabel.frame;
+    titleViewFrame.origin.x -= leftImageShift + leftTextShift;
+    self.textLabel.frame = titleViewFrame;
+
+    CGRect subTitleViewFrame = self.detailTextLabel.frame;
+    subTitleViewFrame.origin.x -= leftImageShift + leftTextShift;
+    self.detailTextLabel.frame = subTitleViewFrame;
+
+    self.separatorInset = UIEdgeInsetsMake(0.0f, self.textLabel.frame.origin.x, 0.0f, 0.0f);
+}
+
+@end
 
 @interface PPLibraryAllSongsListViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
@@ -52,6 +80,16 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
     [self _reloadTracks];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.menuNavigationViewController setMenuHidden:NO animated:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.menuNavigationViewController setMenuHidden:YES animated:animated];
 }
 
 - (void)loadView {
@@ -103,9 +141,10 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
 
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                      reuseIdentifier:tracksCellIdentifier];
-        [cell.imageView setImage:[UIImage imageNamed:@"CellIconFileAudio.png"]];
+        cell = [[PPLibraryAllSongsCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                            reuseIdentifier:tracksCellIdentifier];
+        [cell.imageView setContentMode:UIViewContentModeCenter];
+        [cell.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
     }
 
     return cell;
