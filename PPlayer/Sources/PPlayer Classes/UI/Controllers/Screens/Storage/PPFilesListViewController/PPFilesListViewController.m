@@ -177,14 +177,18 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 #pragma mark - Files Management
 
 - (void)_reloadFilesList {
-    _isLoading = YES;
-    [self updateActions];
+    [self startLoading];
 
-    _displaingFiles = [[_filesProvider filesModelsAtURL:_rootURL] mutableCopy];
-    [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    __block typeof(self) selfRef = self;
+    [_filesProvider filesModelsAtURL:_rootURL
+                 withCompletionBlock:^(NSArray *files) {
+                     selfRef->_displaingFiles = [files mutableCopy];
+                     [selfRef->_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                                             withRowAnimation:UITableViewRowAnimationFade];
 
-    _isLoading = NO;
-    [self updateActions];
+                     [selfRef endLoading];
+                     [selfRef updateActions];
+                 }];
 }
 
 #pragma mark - Deleting
@@ -294,7 +298,6 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
             if (!cell) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                               reuseIdentifier:folderCellIdentifier];
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 cell.imageView.image = [UIImage imageNamed:@"CellIconFolder.png"];
             }
         }
@@ -319,6 +322,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (nowSelectFiles) {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryType = UITableViewCellAccessoryNone;
 
         if ([_selectedFiles[indexPath] isEqual:currentFile]) {
             cell.imageView.image = [[UIImage imageNamed:@"CellIconCheckMarkFilled.png"]
@@ -329,6 +333,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }
     } else {
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+
+        if (currentFile.type == PPFileTypeFolder) {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
     }
 
     switch (currentFile.type) {

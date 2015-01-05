@@ -24,9 +24,12 @@
 
 @interface PPSelectableActionsViewController : PPViewController {
 @protected
-    BOOL _isLoading;
     NSArray *_actionsWhenSelected;
 }
+
+- (void)startLoading;
+
+- (void)endLoading;
 
 - (void)updateActions;
 

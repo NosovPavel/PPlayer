@@ -26,7 +26,7 @@
     PPNavigationBarMenuViewAction *_selectElementsAction;
     PPNavigationBarMenuViewAction *_loadingAction, *_cancelAction;
 
-    BOOL _isSelecting;
+    BOOL _isSelecting, _isLoading;
 }
 @end;
 
@@ -130,6 +130,16 @@
 }
 
 #pragma mark - Interface
+
+- (void)startLoading {
+    _isLoading = YES;
+    [self updateActions];
+}
+
+- (void)endLoading {
+    _isLoading = NO;
+    [self updateActions];
+}
 
 - (void)updateActions {
     [self _setupActualActionsAnimated:YES];

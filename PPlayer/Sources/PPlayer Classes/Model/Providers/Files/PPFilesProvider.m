@@ -73,59 +73,65 @@
     return [NSURL fileURLWithPath:dataPath];
 }
 
-- (NSArray *)filesModelsAtURL:(NSURL *)rootURL {
-    NSMutableArray *resultArray = [NSMutableArray array];
-    NSArray *filesList = [_fileManager contentsOfDirectoryAtURL:rootURL
-                                     includingPropertiesForKeys:nil
-                                                        options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                          error:NULL];
-    NSMutableArray *directoriesOnly = [NSMutableArray array];
-    [filesList enumerateObjectsUsingBlock:^(NSURL *currentURL, NSUInteger idx, BOOL *stop) {
-        PPFileType type;
+- (void)filesModelsAtURL:(NSURL *)rootURL withCompletionBlock:(void (^)(NSArray *files))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSMutableArray *resultArray = [NSMutableArray array];
+        NSArray *filesList = [_fileManager contentsOfDirectoryAtURL:rootURL
+                                         includingPropertiesForKeys:nil
+                                                            options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                              error:NULL];
+        NSMutableArray *directoriesOnly = [NSMutableArray array];
+        [filesList enumerateObjectsUsingBlock:^(NSURL *currentURL, NSUInteger idx, BOOL *stop) {
+            PPFileType type;
 
-        NSNumber *isDirectory;
-        BOOL success = [currentURL getResourceValue:&isDirectory
-                                             forKey:NSURLIsDirectoryKey
-                                              error:nil];
+            NSNumber *isDirectory;
+            BOOL success = [currentURL getResourceValue:&isDirectory
+                                                 forKey:NSURLIsDirectoryKey
+                                                  error:nil];
 
-        if (success && [isDirectory boolValue]) {
-            type = PPFileTypeFolder;
-        } else {
-            type = PPFileTypeFile;
+            if (success && [isDirectory boolValue]) {
+                type = PPFileTypeFolder;
+            } else {
+                type = PPFileTypeFile;
 
-            NSString *file = [[currentURL absoluteString] copy];
-            CFStringRef fileExtension = (__bridge CFStringRef) [file pathExtension];
-            CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+                NSString *file = [[currentURL absoluteString] copy];
+                CFStringRef fileExtension = (__bridge CFStringRef) [file pathExtension];
+                CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
 
-            if (UTTypeConformsTo(fileUTI, kUTTypeAudio)) {
-                type = PPFileTypeFileAudio;
+                if (UTTypeConformsTo(fileUTI, kUTTypeAudio)) {
+                    type = PPFileTypeFileAudio;
+                }
+
+                CFRelease(fileUTI);
             }
 
-            CFRelease(fileUTI);
+            NSString *name = [NSString stringWithFormat:@"%@", [[currentURL absoluteString] lastPathComponent]];
+            PPFileModel *fileModel = [PPFileModel modelWithUrl:currentURL
+                                                         title:name
+                                                          type:type];
+
+            if (fileModel.isSupportedToPlay) {
+                fileModel.title = [fileModel.title stringByDeletingPathExtension];
+            }
+
+            fileModel.title = [fileModel.title stringByRemovingPercentEncoding];
+
+            if (type == PPFileTypeFolder) {
+                [directoriesOnly addObject:fileModel];
+            } else {
+                [resultArray addObject:fileModel];
+            }
+        }];
+
+        [resultArray insertObjects:directoriesOnly
+                         atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, directoriesOnly.count)]];
+
+        if (block) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                block([resultArray copy]);
+            });
         }
-
-        NSString *name = [NSString stringWithFormat:@"%@", [[currentURL absoluteString] lastPathComponent]];
-        PPFileModel *fileModel = [PPFileModel modelWithUrl:currentURL
-                                                     title:name
-                                                      type:type];
-
-        if (fileModel.isSupportedToPlay) {
-            fileModel.title = [fileModel.title stringByDeletingPathExtension];
-        }
-
-        fileModel.title = [fileModel.title stringByRemovingPercentEncoding];
-
-        if (type == PPFileTypeFolder) {
-            [directoriesOnly addObject:fileModel];
-        } else {
-            [resultArray addObject:fileModel];
-        }
-    }];
-
-    [resultArray insertObjects:directoriesOnly
-                     atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, directoriesOnly.count)]];
-
-    return [resultArray copy];
+    });
 }
 
 - (void)removeFileAtURL:(NSURL *)url {

@@ -324,33 +324,37 @@
         dispatch_group_enter(importGroup);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (currentFile.type == PPFileTypeFolder) {
-                NSArray *filesModelsAtURL = [selfRef->_filesProvider filesModelsAtURL:currentFile.url];
-                [selfRef importFiles:filesModelsAtURL
-                   withProgressBlock:^(float partProgress) {
-                       dispatch_async(dispatch_get_main_queue(), ^{
-                           percent = (parts + partProgress) * onePartPercent;
+                [selfRef->_filesProvider filesModelsAtURL:currentFile.url withCompletionBlock:^(NSArray *filesModelsAtURL) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        [selfRef importFiles:filesModelsAtURL
+                           withProgressBlock:^(float partProgress) {
+                               dispatch_async(dispatch_get_main_queue(), ^{
+                                   percent = (parts + partProgress) * onePartPercent;
 
-                           float percentSnapshot = percent;
-                           if (progressBlock) {
-                               progressBlock(percentSnapshot);
+                                   float percentSnapshot = percent;
+                                   if (progressBlock) {
+                                       progressBlock(percentSnapshot);
+                                   }
+                               });
                            }
-                       });
-                   }
-                  andCompletionBlock:^{
-                      dispatch_async(dispatch_get_main_queue(), ^{
-                          [_filesProvider removeFileAtURL:currentFile.url];
+                          andCompletionBlock:^{
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [_filesProvider removeFileAtURL:currentFile.url];
 
-                          parts++;
-                          percent = parts * onePartPercent;
+                                  parts++;
+                                  percent = parts * onePartPercent;
 
-                          float percentSnapshot = percent;
-                          if (progressBlock) {
-                              progressBlock(percentSnapshot);
-                          }
+                                  float percentSnapshot = percent;
+                                  if (progressBlock) {
+                                      progressBlock(percentSnapshot);
+                                  }
 
-                          dispatch_group_leave(importGroup);
-                      });
-                  }];
+                                  dispatch_group_leave(importGroup);
+                              });
+                          }];
+                    });
+                }];
+
             } else {
                 [selfRef _importFile:currentFile withCompletionBlock:^{
                     dispatch_async(dispatch_get_main_queue(), ^{

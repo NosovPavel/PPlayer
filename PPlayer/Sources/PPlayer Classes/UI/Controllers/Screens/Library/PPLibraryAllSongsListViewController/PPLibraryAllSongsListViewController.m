@@ -123,17 +123,14 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
 #pragma mark - Reloading
 
 - (void)_reloadTracks {
-    _isLoading = YES;
-    [self updateActions];
+    [self startLoading];
 
     __block typeof(self) selfRef = self;
     [[PPLibraryProvider sharedLibrary] tracksListWithCompletionBlock:^(NSArray *tracksList) {
         selfRef->_tracksArray = [tracksList mutableCopy];
-
-        selfRef->_isLoading = NO;
-        [selfRef updateActions];
         [selfRef->_tracksTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                  withRowAnimation:UITableViewRowAnimationFade];
+        [selfRef endLoading];
     }];
 }
 
