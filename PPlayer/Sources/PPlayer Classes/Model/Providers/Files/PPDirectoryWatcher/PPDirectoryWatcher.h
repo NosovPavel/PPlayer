@@ -19,15 +19,26 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPSelectableActionsViewController.h"
+#import <Foundation/Foundation.h>
 
-@interface PPFilesListViewController : PPSelectableActionsViewController
-@property(atomic, strong) NSURL *rootURL;
+@class PPDirectoryWatcher;
 
-#pragma mark - Init
+@protocol PPDirectoryWatcherDelegate <NSObject>
+@required
+- (void)directoryDidChange:(PPDirectoryWatcher *)folderWatcher;
+@end
 
-- (instancetype)initWithRootURL:(NSURL *)rootURL;
+@interface PPDirectoryWatcher : NSObject {
+    id <PPDirectoryWatcherDelegate> __weak delegate;
 
-+ (instancetype)controllerWithRootURL:(NSURL *)rootURL;
+    int dirFD;
+    int kq;
 
+    CFFileDescriptorRef dirKQRef;
+}
+@property(nonatomic, weak) id <PPDirectoryWatcherDelegate> delegate;
+
++ (PPDirectoryWatcher *)watchFolderWithPath:(NSString *)watchPath delegate:(id <PPDirectoryWatcherDelegate>)watchDelegate;
+
+- (void)invalidate;
 @end

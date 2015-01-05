@@ -81,7 +81,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 @end
 
-@interface PPFilesListViewController () <UITableViewDataSource, UITableViewDelegate> {
+@interface PPFilesListViewController () <UITableViewDataSource, UITableViewDelegate, PPDirectoryWatcherDelegate> {
 @private
     BOOL nowSelectFiles;
     NSMutableArray *_displaingFiles;
@@ -90,6 +90,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     PPNavigationBarMenuViewAction *_importToLibraryAction, *_deleteAction;
 
     PPFilesProvider *_filesProvider;
+    PPDirectoryWatcher *_directoryWatcher;
 
     //Visual
     UITableView *_filesTableView;
@@ -150,11 +151,15 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
     [self _reloadFilesList];
+    [self _startObservingContent];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
+    [self _stopObservingContent];
 }
 
 - (void)dealloc {
@@ -164,6 +169,9 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     _filesProvider = nil;
     _deleteAction = nil;
     _importToLibraryAction = nil;
+
+    [self _stopObservingContent];
+    _directoryWatcher = nil;
 }
 
 #pragma mark - Layout
@@ -174,7 +182,22 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     [_filesTableView setFrame:self.view.bounds];
 }
 
+#pragma mark - PPDirectoryWatcherDelegate Implementation
+
+- (void)directoryDidChange:(PPDirectoryWatcher *)folderWatcher {
+    [self _reloadFilesList];
+}
+
 #pragma mark - Files Management
+
+- (void)_startObservingContent {
+    _directoryWatcher = [PPDirectoryWatcher watchFolderWithPath:[_rootURL path]
+                                                       delegate:self];
+}
+
+- (void)_stopObservingContent {
+    [_directoryWatcher invalidate];
+}
 
 - (void)_reloadFilesList {
     [self startLoading];

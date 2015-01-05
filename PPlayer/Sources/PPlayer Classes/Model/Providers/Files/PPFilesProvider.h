@@ -22,6 +22,8 @@
 #import "PPProvider.h"
 #import "PPFileModel.h"
 
+#import "PPDirectoryWatcher.h"
+
 @interface PPFilesProvider : PPProvider
 
 + (NSURL *)urlInboxRoot;
