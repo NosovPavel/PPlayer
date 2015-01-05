@@ -32,4 +32,6 @@
 
 - (void)commonInit;
 
+- (void)setMenuHidden:(BOOL)hidden animated:(BOOL)animated;
+
 @end

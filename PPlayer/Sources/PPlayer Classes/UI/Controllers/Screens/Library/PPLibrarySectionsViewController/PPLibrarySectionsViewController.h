@@ -1,5 +1,5 @@
 //
-//  Copyright © 2014 Alexander Orlov
+//  Copyright © 2015 Alexander Orlov
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -19,39 +19,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPStorageRootViewController.h"
-#import "PPFilesListViewController.h"
+#import <UIKit/UIKit.h>
 
-#import "PPFilesProvider.h"
-
-@interface PPStorageRootViewController () {
-@private
-    PPFilesListViewController *_filesListViewController;
-}
-@end
-
-@implementation PPStorageRootViewController
-
-#pragma mark - Init
-
-- (void)designedInit {
-    [super designedInit];
-
-    _filesListViewController = [PPFilesListViewController controllerWithRootURL:[PPFilesProvider urlInboxRoot]];
-    _filesListViewController.title = NSLocalizedString(@"Storage", nil);
-
-    [self setViewControllers:@[_filesListViewController]];
-    [self setMenuHidden:NO animated:NO];
-}
-
-- (void)commonInit {
-    [super commonInit];
-}
-
-#pragma mark - Lifecycle
-
-- (void)dealloc {
-    _filesListViewController = nil;
-}
-
+@interface PPLibrarySectionsViewController : UIViewController
 @end
