@@ -153,7 +153,6 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
     [super viewWillAppear:animated];
 
     [self _reloadFilesList];
-    [self _startObservingContent];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -191,6 +190,8 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 #pragma mark - Files Management
 
 - (void)_startObservingContent {
+    [self _stopObservingContent];
+
     _directoryWatcher = [PPDirectoryWatcher watchFolderWithPath:[_rootURL path]
                                                        delegate:self];
 }
@@ -209,6 +210,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
                      [selfRef->_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                              withRowAnimation:UITableViewRowAnimationFade];
 
+                     [selfRef _startObservingContent];
                      [selfRef endLoading];
                      [selfRef updateActions];
                  }];
@@ -458,6 +460,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     [super selectTapped];
 
     nowSelectFiles = YES;
+    [self _stopObservingContent];
 
     _selectedFiles = [@{} mutableCopy];
     [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
@@ -472,6 +475,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     _selectedFiles = [@{} mutableCopy];
     [_filesTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                    withRowAnimation:UITableViewRowAnimationFade];
+    [self _reloadFilesList];
 }
 
 
