@@ -57,10 +57,7 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
 @private
     //Data
     NSMutableArray *_tracksArray;
-    PPNavigationBarMenuViewAction *_selectElementsAction;
-    PPNavigationBarMenuViewAction *_loadingAction, *_deleteAction, *_cancelAction;
-
-    BOOL _isSelecting, _isLoading;
+    PPNavigationBarMenuViewAction *_deleteAction;
 
     //Visual
     UITableView *_tracksTableView;
@@ -74,8 +71,11 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
 - (void)designedInit {
     [super designedInit];
 
-    _isSelecting = NO;
-    _isLoading = NO;
+    _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
+                                                          handler:^{
+                                                              //
+                                                          } title:NSLocalizedString(@"Delete", nil)];
+    _actionsWhenSelected = @[_deleteAction];
 }
 
 - (void)commonInit {
@@ -111,10 +111,7 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
     _tracksTableView = nil;
     _tracksArray = nil;
 
-    _selectElementsAction = nil;
-    _loadingAction = nil;
     _deleteAction = nil;
-    _cancelAction = nil;
 }
 
 #pragma mark - Layout
@@ -128,14 +125,16 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
 
 - (void)_reloadTracks {
     _isLoading = YES;
-    [self _actionsStateChanged];
+    [self updateActions];
 
     __block typeof(self) selfRef = self;
     [[PPLibraryProvider sharedLibrary] tracksListWithCompletionBlock:^(NSArray *tracksList) {
         selfRef->_tracksArray = [tracksList mutableCopy];
 
         selfRef->_isLoading = NO;
-        [selfRef _actionsStateChanged];
+        [selfRef updateActions];
+        [selfRef->_tracksTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                                 withRowAnimation:UITableViewRowAnimationFade];
     }];
 }
 
@@ -181,96 +180,24 @@ static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-#pragma mark - Actions Setting Up
+#pragma mark - Overriding Logic
 
-- (void)_setupActualActionsAnimated:(BOOL)animated {
-    if (_isLoading) {
-        [self _setupLoadingStateActionsAnimated:animated];
-    } else {
-        _isSelecting ? [self _setupSelectedStateActionsAnimated:animated] : [self _setupUnselectedStateActionsAnimated:animated];
-    }
+- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
+    return NO;
 }
 
-- (void)_setupLoadingStateActionsAnimated:(BOOL)animated {
-    if (!_loadingAction) {
-        _loadingAction = [PPNavigationBarMenuViewAction actionWithIcon:nil
-                                                               handler:^{
-                                                                   //
-                                                               } title:NSLocalizedString(@"Refreshing...", nil)];
-    }
-
-    [self _updateActionsEnabledState];
-    [self.menuNavigationViewController setNavigationMenuActions:@[_loadingAction] animated:animated];
+- (BOOL)canPerformSelection {
+    return _tracksArray.count > 0;
 }
 
-- (void)_setupUnselectedStateActionsAnimated:(BOOL)animated {
-    __block typeof(self) selfRef = self;
-    if (!_selectElementsAction) {
-        _selectElementsAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconSelect.png"]
-                                                                      handler:^{
-                                                                          selfRef->_isSelecting = YES;
-                                                                          [selfRef _setupActualActionsAnimated:YES];
-                                                                          [selfRef->_tracksTableView reloadData];
-                                                                      } title:NSLocalizedString(@"Select items...", nil)];
-    }
-
-    [self _updateActionsEnabledState];
-    [self.menuNavigationViewController setNavigationMenuActions:@[_selectElementsAction] animated:animated];
+- (void)selectTapped {
+    [super selectTapped];
+    [_tracksTableView reloadData];
 }
 
-- (void)_setupSelectedStateActionsAnimated:(BOOL)animated {
-    __block typeof(self) selfRef = self;
-    if (!_deleteAction) {
-        _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                              handler:^{
-                                                                  //
-                                                              } title:NSLocalizedString(@"Delete", nil)];
-    }
-    if (!_cancelAction) {
-        _cancelAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDone.png"]
-                                                              handler:^{
-                                                                  selfRef->_isSelecting = NO;
-                                                                  [selfRef _setupActualActionsAnimated:YES];
-                                                              }
-                                                                title:NSLocalizedString(@"Done", nil)];
-    }
-
-    [self _updateActionsEnabledState];
-    [self.menuNavigationViewController setNavigationMenuActions:@[_deleteAction, _cancelAction]
-                                                       animated:animated];
-}
-
-#pragma mark - Navigation Bar Actions Enabled State
-
-- (void)_updateActionsEnabledState {
-    if (_isLoading) {
-        _loadingAction.enabled = NO;
-
-        _selectElementsAction.enabled = NO;
-        _deleteAction.enabled = NO;
-        _cancelAction.enabled = NO;
-    } else {
-        if (_isSelecting) {
-            _selectElementsAction.enabled = NO;
-            _cancelAction.enabled = YES;
-
-            _deleteAction.enabled = NO;
-        } else {
-            _selectElementsAction.enabled = _tracksArray.count > 0;
-
-            _cancelAction.enabled = NO;
-            _deleteAction.enabled = NO;
-        }
-    }
-}
-
-#pragma mark - Selecting State Changing
-
-- (void)_actionsStateChanged {
-    [self _setupActualActionsAnimated:YES];
-
-    [_tracksTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-                    withRowAnimation:UITableViewRowAnimationFade];
+- (void)doneTapped {
+    [super doneTapped];
+    [_tracksTableView reloadData];
 }
 
 @end

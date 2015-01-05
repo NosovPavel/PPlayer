@@ -19,7 +19,23 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPSelectableActionsViewController.h"
+#import "PPViewController.h"
+#import "PPMenuNavigationViewController.h"
 
-@interface PPLibraryAllSongsListViewController : PPSelectableActionsViewController
+@interface PPSelectableActionsViewController : PPViewController {
+@protected
+    BOOL _isLoading;
+    NSArray *_actionsWhenSelected;
+}
+
+- (void)updateActions;
+
+- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action;
+
+- (BOOL)canPerformSelection;
+
+- (void)selectTapped;
+
+- (void)doneTapped;
+
 @end
