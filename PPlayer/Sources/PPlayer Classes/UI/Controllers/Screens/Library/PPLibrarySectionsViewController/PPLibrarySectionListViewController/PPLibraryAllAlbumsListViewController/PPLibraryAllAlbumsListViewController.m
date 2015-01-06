@@ -104,92 +104,30 @@ static const CGFloat leftTextShift = 0.0f;
 
 @end
 
-@interface PPLibraryAllAlbumsListViewController () <UITableViewDataSource, UITableViewDelegate> {
-@private
-    //Data
-    NSMutableArray *_albumsArray;
-    PPNavigationBarMenuViewAction *_deleteAction;
-
-    //Visual
-    UITableView *_albumsTableView;
-}
-@end
-
 @implementation PPLibraryAllAlbumsListViewController
 
 #pragma mark - Init
 
-- (void)designedInit {
-    [super designedInit];
-
-    _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                          handler:^{
-                                                              //
-                                                          } title:NSLocalizedString(@"Delete", nil)];
-    _actionsWhenSelected = @[_deleteAction];
-}
-
 - (void)commonInit {
     [super commonInit];
-}
-
-#pragma mark - Lifecycle
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
-    [self _reloadArtists];
-}
-
-- (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-
-    _albumsTableView = [[UITableView alloc] initWithFrame:self.view.bounds
-                                                    style:UITableViewStylePlain];
-    _albumsTableView.dataSource = self;
-    _albumsTableView.delegate = self;
-    _albumsTableView.rowHeight = cellsHeight;
-
-    [self.view addSubview:_albumsTableView];
-}
-
-- (void)dealloc {
-    _albumsTableView = nil;
-    _albumsArray = nil;
-
-    _deleteAction = nil;
-}
-
-#pragma mark - Layout
-
-- (void)performLayout {
-    [super performLayout];
-    [_albumsTableView setFrame:self.view.bounds];
+    _sourceTableView.rowHeight = cellsHeight;
 }
 
 #pragma mark - Reloading
 
-- (void)_reloadArtists {
-    [self startLoading];
-
+- (void)reloadDataWithCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
     [[PPLibraryProvider sharedLibrary].fetcher albumsListWithCompletionBlock:^(NSArray *albumsList) {
-        selfRef->_albumsArray = [albumsList mutableCopy];
-        [selfRef->_albumsTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+        selfRef->_sourceArray = [albumsList mutableCopy];
+        [selfRef->_sourceTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                  withRowAnimation:UITableViewRowAnimationFade];
-        [selfRef endLoading];
+        if (block) {
+            block();
+        }
     }];
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _albumsArray.count;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:albumCellIdentifier];
@@ -206,7 +144,7 @@ static const CGFloat leftTextShift = 0.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(PPLibraryAllAlbumsCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PPLibraryAlbumModel *albumModel = _albumsArray[(NSUInteger) indexPath.row];
+    PPLibraryAlbumModel *albumModel = _sourceArray[(NSUInteger) indexPath.row];
 
     NSString *title = albumModel.title;
     NSString *middleTitle = albumModel.artistModel.title;
@@ -217,29 +155,5 @@ static const CGFloat leftTextShift = 0.0f;
     [cell.middleLabel setText:middleTitle];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark - PPSelectableActionsViewController Logic
-
-- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
-    return NO;
-}
-
-- (BOOL)canPerformSelection {
-    return _albumsArray.count > 0;
-}
-
-- (void)selectTapped {
-    [super selectTapped];
-    [_albumsTableView reloadData];
-}
-
-- (void)doneTapped {
-    [super doneTapped];
-    [_albumsTableView reloadData];
-}
 
 @end

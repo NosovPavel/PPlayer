@@ -21,8 +21,17 @@
 
 #import "PPSelectableActionsViewController.h"
 
-@interface PPLibraryAllSongsCell : UITableViewCell
-@end
+@interface PPLibrarySectionListViewController : PPSelectableActionsViewController {
+@protected
+    //Data
+    NSMutableArray *_sourceArray;
+    PPNavigationBarMenuViewAction *_deleteAction;
+    PPNavigationBarMenuViewAction *_editEction;
 
-@interface PPLibraryAllSongsListViewController : PPSelectableActionsViewController
+    //Visual
+    UITableView *_sourceTableView;
+}
+
+- (void)reloadDataWithCompletionBlock:(void (^)())block;
+
 @end

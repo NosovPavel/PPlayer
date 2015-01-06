@@ -74,92 +74,30 @@ static const CGFloat leftTextShift = 0.0f;
 
 @end
 
-@interface PPLibraryAllGenresListViewController () <UITableViewDataSource, UITableViewDelegate> {
-@private
-    //Data
-    NSMutableArray *_genresArray;
-    PPNavigationBarMenuViewAction *_deleteAction;
-
-    //Visual
-    UITableView *_genresTableView;
-}
-@end
-
 @implementation PPLibraryAllGenresListViewController
 
 #pragma mark - Init
 
-- (void)designedInit {
-    [super designedInit];
-
-    _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                          handler:^{
-                                                              //
-                                                          } title:NSLocalizedString(@"Delete", nil)];
-    _actionsWhenSelected = @[_deleteAction];
-}
-
 - (void)commonInit {
     [super commonInit];
-}
-
-#pragma mark - Lifecycle
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
-    [self _reloadArtists];
-}
-
-- (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-
-    _genresTableView = [[UITableView alloc] initWithFrame:self.view.bounds
-                                                    style:UITableViewStylePlain];
-    _genresTableView.dataSource = self;
-    _genresTableView.delegate = self;
-    _genresTableView.rowHeight = cellsHeight;
-
-    [self.view addSubview:_genresTableView];
-}
-
-- (void)dealloc {
-    _genresTableView = nil;
-    _genresArray = nil;
-
-    _deleteAction = nil;
-}
-
-#pragma mark - Layout
-
-- (void)performLayout {
-    [super performLayout];
-    [_genresTableView setFrame:self.view.bounds];
+    _sourceTableView.rowHeight = cellsHeight;
 }
 
 #pragma mark - Reloading
 
-- (void)_reloadArtists {
-    [self startLoading];
-
+- (void)reloadDataWithCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
     [[PPLibraryProvider sharedLibrary].fetcher genresListWithCompletionBlock:^(NSArray *genresList) {
-        selfRef->_genresArray = [genresList mutableCopy];
-        [selfRef->_genresTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+        selfRef->_sourceArray = [genresList mutableCopy];
+        [selfRef->_sourceTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                  withRowAnimation:UITableViewRowAnimationFade];
-        [selfRef endLoading];
+        if (block) {
+            block();
+        }
     }];
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _genresArray.count;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:genreCellIdentifier];
@@ -176,7 +114,7 @@ static const CGFloat leftTextShift = 0.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PPLibraryGenreModel *genreModel = _genresArray[(NSUInteger) indexPath.row];
+    PPLibraryGenreModel *genreModel = _sourceArray[(NSUInteger) indexPath.row];
 
     NSString *title = genreModel.title;
     NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %lld", NSLocalizedString(@"Tracks_count.genres", nil), genreModel.tracksCount]
@@ -185,29 +123,5 @@ static const CGFloat leftTextShift = 0.0f;
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark - PPSelectableActionsViewController Logic
-
-- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
-    return NO;
-}
-
-- (BOOL)canPerformSelection {
-    return _genresArray.count > 0;
-}
-
-- (void)selectTapped {
-    [super selectTapped];
-    [_genresTableView reloadData];
-}
-
-- (void)doneTapped {
-    [super doneTapped];
-    [_genresTableView reloadData];
-}
 
 @end

@@ -11,6 +11,9 @@
 "Done" = "Готово";
 "Select items..." = "Отметить элементы...";
 
+//Actions
+"Edit" = "Изменить";
+
 //Signs on FileList VC
 "Files folder" = "Папка с файлами";
 

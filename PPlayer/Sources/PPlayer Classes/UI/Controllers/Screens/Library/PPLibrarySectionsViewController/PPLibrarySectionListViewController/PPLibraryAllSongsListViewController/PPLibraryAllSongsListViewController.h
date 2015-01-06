@@ -19,11 +19,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPSelectableActionsViewController.h"
+#import "PPLibrarySectionListViewController.h"
 
-@interface PPLibraryAllAlbumsCell : UITableViewCell
-@property UILabel *middleLabel;
+@interface PPLibraryAllSongsCell : UITableViewCell
 @end
 
-@interface PPLibraryAllAlbumsListViewController : PPSelectableActionsViewController
+@interface PPLibraryAllSongsListViewController : PPLibrarySectionListViewController
 @end

@@ -11,6 +11,9 @@
 "Done" = "Done";
 "Select items..." = "Select items...";
 
+//Actions
+"Edit" = "Edit";
+
 //Signs on FileList VC
 "Files folder" = "Files folder";
 

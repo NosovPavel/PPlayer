@@ -71,92 +71,30 @@ static const CGFloat leftTextShift = 5.0f;
 
 @end
 
-@interface PPLibraryAllSongsListViewController () <UITableViewDataSource, UITableViewDelegate> {
-@private
-    //Data
-    NSMutableArray *_tracksArray;
-    PPNavigationBarMenuViewAction *_deleteAction;
-
-    //Visual
-    UITableView *_tracksTableView;
-}
-@end
-
 @implementation PPLibraryAllSongsListViewController
 
 #pragma mark - Init
 
-- (void)designedInit {
-    [super designedInit];
-
-    _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                          handler:^{
-                                                              //
-                                                          } title:NSLocalizedString(@"Delete", nil)];
-    _actionsWhenSelected = @[_deleteAction];
-}
-
 - (void)commonInit {
     [super commonInit];
-}
-
-#pragma mark - Lifecycle
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
-    [self _reloadTracks];
-}
-
-- (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-
-    _tracksTableView = [[UITableView alloc] initWithFrame:self.view.bounds
-                                                    style:UITableViewStylePlain];
-    _tracksTableView.dataSource = self;
-    _tracksTableView.delegate = self;
-    _tracksTableView.rowHeight = cellsHeight;
-
-    [self.view addSubview:_tracksTableView];
-}
-
-- (void)dealloc {
-    _tracksTableView = nil;
-    _tracksArray = nil;
-
-    _deleteAction = nil;
-}
-
-#pragma mark - Layout
-
-- (void)performLayout {
-    [super performLayout];
-    [_tracksTableView setFrame:self.view.bounds];
+    _sourceTableView.rowHeight = cellsHeight;
 }
 
 #pragma mark - Reloading
 
-- (void)_reloadTracks {
-    [self startLoading];
-
+- (void)reloadDataWithCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
     [[PPLibraryProvider sharedLibrary].fetcher tracksListWithCompletionBlock:^(NSArray *tracksList) {
-        selfRef->_tracksArray = [tracksList mutableCopy];
-        [selfRef->_tracksTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+        selfRef->_sourceArray = [tracksList mutableCopy];
+        [selfRef->_sourceTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                  withRowAnimation:UITableViewRowAnimationFade];
-        [selfRef endLoading];
+        if (block) {
+            block();
+        }
     }];
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _tracksArray.count;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
@@ -173,7 +111,7 @@ static const CGFloat leftTextShift = 5.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PPLibraryTrackModel *track = _tracksArray[(NSUInteger) indexPath.row];
+    PPLibraryTrackModel *track = _sourceArray[(NSUInteger) indexPath.row];
 
     NSString *title = track.title;
     NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:track.albumModel.artistModel.title
@@ -185,29 +123,5 @@ static const CGFloat leftTextShift = 5.0f;
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark - PPSelectableActionsViewController Logic
-
-- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
-    return NO;
-}
-
-- (BOOL)canPerformSelection {
-    return _tracksArray.count > 0;
-}
-
-- (void)selectTapped {
-    [super selectTapped];
-    [_tracksTableView reloadData];
-}
-
-- (void)doneTapped {
-    [super doneTapped];
-    [_tracksTableView reloadData];
-}
 
 @end

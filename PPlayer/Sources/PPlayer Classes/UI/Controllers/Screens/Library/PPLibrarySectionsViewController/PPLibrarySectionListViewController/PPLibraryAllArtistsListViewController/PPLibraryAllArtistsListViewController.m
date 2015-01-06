@@ -74,92 +74,30 @@ static const CGFloat leftTextShift = 0.0f;
 
 @end
 
-@interface PPLibraryAllArtistsListViewController () <UITableViewDataSource, UITableViewDelegate> {
-@private
-    //Data
-    NSMutableArray *_artistsArray;
-    PPNavigationBarMenuViewAction *_deleteAction;
-
-    //Visual
-    UITableView *_artistsTableView;
-}
-@end
-
 @implementation PPLibraryAllArtistsListViewController
 
 #pragma mark - Init
 
-- (void)designedInit {
-    [super designedInit];
-
-    _deleteAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
-                                                          handler:^{
-                                                              //
-                                                          } title:NSLocalizedString(@"Delete", nil)];
-    _actionsWhenSelected = @[_deleteAction];
-}
-
 - (void)commonInit {
     [super commonInit];
-}
-
-#pragma mark - Lifecycle
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
-    [self _reloadArtists];
-}
-
-- (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-
-    _artistsTableView = [[UITableView alloc] initWithFrame:self.view.bounds
-                                                     style:UITableViewStylePlain];
-    _artistsTableView.dataSource = self;
-    _artistsTableView.delegate = self;
-    _artistsTableView.rowHeight = cellsHeight;
-
-    [self.view addSubview:_artistsTableView];
-}
-
-- (void)dealloc {
-    _artistsTableView = nil;
-    _artistsArray = nil;
-
-    _deleteAction = nil;
-}
-
-#pragma mark - Layout
-
-- (void)performLayout {
-    [super performLayout];
-    [_artistsTableView setFrame:self.view.bounds];
+    _sourceTableView.rowHeight = cellsHeight;
 }
 
 #pragma mark - Reloading
 
-- (void)_reloadArtists {
-    [self startLoading];
-
+- (void)reloadDataWithCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
     [[PPLibraryProvider sharedLibrary].fetcher artistsListWithCompletionBlock:^(NSArray *artistsList) {
-        selfRef->_artistsArray = [artistsList mutableCopy];
-        [selfRef->_artistsTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-        [selfRef endLoading];
+        selfRef->_sourceArray = [artistsList mutableCopy];
+        [selfRef->_sourceTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                                 withRowAnimation:UITableViewRowAnimationFade];
+        if (block) {
+            block();
+        }
     }];
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _artistsArray.count;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:artistCellIdentifier];
@@ -176,7 +114,7 @@ static const CGFloat leftTextShift = 0.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PPLibraryArtistModel *artistModel = _artistsArray[(NSUInteger) indexPath.row];
+    PPLibraryArtistModel *artistModel = _sourceArray[(NSUInteger) indexPath.row];
 
     NSString *title = artistModel.title;
     NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %lld, ", NSLocalizedString(@"Albums_count", nil), artistModel.albumsCount]
@@ -188,29 +126,5 @@ static const CGFloat leftTextShift = 0.0f;
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark - PPSelectableActionsViewController Logic
-
-- (BOOL)canPerformAction:(PPNavigationBarMenuViewAction *)action {
-    return NO;
-}
-
-- (BOOL)canPerformSelection {
-    return _artistsArray.count > 0;
-}
-
-- (void)selectTapped {
-    [super selectTapped];
-    [_artistsTableView reloadData];
-}
-
-- (void)doneTapped {
-    [super doneTapped];
-    [_artistsTableView reloadData];
-}
 
 @end
