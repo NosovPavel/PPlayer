@@ -24,6 +24,7 @@
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryAllArtistsListViewController.h"
 #import "PPLibraryAllAlbumsListViewController.h"
+#import "PPLibraryAllGenresListViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
@@ -200,7 +201,10 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
                     break;
 
                 case 2: {
-                    //Genres
+                    PPLibraryAllGenresListViewController *genresListViewController = [[PPLibraryAllGenresListViewController alloc] init];
+                    genresListViewController.title = NSLocalizedString(@"Genres", nil);
+
+                    [self.navigationController pushViewController:genresListViewController animated:YES];
                 }
                     break;
 

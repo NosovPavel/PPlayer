@@ -41,3 +41,6 @@
 
 //All albums screen
 "Tracks_count.albums" = "Песен";
+
+//All genres screen
+"Tracks_count.genres" = "Песен";
