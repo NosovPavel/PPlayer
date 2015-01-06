@@ -137,10 +137,12 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 #pragma mark - Interface
 
 - (void)setMenuHidden:(BOOL)hidden animated:(BOOL)animated {
-    _menuHidden = hidden;
-    [UIView animateWithDuration:animated ? (1.0f / 3.0f) : 0.0f animations:^{
-        [self layoutSubviews];
-    }                completion:nil];
+    if (_menuHidden != hidden) {
+        _menuHidden = hidden;
+        [UIView animateWithDuration:animated ? (1.0f / 3.0f) : 0.0f animations:^{
+            [self layoutSubviews];
+        }                completion:nil];
+    }
 }
 
 @end

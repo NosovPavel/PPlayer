@@ -22,6 +22,7 @@
 #import "PPLibrarySectionsViewController.h"
 
 #import "PPLibraryAllSongsListViewController.h"
+#import "PPLibraryAllArtistsListViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
@@ -57,6 +58,11 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
     _sectionsTableView.rowHeight = cellsHeight;
 
     [self.view addSubview:_sectionsTableView];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.menuNavigationViewController setMenuHidden:YES animated:YES];
 }
 
 - (void)dealloc {
@@ -177,7 +183,11 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    //Artists
+                    PPLibraryAllArtistsListViewController *artistsListViewController = [[PPLibraryAllArtistsListViewController alloc] init];
+                    artistsListViewController.title = NSLocalizedString(@"Artists", nil);
+
+                    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
+                    [self.navigationController pushViewController:artistsListViewController animated:YES];
                 }
                     break;
 
@@ -204,6 +214,7 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
                     PPLibraryAllSongsListViewController *songsListViewController = [[PPLibraryAllSongsListViewController alloc] init];
                     songsListViewController.title = NSLocalizedString(@"All songs", nil);
 
+                    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
                     [self.navigationController pushViewController:songsListViewController animated:YES];
                 }
                     break;

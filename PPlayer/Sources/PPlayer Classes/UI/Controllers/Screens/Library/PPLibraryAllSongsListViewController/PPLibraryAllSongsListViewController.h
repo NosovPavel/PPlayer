@@ -21,5 +21,8 @@
 
 #import "PPSelectableActionsViewController.h"
 
+@interface PPLibraryAllSongsCell : UITableViewCell
+@end
+
 @interface PPLibraryAllSongsListViewController : PPSelectableActionsViewController
 @end

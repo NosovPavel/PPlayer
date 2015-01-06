@@ -42,6 +42,8 @@
 
 #pragma mark - Artists
 
+- (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block;
+
 #pragma mark - Albums
 
 #pragma mark - Genres

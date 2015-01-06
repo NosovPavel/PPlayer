@@ -19,8 +19,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPLibraryItemModel.h"
+#import "PPSelectableActionsViewController.h"
 
-@interface PPLibraryArtistModel : PPLibraryItemModel
-@property int64_t albumsCount, tracksCount;
+@interface PPLibraryAllArtistsCell : UITableViewCell
+@end
+
+@interface PPLibraryAllArtistsListViewController : PPSelectableActionsViewController
 @end

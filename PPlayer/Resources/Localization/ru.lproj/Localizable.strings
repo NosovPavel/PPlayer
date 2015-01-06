@@ -34,3 +34,7 @@
 
 //All songs screen
 "Refreshing..." = "Обновление...";
+
+//All artists screen
+"Albums_count" = "Альбомов";
+"Tracks_count" = "песен";

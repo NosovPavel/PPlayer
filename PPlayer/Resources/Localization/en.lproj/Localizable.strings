@@ -34,3 +34,7 @@
 
 //All songs screen
 "Refreshing..." = "Refreshing...";
+
+//All artists screen
+"Albums_count" = "Albums";
+"Tracks_count" = "tracks";

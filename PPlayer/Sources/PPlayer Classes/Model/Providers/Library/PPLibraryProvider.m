@@ -50,8 +50,8 @@
 #pragma mark - Preparing
 
 + (void)load {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] rootDirectory] path]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] rootDirectory] path]
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] rootDirectoryURL] path]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] rootDirectoryURL] path]
                                   withIntermediateDirectories:NO
                                                    attributes:nil
                                                         error:NULL];
@@ -60,7 +60,7 @@
 
 #pragma mark - Paths
 
-+ (NSURL *)rootDirectory {
++ (NSURL *)rootDirectoryURL {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths lastObject];
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/.Library"];
@@ -68,14 +68,14 @@
     return [NSURL fileURLWithPath:dataPath];
 }
 
-+ (NSURL *)libraryDBPath {
-    NSURL *libraryURL = [[[self class] rootDirectory] URLByAppendingPathComponent:@"library.sqlite"];
++ (NSURL *)libraryDBURL {
+    NSURL *libraryURL = [[[self class] rootDirectoryURL] URLByAppendingPathComponent:@"library.sqlite"];
 
     return libraryURL;
 }
 
-+ (NSURL *)trackPathForID:(int64_t)trackID {
-    NSURL *trackURL = [[[self class] rootDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%lld.pptrack", trackID]];
++ (NSURL *)trackURLForID:(int64_t)trackID {
+    NSURL *trackURL = [[[self class] rootDirectoryURL] URLByAppendingPathComponent:[NSString stringWithFormat:@"%lld.pptrack", trackID]];
 
     return trackURL;
 }
@@ -98,7 +98,7 @@
 
 - (void)_init {
     _filesProvider = [[PPFilesProvider alloc] init];
-    _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[self class] libraryDBPath] path]];
+    _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[self class] libraryDBURL] path]];
 }
 
 #pragma mark - Lifecycle
@@ -226,7 +226,7 @@
 
 - (void)_moveTrackToLibrary:(PPFileModel *)track withID:(int64_t)trackID {
     NSURL *fromURL = track.url;
-    NSURL *toURL = [[self class] trackPathForID:trackID];
+    NSURL *toURL = [[self class] trackURLForID:trackID];
 
     [_filesProvider moveFileFromURL:fromURL toURL:toURL];
 }
@@ -419,6 +419,53 @@
             if (block) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     block([tracks copy]);
+                });
+            }
+        }];
+    });
+}
+
+#pragma mark - Artists
+
+- (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
+                    "artists.id as artist_id, artists.title as artist_title,\n"
+                    "\n"
+                    "COUNT(DISTINCT albums.id) as albums_count,\n"
+                    "COUNT(DISTINCT tracks.id) as tracks_count\n"
+                    "\n"
+                    "FROM \n"
+                    "artists, albums, tracks\n"
+                    "\n"
+                    "WHERE\n"
+                    "albums.artist_id = artists.id\n"
+                    "AND\n"
+                    "tracks.album_id = albums.id\n"
+                    "\n"
+                    "GROUP BY \n"
+                    "artist_id, artist_title"];
+
+            NSMutableArray *artists = [NSMutableArray array];
+            while ([resultSet next]) {
+                int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
+                NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
+
+                int64_t albumsCount = [resultSet longLongIntForColumn:@"albums_count"];
+                int64_t tracksCount = [resultSet longLongIntForColumn:@"tracks_count"];
+
+                PPLibraryArtistModel *artistModel = [PPLibraryArtistModel modelWithId:artistID title:artistTitle];
+                artistModel.albumsCount = albumsCount;
+                artistModel.tracksCount = tracksCount;
+
+                [artists addObject:artistModel];
+            }
+            [resultSet close];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block([artists copy]);
                 });
             }
         }];
