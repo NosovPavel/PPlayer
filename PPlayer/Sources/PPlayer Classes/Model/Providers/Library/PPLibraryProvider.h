@@ -66,6 +66,12 @@
 - (void)albumsWithTracksByArtist:(PPLibraryArtistModel *)artistModel
              withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block;
 
+- (void)albumsWithTracksByAlbum:(PPLibraryAlbumModel *)albumModel
+            withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block;
+
+- (void)albumsWithTracksByGenre:(PPLibraryGenreModel *)genreModel
+            withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block;
+
 @end
 
 @interface PPLibraryProvider : PPProvider

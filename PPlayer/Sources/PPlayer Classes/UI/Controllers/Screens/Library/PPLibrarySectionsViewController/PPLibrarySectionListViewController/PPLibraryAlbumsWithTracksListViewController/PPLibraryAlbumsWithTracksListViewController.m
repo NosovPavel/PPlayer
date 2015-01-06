@@ -21,6 +21,8 @@
 
 #import "PPLibraryAlbumsWithTracksListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPLibraryAlbumModel.h"
+#import "PPLibraryGenreModel.h"
 
 static const CGFloat cellsHeight = 50.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
@@ -73,6 +75,32 @@ static NSString *albumsHeaderIdentifier = @"albumsHeaderIdentifier";
     return self;
 }
 
+- (instancetype)initWithAlbumModel:(PPLibraryAlbumModel *)albumModel {
+    self = [super init];
+    if (self) {
+        self.albumModel = albumModel;
+    }
+
+    return self;
+}
+
+- (instancetype)initWithGenreModel:(PPLibraryGenreModel *)genreModel {
+    self = [super init];
+    if (self) {
+        self.genreModel = genreModel;
+    }
+
+    return self;
+}
+
++ (instancetype)controllerWithGenreModel:(PPLibraryGenreModel *)genreModel {
+    return [[self alloc] initWithGenreModel:genreModel];
+}
+
++ (instancetype)controllerWithAlbumModel:(PPLibraryAlbumModel *)albumModel {
+    return [[self alloc] initWithAlbumModel:albumModel];
+}
+
 + (instancetype)controllerWithArtistModel:(PPLibraryArtistModel *)artistModel {
     return [[self alloc] initWithArtistModel:artistModel];
 }
@@ -87,16 +115,27 @@ static NSString *albumsHeaderIdentifier = @"albumsHeaderIdentifier";
 - (void)reloadDataWithCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
 
+    void (^completionBlock)(NSArray *albumsList, NSArray *tracksListsList) = ^(NSArray *albumsList, NSArray *tracksListsList) {
+        selfRef->_sourceArray = [albumsList mutableCopy];
+        selfRef->_tracksArray = [tracksListsList mutableCopy];
+        [selfRef->_sourceTableView reloadData];
+        if (block) {
+            block();
+        }
+    };
+
     if (_artistModel) {
         [[PPLibraryProvider sharedLibrary].fetcher albumsWithTracksByArtist:_artistModel
-                                                        withCompletionBlock:^(NSArray *albumsList, NSArray *tracksListsList) {
-                                                            selfRef->_sourceArray = [albumsList mutableCopy];
-                                                            selfRef->_tracksArray = [tracksListsList mutableCopy];
-                                                            [selfRef->_sourceTableView reloadData];
-                                                            if (block) {
-                                                                block();
-                                                            }
-                                                        }];
+                                                        withCompletionBlock:completionBlock];
+        return;
+    } else if (_albumModel) {
+        [[PPLibraryProvider sharedLibrary].fetcher albumsWithTracksByAlbum:_albumModel
+                                                       withCompletionBlock:completionBlock];
+        return;
+    } else if (_genreModel) {
+        [[PPLibraryProvider sharedLibrary].fetcher albumsWithTracksByGenre:_genreModel
+                                                       withCompletionBlock:completionBlock];
+        return;
     }
 
     if (block) {

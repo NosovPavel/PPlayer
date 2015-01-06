@@ -252,7 +252,67 @@
 
 #pragma mark - Complex
 
-- (void)albumsWithTracksByArtist:(PPLibraryArtistModel *)artistModelGiven
+- (void)_albumsWithTracksFromResultSet:(FMResultSet *)resultSet
+                   withcompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block {
+    NSMutableArray *albumsList = [NSMutableArray array];
+    NSMutableArray *tracksListsList = [NSMutableArray array];
+
+    while ([resultSet next]) {
+        int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
+        NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
+
+        int64_t genreID = [resultSet longLongIntForColumn:@"genre_id"];
+        NSString *genreTitle = [resultSet stringForColumn:@"genre_title"];
+
+        int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
+        NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
+
+        int64_t albumID = [resultSet longLongIntForColumn:@"album_id"];
+        NSString *albumTitle = [resultSet stringForColumn:@"album_title"];
+
+        PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:genreID title:genreTitle];
+        PPLibraryArtistModel *artistModelFetched = [PPLibraryArtistModel modelWithId:artistID title:artistTitle];
+
+        __block PPLibraryAlbumModel *albumModel = nil;
+        __block NSUInteger indexOfAlbum = NSNotFound;
+        [albumsList enumerateObjectsUsingBlock:^(PPLibraryAlbumModel *currentAlbum, NSUInteger idx, BOOL *stop) {
+            if (currentAlbum.id == albumID) {
+                albumModel = currentAlbum;
+                indexOfAlbum = idx;
+                *stop = YES;
+            }
+        }];
+
+        if (!albumModel) {
+            albumModel = [PPLibraryAlbumModel modelWithId:albumID
+                                                    title:albumTitle
+                                              artistModel:artistModelFetched];
+            [albumsList addObject:albumModel];
+            [tracksListsList addObject:[NSMutableArray array]];
+
+            indexOfAlbum = albumsList.count - 1;
+        }
+
+        PPLibraryTrackModel *trackModel = [PPLibraryTrackModel
+                modelWithId:trackID
+                      title:trackTitle
+                 albumModel:albumModel
+                 genreModel:genreModel];
+
+        NSMutableArray *tracks = tracksListsList[indexOfAlbum];
+        [tracks addObject:trackModel];
+    }
+
+    [resultSet close];
+
+    if (block) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            block([albumsList copy], [tracksListsList copy]);
+        });
+    }
+}
+
+- (void)albumsWithTracksByArtist:(PPLibraryArtistModel *)artistModel
              withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [_libraryDBQueue inDatabase:^(FMDatabase *db) {
@@ -272,63 +332,66 @@
                                                               "AND\n"
                                                               "tracks.genre_id = genres.id\n"
                                                               "AND\n"
-                                                              "albums.artist_id = ?", @(artistModelGiven.id)];
+                                                              "albums.artist_id = ?", @(artistModel.id)];
 
-            NSMutableArray *albumsList = [NSMutableArray array];
-            NSMutableArray *tracksListsList = [NSMutableArray array];
+            [self _albumsWithTracksFromResultSet:resultSet
+                             withcompletionBlock:block];
+        }];
+    });
+}
 
-            while ([resultSet next]) {
-                int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
-                NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
+- (void)albumsWithTracksByAlbum:(PPLibraryAlbumModel *)albumModel
+            withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
+                                                              "tracks.id as track_id, tracks.title as track_title,\n"
+                                                              "albums.id as album_id, albums.title as album_title,\n"
+                                                              "artists.id as artist_id, artists.title as artist_title,\n"
+                                                              "genres.id as genre_id, genres.title as genre_title\n"
+                                                              "\n"
+                                                              "FROM\n"
+                                                              "albums, tracks, artists, genres\n"
+                                                              "\n"
+                                                              "WHERE\n"
+                                                              "tracks.album_id = albums.id\n"
+                                                              "AND\n"
+                                                              "albums.artist_id = artists.id\n"
+                                                              "AND\n"
+                                                              "tracks.genre_id = genres.id\n"
+                                                              "AND\n"
+                                                              "albums.id = ?", @(albumModel.id)];
 
-                int64_t genreID = [resultSet longLongIntForColumn:@"genre_id"];
-                NSString *genreTitle = [resultSet stringForColumn:@"genre_title"];
+            [self _albumsWithTracksFromResultSet:resultSet
+                             withcompletionBlock:block];
+        }];
+    });
+}
 
-                int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
-                NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
+- (void)albumsWithTracksByGenre:(PPLibraryGenreModel *)genreModel
+            withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
+                                                              "tracks.id as track_id, tracks.title as track_title,\n"
+                                                              "albums.id as album_id, albums.title as album_title,\n"
+                                                              "artists.id as artist_id, artists.title as artist_title,\n"
+                                                              "genres.id as genre_id, genres.title as genre_title\n"
+                                                              "\n"
+                                                              "FROM\n"
+                                                              "albums, tracks, artists, genres\n"
+                                                              "\n"
+                                                              "WHERE\n"
+                                                              "tracks.album_id = albums.id\n"
+                                                              "AND\n"
+                                                              "albums.artist_id = artists.id\n"
+                                                              "AND\n"
+                                                              "tracks.genre_id = genres.id\n"
+                                                              "AND\n"
+                                                              "tracks.genre_id = ?", @(genreModel.id)];
 
-                int64_t albumID = [resultSet longLongIntForColumn:@"album_id"];
-                NSString *albumTitle = [resultSet stringForColumn:@"album_title"];
-
-                PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:genreID title:genreTitle];
-                PPLibraryArtistModel *artistModelFetched = [PPLibraryArtistModel modelWithId:artistID title:artistTitle];
-
-                __block PPLibraryAlbumModel *albumModel = nil;
-                __block NSUInteger indexOfAlbum = NSNotFound;
-                [albumsList enumerateObjectsUsingBlock:^(PPLibraryAlbumModel *currentAlbum, NSUInteger idx, BOOL *stop) {
-                    if (currentAlbum.id == albumID) {
-                        albumModel = currentAlbum;
-                        indexOfAlbum = idx;
-                        *stop = YES;
-                    }
-                }];
-
-                if (!albumModel) {
-                    albumModel = [PPLibraryAlbumModel modelWithId:albumID
-                                                            title:albumTitle
-                                                      artistModel:artistModelFetched];
-                    [albumsList addObject:albumModel];
-                    [tracksListsList addObject:[NSMutableArray array]];
-
-                    indexOfAlbum = albumsList.count - 1;
-                }
-
-                PPLibraryTrackModel *trackModel = [PPLibraryTrackModel
-                        modelWithId:trackID
-                              title:trackTitle
-                         albumModel:albumModel
-                         genreModel:genreModel];
-
-                NSMutableArray *tracks = tracksListsList[indexOfAlbum];
-                [tracks addObject:trackModel];
-            }
-            [resultSet close];
-
-            if (block) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    block([albumsList copy], [tracksListsList copy]);
-                });
-            }
+            [self _albumsWithTracksFromResultSet:resultSet
+                             withcompletionBlock:block];
         }];
     });
 }

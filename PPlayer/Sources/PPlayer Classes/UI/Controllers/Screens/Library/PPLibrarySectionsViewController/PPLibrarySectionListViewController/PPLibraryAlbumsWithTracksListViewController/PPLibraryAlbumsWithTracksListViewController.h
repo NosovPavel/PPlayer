@@ -22,6 +22,8 @@
 #import "PPLibrarySectionListViewController.h"
 
 @class PPLibraryArtistModel;
+@class PPLibraryAlbumModel;
+@class PPLibraryGenreModel;
 
 @interface PPLibraryAlbumsWithTracksHeaderView : UITableViewHeaderFooterView
 @end
@@ -31,8 +33,18 @@
 
 @interface PPLibraryAlbumsWithTracksListViewController : PPLibrarySectionListViewController
 @property(atomic, strong) PPLibraryArtistModel *artistModel;
+@property(atomic, strong) PPLibraryAlbumModel *albumModel;
+@property(atomic, strong) PPLibraryGenreModel *genreModel;
 
 - (instancetype)initWithArtistModel:(PPLibraryArtistModel *)artistModel;
+
+- (instancetype)initWithAlbumModel:(PPLibraryAlbumModel *)albumModel;
+
+- (instancetype)initWithGenreModel:(PPLibraryGenreModel *)genreModel;
+
++ (instancetype)controllerWithGenreModel:(PPLibraryGenreModel *)genreModel;
+
++ (instancetype)controllerWithAlbumModel:(PPLibraryAlbumModel *)albumModel;
 
 + (instancetype)controllerWithArtistModel:(PPLibraryArtistModel *)artistModel;
 

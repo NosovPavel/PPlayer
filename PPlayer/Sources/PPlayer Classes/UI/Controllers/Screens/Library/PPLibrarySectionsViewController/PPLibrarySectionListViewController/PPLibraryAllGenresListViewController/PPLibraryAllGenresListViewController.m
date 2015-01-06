@@ -21,6 +21,7 @@
 
 #import "PPLibraryAllGenresListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPLibraryAlbumsWithTracksListViewController.h"
 
 static const CGFloat cellsHeight = 100.0f;
 static NSString *genreCellIdentifier = @"genreCellIdentifier";
@@ -123,5 +124,16 @@ static const CGFloat leftTextShift = 0.0f;
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+
+    PPLibraryGenreModel *genreModel = _sourceArray[(NSUInteger) indexPath.row];
+    PPLibraryAlbumsWithTracksListViewController *albumsWithTracksListViewController = [PPLibraryAlbumsWithTracksListViewController
+            controllerWithGenreModel:genreModel];
+    albumsWithTracksListViewController.title = genreModel.title;
+
+    [self.navigationController pushViewController:albumsWithTracksListViewController animated:YES];
+}
 
 @end
