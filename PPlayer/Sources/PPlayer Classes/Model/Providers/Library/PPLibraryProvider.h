@@ -59,6 +59,8 @@
 
 #pragma mark - Genres
 
+- (void)genresListWithCompletionBlock:(void (^)(NSArray *genresList))block;
+
 @end
 
 @interface PPLibraryProvider : PPProvider

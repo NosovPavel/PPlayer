@@ -208,6 +208,48 @@
     });
 }
 
+#pragma mark - Genres
+
+- (void)genresListWithCompletionBlock:(void (^)(NSArray *genresList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
+                    "genres.id as genre_id, genres.title as genre_title,\n"
+                    "\n"
+                    "COUNT(DISTINCT tracks.id) as tracks_count\n"
+                    "\n"
+                    "FROM \n"
+                    "genres, tracks\n"
+                    "\n"
+                    "WHERE\n"
+                    "tracks.genre_id = genres.id\n"
+                    "\n"
+                    "GROUP BY \n"
+                    "genre_id, genre_title"];
+
+            NSMutableArray *genres = [NSMutableArray array];
+            while ([resultSet next]) {
+                int64_t genreID = [resultSet longLongIntForColumn:@"genre_id"];
+                NSString *genreTitle = [resultSet stringForColumn:@"genre_title"];
+
+                int64_t tracksCount = [resultSet longLongIntForColumn:@"tracks_count"];
+
+                PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:genreID title:genreTitle];
+                genreModel.tracksCount = tracksCount;
+
+                [genres addObject:genreModel];
+            }
+            [resultSet close];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block([genres copy]);
+                });
+            }
+        }];
+    });
+}
+
 @end
 
 @interface PPLibraryEditor () {

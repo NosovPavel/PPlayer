@@ -22,4 +22,5 @@
 #import "PPLibraryItemModel.h"
 
 @interface PPLibraryGenreModel : PPLibraryItemModel
+@property(atomic) int64_t tracksCount;
 @end
