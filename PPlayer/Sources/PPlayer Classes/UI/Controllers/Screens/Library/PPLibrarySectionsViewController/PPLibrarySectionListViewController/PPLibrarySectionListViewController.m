@@ -36,7 +36,7 @@
                                                               //
                                                           } title:NSLocalizedString(@"Delete", nil)];
 
-    _editEction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconDelete.png"]
+    _editEction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconEdit.png"]
                                                         handler:^{
                                                             //
                                                         } title:NSLocalizedString(@"Edit", nil)];
