@@ -21,9 +21,6 @@
 
 #import "PPLibrarySectionListViewController.h"
 
-@interface PPLibrarySectionListViewController () <UITableViewDataSource, UITableViewDelegate>
-@end
-
 @implementation PPLibrarySectionListViewController
 
 #pragma mark - Init

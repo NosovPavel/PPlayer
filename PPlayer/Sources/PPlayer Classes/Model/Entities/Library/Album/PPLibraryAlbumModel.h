@@ -30,5 +30,4 @@
 
 + (instancetype)modelWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel;
 
-
 @end

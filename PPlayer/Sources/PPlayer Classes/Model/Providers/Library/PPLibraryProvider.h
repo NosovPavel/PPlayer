@@ -61,6 +61,11 @@
 
 - (void)genresListWithCompletionBlock:(void (^)(NSArray *genresList))block;
 
+#pragma mark - Complex
+
+- (void)albumsWithTracksByArtist:(PPLibraryArtistModel *)artistModel
+             withCompletionBlock:(void (^)(NSArray *albumsList, NSArray *tracksListsList))block;
+
 @end
 
 @interface PPLibraryProvider : PPProvider

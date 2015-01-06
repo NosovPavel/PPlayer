@@ -19,19 +19,21 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPSelectableActionsViewController.h"
+#import "PPLibrarySectionListViewController.h"
 
-@interface PPLibrarySectionListViewController : PPSelectableActionsViewController <UITableViewDataSource, UITableViewDelegate> {
-@protected
-    //Data
-    NSMutableArray *_sourceArray;
-    PPNavigationBarMenuViewAction *_deleteAction;
-    PPNavigationBarMenuViewAction *_editEction;
+@class PPLibraryArtistModel;
 
-    //Visual
-    UITableView *_sourceTableView;
-}
+@interface PPLibraryAlbumsWithTracksHeaderView : UITableViewHeaderFooterView
+@end
 
-- (void)reloadDataWithCompletionBlock:(void (^)())block;
+@interface PPLibraryAlbumsWithTracksCell : UITableViewCell
+@end
+
+@interface PPLibraryAlbumsWithTracksListViewController : PPLibrarySectionListViewController
+@property(atomic, strong) PPLibraryArtistModel *artistModel;
+
+- (instancetype)initWithArtistModel:(PPLibraryArtistModel *)artistModel;
+
++ (instancetype)controllerWithArtistModel:(PPLibraryArtistModel *)artistModel;
 
 @end

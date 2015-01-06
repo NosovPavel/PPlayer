@@ -21,6 +21,7 @@
 
 #import "PPLibraryAllArtistsListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPLibraryAlbumsWithTracksListViewController.h"
 
 static const CGFloat cellsHeight = 100.0f;
 static NSString *artistCellIdentifier = @"artistCellIdentifier";
@@ -126,5 +127,16 @@ static const CGFloat leftTextShift = 0.0f;
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+
+    PPLibraryArtistModel *artistModel = _sourceArray[(NSUInteger) indexPath.row];
+    PPLibraryAlbumsWithTracksListViewController *albumsWithTracksListViewController = [PPLibraryAlbumsWithTracksListViewController
+            controllerWithArtistModel:artistModel];
+    albumsWithTracksListViewController.title = artistModel.title;
+
+    [self.navigationController pushViewController:albumsWithTracksListViewController animated:YES];
+}
 
 @end
