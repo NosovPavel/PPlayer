@@ -28,18 +28,30 @@ static NSString *albumCellIdentifier = @"albumCellIdentifier";
 static const CGFloat leftImageShift = 10.0f;
 static const CGFloat leftTextShift = 0.0f;
 
+@interface PPLibraryAllAlbumsCell () {
+@private
+    UILabel *_middleLabel;
+}
+@end
+
 @implementation PPLibraryAllAlbumsCell
+@synthesize middleLabel = _middleLabel;
 
 #pragma mark - Init
 
 - (void)_init {
-    [self.textLabel setNumberOfLines:2];
     [self.imageView setContentMode:UIViewContentModeCenter];
 
     [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
     [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
 
     [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+
+    _middleLabel = [[UILabel alloc] init];
+    [_middleLabel setFont:[UIFont systemFontOfSize:16.0f]];
+
+    [self addSubview:_middleLabel];
+    [self bringSubviewToFront:_middleLabel];
 }
 
 #pragma mark - Lifecycle
@@ -53,10 +65,16 @@ static const CGFloat leftTextShift = 0.0f;
     return self;
 }
 
+- (void)dealloc {
+    _middleLabel = nil;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+
+    self.accessoryView.backgroundColor = [UIColor redColor];
 
     CGRect imageViewFrame = self.imageView.frame;
     imageViewFrame.origin.x -= leftImageShift;
@@ -69,6 +87,17 @@ static const CGFloat leftTextShift = 0.0f;
     CGRect subTitleViewFrame = self.detailTextLabel.frame;
     subTitleViewFrame.origin.x -= leftImageShift + leftTextShift;
     self.detailTextLabel.frame = subTitleViewFrame;
+
+    [_middleLabel setFrame:self.textLabel.frame];
+    [_middleLabel setCenter:CGPointMake(self.textLabel.frame.origin.x + self.textLabel.bounds.size.width / 2.0f, _middleLabel.superview.bounds.size.height / 2.0f)];
+    [_middleLabel setFrame:CGRectMake(_middleLabel.frame.origin.x, _middleLabel.frame.origin.y, self.bounds.size.width - _middleLabel.frame.origin.x, _middleLabel.bounds.size.height)];
+
+    [self.textLabel setFrame:CGRectMake(_middleLabel.frame.origin.x,
+            _middleLabel.frame.origin.y - self.textLabel.bounds.size.height,
+            self.textLabel.bounds.size.width, self.textLabel.bounds.size.height)];
+    [self.detailTextLabel setFrame:CGRectMake(_middleLabel.frame.origin.x,
+            _middleLabel.frame.origin.y + _middleLabel.bounds.size.height,
+            self.detailTextLabel.bounds.size.width, self.detailTextLabel.bounds.size.height)];
 
     self.separatorInset = UIEdgeInsetsMake(0.0f, self.textLabel.frame.origin.x, 0.0f, 0.0f);
 }
@@ -176,16 +205,16 @@ static const CGFloat leftTextShift = 0.0f;
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView willDisplayCell:(PPLibraryAllAlbumsCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     PPLibraryAlbumModel *albumModel = _albumsArray[(NSUInteger) indexPath.row];
 
-    NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:albumModel.title];
-    [title appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@", albumModel.artistModel.title] attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:17.0f]}]];
-
+    NSString *title = albumModel.title;
+    NSString *middleTitle = albumModel.artistModel.title;
     NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %lld", NSLocalizedString(@"Tracks_count.albums", nil), albumModel.tracksCount]
                                                                                  attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
 
-    [cell.textLabel setAttributedText:title];
+    [cell.textLabel setText:title];
+    [cell.middleLabel setText:middleTitle];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
 

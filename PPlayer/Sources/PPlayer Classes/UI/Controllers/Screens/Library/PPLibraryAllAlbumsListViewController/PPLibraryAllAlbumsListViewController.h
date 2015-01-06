@@ -22,6 +22,7 @@
 #import "PPSelectableActionsViewController.h"
 
 @interface PPLibraryAllAlbumsCell : UITableViewCell
+@property UILabel *middleLabel;
 @end
 
 @interface PPLibraryAllAlbumsListViewController : PPSelectableActionsViewController
