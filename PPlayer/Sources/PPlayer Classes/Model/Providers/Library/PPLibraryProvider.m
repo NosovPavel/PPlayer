@@ -21,105 +21,326 @@
 
 #import "PPLibraryProvider.h"
 #import "FMDB.h"
+#import "NSString+EncodingFixing.h"
 #import <AVFoundation/AVFoundation.h>
 
-@interface NSString (AVMetadataItemEncodingFixing)
-- (NSString *)fixedEncodingString;
-@end
-
-@implementation NSString (AVMetadataItemEncodingFixing)
-- (NSString *)fixedEncodingString {
-    if ([self canBeConvertedToEncoding:NSWindowsCP1252StringEncoding]) {
-        const char *cString = [self cStringUsingEncoding:NSWindowsCP1252StringEncoding];
-        return [NSString stringWithCString:cString encoding:NSWindowsCP1251StringEncoding];
-    }
-
-    return self;
-}
-@end
-
-@interface PPLibraryProvider () {
-@private
+@interface PPLibraryModule () {
+@protected
     FMDatabaseQueue *_libraryDBQueue;
-    PPFilesProvider *_filesProvider;
 }
+@property(atomic, strong, readonly) FMDatabaseQueue *libraryDBQueue;
+
+- (void)_init;
+
+- (instancetype)initWithLibraryDBQueue:(FMDatabaseQueue *)libraryDBQueue;
+
++ (instancetype)moduleWithLibraryDBQueue:(FMDatabaseQueue *)libraryDBQueue;
+
 @end
 
-@implementation PPLibraryProvider
-
-#pragma mark - Preparing
-
-+ (void)load {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[self class] rootDirectoryURL] path]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[[[self class] rootDirectoryURL] path]
-                                  withIntermediateDirectories:NO
-                                                   attributes:nil
-                                                        error:NULL];
-    }
-}
-
-#pragma mark - Paths
-
-+ (NSURL *)rootDirectoryURL {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths lastObject];
-    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/.Library"];
-
-    return [NSURL fileURLWithPath:dataPath];
-}
-
-+ (NSURL *)libraryDBURL {
-    NSURL *libraryURL = [[[self class] rootDirectoryURL] URLByAppendingPathComponent:@"library.sqlite"];
-
-    return libraryURL;
-}
-
-+ (NSURL *)trackURLForID:(int64_t)trackID {
-    NSURL *trackURL = [[[self class] rootDirectoryURL] URLByAppendingPathComponent:[NSString stringWithFormat:@"%lld.pptrack", trackID]];
-
-    return trackURL;
-}
-
-#pragma mark - Singleton
-
-+ (PPLibraryProvider *)sharedLibrary {
-    static PPLibraryProvider *_instance = nil;
-
-    @synchronized (self) {
-        if (_instance == nil) {
-            _instance = [[self alloc] init];
-        }
-    }
-
-    return _instance;
-}
-
-#pragma mark - Init
+@implementation PPLibraryModule
+@synthesize libraryDBQueue = _libraryDBQueue;
 
 - (void)_init {
-    _filesProvider = [[PPFilesProvider alloc] init];
-    _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[self class] libraryDBURL] path]];
+    //
 }
 
-#pragma mark - Lifecycle
+- (void)dealloc {
+    _libraryDBQueue = nil;
+}
 
-- (instancetype)init {
+- (instancetype)initWithLibraryDBQueue:(FMDatabaseQueue *)libraryDBQueue {
     self = [super init];
     if (self) {
+        _libraryDBQueue = libraryDBQueue;
         [self _init];
     }
 
     return self;
 }
 
-- (void)dealloc {
-    [_libraryDBQueue close];
++ (instancetype)moduleWithLibraryDBQueue:(FMDatabaseQueue *)libraryDBQueue {
+    return [[self alloc] initWithLibraryDBQueue:libraryDBQueue];
+}
 
-    _libraryDBQueue = nil;
+@end
+
+@implementation PPLibraryFetcher
+
+#pragma mark - Tracks
+
+- (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT tracks.id as track_id, tracks.title as track_title, \n"
+                    "albums.id as track_album_id, albums.title as track_album_title, albums.artist_id as track_album_artist_id, artists.title as track_album_artist_title,\n"
+                    "genres.id as track_genre_id, genres.title as track_genre_title\n"
+                    "FROM tracks, artists, albums, genres\n"
+                    "WHERE tracks.album_id = albums.id AND albums.artist_id = artists.id AND tracks.genre_id = genres.id"];
+
+            NSMutableArray *tracks = [NSMutableArray array];
+            while ([resultSet next]) {
+                int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
+                NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
+
+                int64_t trackGenreID = [resultSet longLongIntForColumn:@"track_genre_id"];
+                NSString *trackGenreTitle = [resultSet stringForColumn:@"track_genre_title"];
+
+                int64_t trackAlbumArtistID = [resultSet longLongIntForColumn:@"track_album_artist_id"];
+                NSString *trackAlbumArtistTitle = [resultSet stringForColumn:@"track_album_artist_title"];
+                int64_t trackAlbumID = [resultSet longLongIntForColumn:@"track_album_id"];
+                NSString *trackAlbumTitle = [resultSet stringForColumn:@"track_album_title"];
+
+                PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:trackGenreID title:trackGenreTitle];
+                PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:trackAlbumID title:trackAlbumTitle
+                                                                       artistModel:[PPLibraryArtistModel modelWithId:trackAlbumArtistID
+                                                                                                               title:trackAlbumArtistTitle]];
+                PPLibraryTrackModel *trackModel = [PPLibraryTrackModel modelWithId:trackID title:trackTitle
+                                                                        albumModel:albumModel
+                                                                        genreModel:genreModel];
+
+                [tracks addObject:trackModel];
+            }
+            [resultSet close];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block([tracks copy]);
+                });
+            }
+        }];
+    });
+}
+
+#pragma mark - Artists
+
+- (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
+                    "artists.id as artist_id, artists.title as artist_title,\n"
+                    "\n"
+                    "COUNT(DISTINCT albums.id) as albums_count,\n"
+                    "COUNT(DISTINCT tracks.id) as tracks_count\n"
+                    "\n"
+                    "FROM \n"
+                    "artists, albums, tracks\n"
+                    "\n"
+                    "WHERE\n"
+                    "albums.artist_id = artists.id\n"
+                    "AND\n"
+                    "tracks.album_id = albums.id\n"
+                    "\n"
+                    "GROUP BY \n"
+                    "artist_id, artist_title"];
+
+            NSMutableArray *artists = [NSMutableArray array];
+            while ([resultSet next]) {
+                int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
+                NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
+
+                int64_t albumsCount = [resultSet longLongIntForColumn:@"albums_count"];
+                int64_t tracksCount = [resultSet longLongIntForColumn:@"tracks_count"];
+
+                PPLibraryArtistModel *artistModel = [PPLibraryArtistModel modelWithId:artistID title:artistTitle];
+                artistModel.albumsCount = albumsCount;
+                artistModel.tracksCount = tracksCount;
+
+                [artists addObject:artistModel];
+            }
+            [resultSet close];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block([artists copy]);
+                });
+            }
+        }];
+    });
+}
+
+@end
+
+@interface PPLibraryEditor () {
+@private
+    PPFilesProvider *_filesProvider;
+}
+@end
+
+@implementation PPLibraryEditor
+
+#pragma mark - Init
+
+- (void)_init {
+    [super _init];
+    _filesProvider = [[PPFilesProvider alloc] init];
+}
+
+#pragma mark - Lifecycle
+
+- (void)dealloc {
     _filesProvider = nil;
 }
 
-#pragma mark - Creating
+#pragma mark - Internal
+
+- (void)_moveTrackToLibrary:(PPFileModel *)track withID:(int64_t)trackID {
+    NSURL *fromURL = track.url;
+    NSURL *toURL = [[PPLibraryProvider class] trackURLForID:trackID];
+
+    [_filesProvider moveFileFromURL:fromURL toURL:toURL];
+}
+
+- (void)_importFile:(PPFileModel *)file withCompletionBlock:(void (^)())block {
+    if (!file.type == PPFileTypeFileAudio) {
+        if (block) {
+            block();
+        }
+
+        return;
+    }
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:file.url options:nil];
+
+        NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
+        NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
+        NSArray *albumNames = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
+        NSArray *genres = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyType keySpace:AVMetadataKeySpaceCommon];
+
+        AVMetadataItem *title = [titles firstObject];
+        AVMetadataItem *artist = [artists firstObject];
+        AVMetadataItem *albumName = [albumNames firstObject];
+        AVMetadataItem *genre = [genres firstObject];
+
+        NSString *currentSongTitle = [(NSString *) [title.value copyWithZone:nil] fixedEncodingString];
+        NSString *currentSongArtist = [(NSString *) [artist.value copyWithZone:nil] fixedEncodingString];
+        NSString *currentSongAlbumName = [(NSString *) [albumName.value copyWithZone:nil] fixedEncodingString];
+        NSString *currentSongGenre = [(NSString *) [genre.value copyWithZone:nil] fixedEncodingString];
+
+        PPLibraryGenreModel *genreModel;
+        PPLibraryAlbumModel *albumModel;
+        PPLibraryArtistModel *artistModel;
+        PPLibraryTrackModel *trackModel;
+
+        if (!currentSongGenre) {
+            currentSongGenre = NSLocalizedString(@"Unknown genre", nil);
+        }
+
+        if (!currentSongArtist) {
+            currentSongArtist = NSLocalizedString(@"Unknown artist", nil);
+        }
+
+        if (!currentSongAlbumName) {
+            currentSongAlbumName = NSLocalizedString(@"Unknown album", nil);
+        }
+
+        if (!currentSongTitle) {
+            currentSongTitle = NSLocalizedString(@"Unknown track", nil);
+        }
+
+        genreModel = [PPLibraryGenreModel modelWithId:-1 title:currentSongGenre];
+        artistModel = [PPLibraryArtistModel modelWithId:-1 title:currentSongArtist];
+        albumModel = [PPLibraryAlbumModel modelWithId:-1 title:currentSongAlbumName
+                                          artistModel:artistModel];
+        trackModel = [PPLibraryTrackModel modelWithId:-1 title:currentSongTitle
+                                           albumModel:albumModel
+                                           genreModel:genreModel];
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            int64_t createdTrackID = [self _createTrack:trackModel inDatabase:db];
+            if (createdTrackID >= 0) {
+                [self _moveTrackToLibrary:file withID:createdTrackID];
+            }
+
+            if (block) {
+                block();
+            }
+        }];
+    });
+}
+
+#pragma mark - Import
+
+- (void)importFiles:(NSArray *)files
+  withProgressBlock:(void (^)(float progress))progressBlock
+ andCompletionBlock:(void (^)())block {
+    __block typeof(self) selfRef = self;
+    __block float percent = 0.0f;
+
+    dispatch_group_t importGroup = dispatch_group_create();
+
+    NSMutableArray *reallyFiles = [NSMutableArray array];
+    [files enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
+        if ([currentFile isKindOfClass:[PPFileModel class]]) {
+            [reallyFiles addObject:currentFile];
+        }
+    }];
+
+    float overall = (float) reallyFiles.count;
+    float onePartPercent = (1.0f / overall);
+    __block float parts = 0;
+
+    [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
+        dispatch_group_enter(importGroup);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (currentFile.type == PPFileTypeFolder) {
+                [selfRef->_filesProvider filesModelsAtURL:currentFile.url withCompletionBlock:^(NSArray *filesModelsAtURL) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        [selfRef importFiles:filesModelsAtURL
+                           withProgressBlock:^(float partProgress) {
+                               dispatch_async(dispatch_get_main_queue(), ^{
+                                   percent = (parts + partProgress) * onePartPercent;
+
+                                   float percentSnapshot = percent;
+                                   if (progressBlock) {
+                                       progressBlock(percentSnapshot);
+                                   }
+                               });
+                           }
+                          andCompletionBlock:^{
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [_filesProvider removeFileAtURL:currentFile.url];
+
+                                  parts++;
+                                  percent = parts * onePartPercent;
+
+                                  float percentSnapshot = percent;
+                                  if (progressBlock) {
+                                      progressBlock(percentSnapshot);
+                                  }
+
+                                  dispatch_group_leave(importGroup);
+                              });
+                          }];
+                    });
+                }];
+
+            } else {
+                [selfRef _importFile:currentFile withCompletionBlock:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        parts++;
+                        percent = parts * onePartPercent;
+
+                        float percentSnapshot = percent;
+                        if (progressBlock) {
+                            progressBlock(percentSnapshot);
+                        }
+
+                        dispatch_group_leave(importGroup);
+                    });
+                }];
+            }
+        });
+    }];
+
+    dispatch_group_notify(importGroup, dispatch_get_main_queue(), ^{
+        if (block) {
+            block();
+        }
+    });
+}
+
+#pragma mark - Creation
 
 - (int64_t)_createGenre:(PPLibraryGenreModel *)genreModel inDatabase:(FMDatabase *)database {
     if (!genreModel.title) {
@@ -222,254 +443,94 @@
     return resultID;
 }
 
-#pragma mark - Files
+@end
 
-- (void)_moveTrackToLibrary:(PPFileModel *)track withID:(int64_t)trackID {
-    NSURL *fromURL = track.url;
-    NSURL *toURL = [[self class] trackURLForID:trackID];
+@interface PPLibraryProvider () {
+@private
+    FMDatabaseQueue *_libraryDBQueue;
 
-    [_filesProvider moveFileFromURL:fromURL toURL:toURL];
+    PPLibraryFetcher *_fetcher;
+    PPLibraryEditor *_editor;
+}
+@end
+
+@implementation PPLibraryProvider
+@synthesize fetcher = _fetcher;
+@synthesize editor = _editor;
+
+#pragma mark - Preparing
+
++ (void)load {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[[[PPLibraryProvider class] _rootDirectoryURL] path]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[[PPLibraryProvider class] _rootDirectoryURL] path]
+                                  withIntermediateDirectories:NO
+                                                   attributes:nil
+                                                        error:NULL];
+    }
 }
 
-#pragma mark - Import
+#pragma mark - Paths
 
-- (void)_importFile:(PPFileModel *)file withCompletionBlock:(void (^)())block {
-    if (!file.type == PPFileTypeFileAudio) {
-        if (block) {
-            block();
++ (NSURL *)_rootDirectoryURL {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths lastObject];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/.Library"];
+
+    return [NSURL fileURLWithPath:dataPath];
+}
+
++ (NSURL *)_libraryDBURL {
+    NSURL *libraryURL = [[[PPLibraryProvider class] _rootDirectoryURL] URLByAppendingPathComponent:@"library.sqlite"];
+
+    return libraryURL;
+}
+
++ (NSURL *)trackURLForID:(int64_t)trackID {
+    NSURL *trackURL = [[[PPLibraryProvider class] _rootDirectoryURL] URLByAppendingPathComponent:[NSString stringWithFormat:@"%lld.pptrack", trackID]];
+
+    return trackURL;
+}
+
+#pragma mark - Singleton
+
++ (PPLibraryProvider *)sharedLibrary {
+    static PPLibraryProvider *_instance = nil;
+
+    @synchronized (self) {
+        if (_instance == nil) {
+            _instance = [[self alloc] init];
         }
-
-        return;
     }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:file.url options:nil];
-
-        NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-        NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-        NSArray *albumNames = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
-        NSArray *genres = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyType keySpace:AVMetadataKeySpaceCommon];
-
-        AVMetadataItem *title = [titles firstObject];
-        AVMetadataItem *artist = [artists firstObject];
-        AVMetadataItem *albumName = [albumNames firstObject];
-        AVMetadataItem *genre = [genres firstObject];
-
-        NSString *currentSongTitle = [(NSString *) [title.value copyWithZone:nil] fixedEncodingString];
-        NSString *currentSongArtist = [(NSString *) [artist.value copyWithZone:nil] fixedEncodingString];
-        NSString *currentSongAlbumName = [(NSString *) [albumName.value copyWithZone:nil] fixedEncodingString];
-        NSString *currentSongGenre = [(NSString *) [genre.value copyWithZone:nil] fixedEncodingString];
-
-        PPLibraryGenreModel *genreModel;
-        PPLibraryAlbumModel *albumModel;
-        PPLibraryArtistModel *artistModel;
-        PPLibraryTrackModel *trackModel;
-
-        if (!currentSongGenre) {
-            currentSongGenre = NSLocalizedString(@"Unknown genre", nil);
-        }
-
-        if (!currentSongArtist) {
-            currentSongArtist = NSLocalizedString(@"Unknown artist", nil);
-        }
-
-        if (!currentSongAlbumName) {
-            currentSongAlbumName = NSLocalizedString(@"Unknown album", nil);
-        }
-
-        if (!currentSongTitle) {
-            currentSongTitle = NSLocalizedString(@"Unknown track", nil);
-        }
-
-        genreModel = [PPLibraryGenreModel modelWithId:-1 title:currentSongGenre];
-        artistModel = [PPLibraryArtistModel modelWithId:-1 title:currentSongArtist];
-        albumModel = [PPLibraryAlbumModel modelWithId:-1 title:currentSongAlbumName
-                                          artistModel:artistModel];
-        trackModel = [PPLibraryTrackModel modelWithId:-1 title:currentSongTitle
-                                           albumModel:albumModel
-                                           genreModel:genreModel];
-        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
-            int64_t createdTrackID = [self _createTrack:trackModel inDatabase:db];
-            if (createdTrackID >= 0) {
-                [self _moveTrackToLibrary:file withID:createdTrackID];
-            }
-
-            if (block) {
-                block();
-            }
-        }];
-    });
+    return _instance;
 }
 
-- (void)importFiles:(NSArray *)files
-  withProgressBlock:(void (^)(float progress))progressBlock
- andCompletionBlock:(void (^)())block {
-    __block typeof(self) selfRef = self;
-    __block float percent = 0.0f;
+#pragma mark - Init
 
-    dispatch_group_t importGroup = dispatch_group_create();
+- (void)_init {
+    _libraryDBQueue = [FMDatabaseQueue databaseQueueWithPath:[[[PPLibraryProvider class] _libraryDBURL] path]];
 
-    NSMutableArray *reallyFiles = [NSMutableArray array];
-    [files enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
-        if ([currentFile isKindOfClass:[PPFileModel class]]) {
-            [reallyFiles addObject:currentFile];
-        }
-    }];
-
-    float overall = (float) reallyFiles.count;
-    float onePartPercent = (1.0f / overall);
-    __block float parts = 0;
-
-    [reallyFiles enumerateObjectsUsingBlock:^(PPFileModel *currentFile, NSUInteger idx, BOOL *stop) {
-        dispatch_group_enter(importGroup);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (currentFile.type == PPFileTypeFolder) {
-                [selfRef->_filesProvider filesModelsAtURL:currentFile.url withCompletionBlock:^(NSArray *filesModelsAtURL) {
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        [selfRef importFiles:filesModelsAtURL
-                           withProgressBlock:^(float partProgress) {
-                               dispatch_async(dispatch_get_main_queue(), ^{
-                                   percent = (parts + partProgress) * onePartPercent;
-
-                                   float percentSnapshot = percent;
-                                   if (progressBlock) {
-                                       progressBlock(percentSnapshot);
-                                   }
-                               });
-                           }
-                          andCompletionBlock:^{
-                              dispatch_async(dispatch_get_main_queue(), ^{
-                                  [_filesProvider removeFileAtURL:currentFile.url];
-
-                                  parts++;
-                                  percent = parts * onePartPercent;
-
-                                  float percentSnapshot = percent;
-                                  if (progressBlock) {
-                                      progressBlock(percentSnapshot);
-                                  }
-
-                                  dispatch_group_leave(importGroup);
-                              });
-                          }];
-                    });
-                }];
-
-            } else {
-                [selfRef _importFile:currentFile withCompletionBlock:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        parts++;
-                        percent = parts * onePartPercent;
-
-                        float percentSnapshot = percent;
-                        if (progressBlock) {
-                            progressBlock(percentSnapshot);
-                        }
-
-                        dispatch_group_leave(importGroup);
-                    });
-                }];
-            }
-        });
-    }];
-
-    dispatch_group_notify(importGroup, dispatch_get_main_queue(), ^{
-        if (block) {
-            block();
-        }
-    });
+    _fetcher = [PPLibraryFetcher moduleWithLibraryDBQueue:_libraryDBQueue];
+    _editor = [PPLibraryEditor moduleWithLibraryDBQueue:_libraryDBQueue];
 }
 
-#pragma mark - Tracks
+#pragma mark - Lifecycle
 
-- (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
-            FMResultSet *resultSet = [db executeQuery:@"SELECT tracks.id as track_id, tracks.title as track_title, \n"
-                    "albums.id as track_album_id, albums.title as track_album_title, albums.artist_id as track_album_artist_id, artists.title as track_album_artist_title,\n"
-                    "genres.id as track_genre_id, genres.title as track_genre_title\n"
-                    "FROM tracks, artists, albums, genres\n"
-                    "WHERE tracks.album_id = albums.id AND albums.artist_id = artists.id AND tracks.genre_id = genres.id"];
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self _init];
+    }
 
-            NSMutableArray *tracks = [NSMutableArray array];
-            while ([resultSet next]) {
-                int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
-                NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
-
-                int64_t trackGenreID = [resultSet longLongIntForColumn:@"track_genre_id"];
-                NSString *trackGenreTitle = [resultSet stringForColumn:@"track_genre_title"];
-
-                int64_t trackAlbumArtistID = [resultSet longLongIntForColumn:@"track_album_artist_id"];
-                NSString *trackAlbumArtistTitle = [resultSet stringForColumn:@"track_album_artist_title"];
-                int64_t trackAlbumID = [resultSet longLongIntForColumn:@"track_album_id"];
-                NSString *trackAlbumTitle = [resultSet stringForColumn:@"track_album_title"];
-
-                PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:trackGenreID title:trackGenreTitle];
-                PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:trackAlbumID title:trackAlbumTitle
-                                                                       artistModel:[PPLibraryArtistModel modelWithId:trackAlbumArtistID
-                                                                                                               title:trackAlbumArtistTitle]];
-                PPLibraryTrackModel *trackModel = [PPLibraryTrackModel modelWithId:trackID title:trackTitle
-                                                                        albumModel:albumModel
-                                                                        genreModel:genreModel];
-
-                [tracks addObject:trackModel];
-            }
-            [resultSet close];
-
-            if (block) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    block([tracks copy]);
-                });
-            }
-        }];
-    });
+    return self;
 }
 
-#pragma mark - Artists
+- (void)dealloc {
+    [_libraryDBQueue close];
 
-- (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
-            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
-                    "artists.id as artist_id, artists.title as artist_title,\n"
-                    "\n"
-                    "COUNT(DISTINCT albums.id) as albums_count,\n"
-                    "COUNT(DISTINCT tracks.id) as tracks_count\n"
-                    "\n"
-                    "FROM \n"
-                    "artists, albums, tracks\n"
-                    "\n"
-                    "WHERE\n"
-                    "albums.artist_id = artists.id\n"
-                    "AND\n"
-                    "tracks.album_id = albums.id\n"
-                    "\n"
-                    "GROUP BY \n"
-                    "artist_id, artist_title"];
-
-            NSMutableArray *artists = [NSMutableArray array];
-            while ([resultSet next]) {
-                int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
-                NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
-
-                int64_t albumsCount = [resultSet longLongIntForColumn:@"albums_count"];
-                int64_t tracksCount = [resultSet longLongIntForColumn:@"tracks_count"];
-
-                PPLibraryArtistModel *artistModel = [PPLibraryArtistModel modelWithId:artistID title:artistTitle];
-                artistModel.albumsCount = albumsCount;
-                artistModel.tracksCount = tracksCount;
-
-                [artists addObject:artistModel];
-            }
-            [resultSet close];
-
-            if (block) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    block([artists copy]);
-                });
-            }
-        }];
-    });
+    _libraryDBQueue = nil;
+    _fetcher = nil;
+    _editor = nil;
 }
 
 @end

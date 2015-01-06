@@ -140,7 +140,7 @@ static const CGFloat leftTextShift = 0.0f;
     [self startLoading];
 
     __block typeof(self) selfRef = self;
-    [[PPLibraryProvider sharedLibrary] artistsListWithCompletionBlock:^(NSArray *artistsList) {
+    [[PPLibraryProvider sharedLibrary].fetcher artistsListWithCompletionBlock:^(NSArray *artistsList) {
         selfRef->_artistsArray = [artistsList mutableCopy];
         [selfRef->_artistsTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                   withRowAnimation:UITableViewRowAnimationFade];

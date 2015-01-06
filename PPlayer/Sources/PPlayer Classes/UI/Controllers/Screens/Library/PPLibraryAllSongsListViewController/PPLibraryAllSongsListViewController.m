@@ -137,7 +137,7 @@ static const CGFloat leftTextShift = 5.0f;
     [self startLoading];
 
     __block typeof(self) selfRef = self;
-    [[PPLibraryProvider sharedLibrary] tracksListWithCompletionBlock:^(NSArray *tracksList) {
+    [[PPLibraryProvider sharedLibrary].fetcher tracksListWithCompletionBlock:^(NSArray *tracksList) {
         selfRef->_tracksArray = [tracksList mutableCopy];
         [selfRef->_tracksTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                  withRowAnimation:UITableViewRowAnimationFade];

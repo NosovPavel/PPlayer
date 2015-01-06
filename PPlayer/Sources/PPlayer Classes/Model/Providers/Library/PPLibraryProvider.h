@@ -24,17 +24,26 @@
 
 #import "PPLibraryTrackModel.h"
 
-@interface PPLibraryProvider : PPProvider
+@interface PPLibraryModule : PPProvider
+@end
 
-#pragma mark - Singleton
-
-+ (PPLibraryProvider *)sharedLibrary;
+@interface PPLibraryEditor : PPLibraryModule
 
 #pragma mark - Import
 
 - (void)importFiles:(NSArray *)files
   withProgressBlock:(void (^)(float progress))progressBlock
  andCompletionBlock:(void (^)())block;
+
+#pragma mark - Creation
+
+#pragma mark - Editing
+
+#pragma mark - Deleting
+
+@end
+
+@interface PPLibraryFetcher : PPLibraryModule
 
 #pragma mark - Tracks
 
@@ -47,5 +56,19 @@
 #pragma mark - Albums
 
 #pragma mark - Genres
+
+@end
+
+@interface PPLibraryProvider : PPProvider
+@property(atomic, strong, readonly) PPLibraryEditor *editor;
+@property(atomic, strong, readonly) PPLibraryFetcher *fetcher;
+
+#pragma mark - System
+
++ (NSURL *)trackURLForID:(int64_t)trackID;
+
+#pragma mark - Singleton
+
++ (PPLibraryProvider *)sharedLibrary;
 
 @end
