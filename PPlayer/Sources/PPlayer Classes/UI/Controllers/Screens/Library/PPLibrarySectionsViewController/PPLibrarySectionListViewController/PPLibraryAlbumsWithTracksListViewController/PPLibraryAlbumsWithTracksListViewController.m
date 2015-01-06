@@ -25,7 +25,7 @@
 static const CGFloat cellsHeight = 50.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
 
-static const CGFloat headersHeight = 80.0f;
+static const CGFloat headersHeight = 100.0f;
 static NSString *albumsHeaderIdentifier = @"albumsHeaderIdentifier";
 
 UIEdgeInsets edgeInsets() {
