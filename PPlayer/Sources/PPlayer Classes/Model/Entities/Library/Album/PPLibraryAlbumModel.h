@@ -24,6 +24,7 @@
 
 @interface PPLibraryAlbumModel : PPLibraryItemModel
 @property(atomic, strong) PPLibraryArtistModel *artistModel;
+@property(atomic) int64_t tracksCount;
 
 - (instancetype)initWithId:(int64_t)id title:(NSString *)title artistModel:(PPLibraryArtistModel *)artistModel;
 

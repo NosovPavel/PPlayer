@@ -19,23 +19,27 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPLibraryAllSongsListViewController.h"
+#import "PPLibraryAllAlbumsListViewController.h"
 #import "PPLibraryProvider.h"
 
-static const CGFloat cellsHeight = 60.0f;
-static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
+static const CGFloat cellsHeight = 100.0f;
+static NSString *albumCellIdentifier = @"albumCellIdentifier";
 
-static const CGFloat leftImageShift = 15.0f;
-static const CGFloat leftTextShift = 5.0f;
+static const CGFloat leftImageShift = 10.0f;
+static const CGFloat leftTextShift = 0.0f;
 
-@implementation PPLibraryAllSongsCell
+@implementation PPLibraryAllAlbumsCell
 
 #pragma mark - Init
 
 - (void)_init {
+    [self.textLabel setNumberOfLines:2];
     [self.imageView setContentMode:UIViewContentModeCenter];
+
     [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
     [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
+
+    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 
 #pragma mark - Lifecycle
@@ -71,18 +75,18 @@ static const CGFloat leftTextShift = 5.0f;
 
 @end
 
-@interface PPLibraryAllSongsListViewController () <UITableViewDataSource, UITableViewDelegate> {
+@interface PPLibraryAllAlbumsListViewController () <UITableViewDataSource, UITableViewDelegate> {
 @private
     //Data
-    NSMutableArray *_tracksArray;
+    NSMutableArray *_albumsArray;
     PPNavigationBarMenuViewAction *_deleteAction;
 
     //Visual
-    UITableView *_tracksTableView;
+    UITableView *_albumsTableView;
 }
 @end
 
-@implementation PPLibraryAllSongsListViewController
+@implementation PPLibraryAllAlbumsListViewController
 
 #pragma mark - Init
 
@@ -105,24 +109,24 @@ static const CGFloat leftTextShift = 5.0f;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.menuNavigationViewController setMenuHidden:NO animated:YES];
-    [self _reloadTracks];
+    [self _reloadArtists];
 }
 
 - (void)loadView {
     self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
 
-    _tracksTableView = [[UITableView alloc] initWithFrame:self.view.bounds
+    _albumsTableView = [[UITableView alloc] initWithFrame:self.view.bounds
                                                     style:UITableViewStylePlain];
-    _tracksTableView.dataSource = self;
-    _tracksTableView.delegate = self;
-    _tracksTableView.rowHeight = cellsHeight;
+    _albumsTableView.dataSource = self;
+    _albumsTableView.delegate = self;
+    _albumsTableView.rowHeight = cellsHeight;
 
-    [self.view addSubview:_tracksTableView];
+    [self.view addSubview:_albumsTableView];
 }
 
 - (void)dealloc {
-    _tracksTableView = nil;
-    _tracksArray = nil;
+    _albumsTableView = nil;
+    _albumsArray = nil;
 
     _deleteAction = nil;
 }
@@ -131,18 +135,18 @@ static const CGFloat leftTextShift = 5.0f;
 
 - (void)performLayout {
     [super performLayout];
-    [_tracksTableView setFrame:self.view.bounds];
+    [_albumsTableView setFrame:self.view.bounds];
 }
 
 #pragma mark - Reloading
 
-- (void)_reloadTracks {
+- (void)_reloadArtists {
     [self startLoading];
 
     __block typeof(self) selfRef = self;
-    [[PPLibraryProvider sharedLibrary].fetcher tracksListWithCompletionBlock:^(NSArray *tracksList) {
-        selfRef->_tracksArray = [tracksList mutableCopy];
-        [selfRef->_tracksTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+    [[PPLibraryProvider sharedLibrary].fetcher albumsListWithCompletionBlock:^(NSArray *albumsList) {
+        selfRef->_albumsArray = [albumsList mutableCopy];
+        [selfRef->_albumsTableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                  withRowAnimation:UITableViewRowAnimationFade];
         [selfRef endLoading];
     }];
@@ -155,16 +159,16 @@ static const CGFloat leftTextShift = 5.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _tracksArray.count;
+    return _albumsArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:albumCellIdentifier];
 
     if (!cell) {
-        cell = [[PPLibraryAllSongsCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                            reuseIdentifier:tracksCellIdentifier];
-        [cell.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
+        cell = [[PPLibraryAllAlbumsCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                             reuseIdentifier:albumCellIdentifier];
+        [cell.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderArtist.png"]];
     }
 
     return cell;
@@ -173,16 +177,15 @@ static const CGFloat leftTextShift = 5.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PPLibraryTrackModel *track = _tracksArray[(NSUInteger) indexPath.row];
+    PPLibraryAlbumModel *albumModel = _albumsArray[(NSUInteger) indexPath.row];
 
-    NSString *title = track.title;
-    NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:track.albumModel.artistModel.title
+    NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:albumModel.title];
+    [title appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@", albumModel.artistModel.title] attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:17.0f]}]];
+
+    NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %lld", NSLocalizedString(@"Tracks_count.albums", nil), albumModel.tracksCount]
                                                                                  attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
-    NSAttributedString *albumName = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", track.albumModel.title]
-                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]}];
-    [subtitle appendAttributedString:albumName];
 
-    [cell.textLabel setText:title];
+    [cell.textLabel setAttributedText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 };
 
@@ -197,17 +200,17 @@ static const CGFloat leftTextShift = 5.0f;
 }
 
 - (BOOL)canPerformSelection {
-    return _tracksArray.count > 0;
+    return _albumsArray.count > 0;
 }
 
 - (void)selectTapped {
     [super selectTapped];
-    [_tracksTableView reloadData];
+    [_albumsTableView reloadData];
 }
 
 - (void)doneTapped {
     [super doneTapped];
-    [_tracksTableView reloadData];
+    [_albumsTableView reloadData];
 }
 
 @end

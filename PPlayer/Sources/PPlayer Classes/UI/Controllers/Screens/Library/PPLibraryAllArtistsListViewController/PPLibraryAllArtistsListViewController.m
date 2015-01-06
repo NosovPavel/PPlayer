@@ -23,7 +23,7 @@
 #import "PPLibraryProvider.h"
 
 static const CGFloat cellsHeight = 100.0f;
-static NSString *artistCellIdentifier = @"tracksCellIdentifier";
+static NSString *artistCellIdentifier = @"artistCellIdentifier";
 
 static const CGFloat leftImageShift = 10.0f;
 static const CGFloat leftTextShift = 0.0f;
@@ -34,8 +34,10 @@ static const CGFloat leftTextShift = 0.0f;
 
 - (void)_init {
     [self.imageView setContentMode:UIViewContentModeCenter];
-    [self.textLabel setFont:[UIFont systemFontOfSize:20.0f]];
-    [self.detailTextLabel setFont:[UIFont systemFontOfSize:15.0f]];
+
+    [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+    [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
+
     [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 
@@ -105,6 +107,7 @@ static const CGFloat leftTextShift = 0.0f;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
     [self _reloadArtists];
 }
 

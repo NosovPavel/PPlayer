@@ -19,58 +19,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPProvider.h"
-#import "PPFilesProvider.h"
+#import "PPSelectableActionsViewController.h"
 
-#import "PPLibraryTrackModel.h"
-
-@interface PPLibraryModule : PPProvider
+@interface PPLibraryAllAlbumsCell : UITableViewCell
 @end
 
-@interface PPLibraryEditor : PPLibraryModule
-
-#pragma mark - Import
-
-- (void)importFiles:(NSArray *)files
-  withProgressBlock:(void (^)(float progress))progressBlock
- andCompletionBlock:(void (^)())block;
-
-#pragma mark - Creation
-
-#pragma mark - Editing
-
-#pragma mark - Deleting
-
-@end
-
-@interface PPLibraryFetcher : PPLibraryModule
-
-#pragma mark - Tracks
-
-- (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block;
-
-#pragma mark - Artists
-
-- (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block;
-
-#pragma mark - Albums
-
-- (void)albumsListWithCompletionBlock:(void (^)(NSArray *albumsList))block;
-
-#pragma mark - Genres
-
-@end
-
-@interface PPLibraryProvider : PPProvider
-@property(atomic, strong, readonly) PPLibraryEditor *editor;
-@property(atomic, strong, readonly) PPLibraryFetcher *fetcher;
-
-#pragma mark - System
-
-+ (NSURL *)trackURLForID:(int64_t)trackID;
-
-#pragma mark - Singleton
-
-+ (PPLibraryProvider *)sharedLibrary;
-
+@interface PPLibraryAllAlbumsListViewController : PPSelectableActionsViewController
 @end

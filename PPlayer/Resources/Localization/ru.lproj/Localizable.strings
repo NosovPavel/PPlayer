@@ -38,3 +38,6 @@
 //All artists screen
 "Albums_count" = "Альбомов";
 "Tracks_count" = "песен";
+
+//All albums screen
+"Tracks_count.albums" = "Песен";

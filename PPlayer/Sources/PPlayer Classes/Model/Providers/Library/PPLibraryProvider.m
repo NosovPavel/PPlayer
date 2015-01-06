@@ -159,6 +159,55 @@
     });
 }
 
+#pragma mark - Albums
+
+- (void)albumsListWithCompletionBlock:(void (^)(NSArray *albumsList))block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:@"SELECT \n"
+                    "albums.id as album_id, albums.title as album_title,\n"
+                    "artists.id as artist_id, artists.title as artist_title,\n"
+                    "\n"
+                    "COUNT(DISTINCT tracks.id) as tracks_count\n"
+                    "\n"
+                    "FROM \n"
+                    "artists, albums, tracks\n"
+                    "\n"
+                    "WHERE\n"
+                    "albums.artist_id = artists.id\n"
+                    "AND\n"
+                    "tracks.album_id = albums.id\n"
+                    "\n"
+                    "GROUP BY \n"
+                    "album_id, album_title"];
+
+            NSMutableArray *albums = [NSMutableArray array];
+            while ([resultSet next]) {
+                int64_t albumID = [resultSet longLongIntForColumn:@"album_id"];
+                NSString *albumTitle = [resultSet stringForColumn:@"album_title"];
+
+                int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
+                NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
+
+                int64_t tracksCount = [resultSet longLongIntForColumn:@"tracks_count"];
+
+                PPLibraryArtistModel *artistModel = [PPLibraryArtistModel modelWithId:artistID title:artistTitle];
+                PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:albumID title:albumTitle artistModel:artistModel];
+                albumModel.tracksCount = tracksCount;
+
+                [albums addObject:albumModel];
+            }
+            [resultSet close];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block([albums copy]);
+                });
+            }
+        }];
+    });
+}
+
 @end
 
 @interface PPLibraryEditor () {

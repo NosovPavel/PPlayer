@@ -23,6 +23,7 @@
 
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryAllArtistsListViewController.h"
+#import "PPLibraryAllAlbumsListViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
@@ -186,13 +187,15 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
                     PPLibraryAllArtistsListViewController *artistsListViewController = [[PPLibraryAllArtistsListViewController alloc] init];
                     artistsListViewController.title = NSLocalizedString(@"Artists", nil);
 
-                    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
                     [self.navigationController pushViewController:artistsListViewController animated:YES];
                 }
                     break;
 
                 case 1: {
-                    //Albums
+                    PPLibraryAllAlbumsListViewController *albumsListViewController = [[PPLibraryAllAlbumsListViewController alloc] init];
+                    albumsListViewController.title = NSLocalizedString(@"Albums", nil);
+
+                    [self.navigationController pushViewController:albumsListViewController animated:YES];
                 }
                     break;
 
@@ -214,7 +217,6 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
                     PPLibraryAllSongsListViewController *songsListViewController = [[PPLibraryAllSongsListViewController alloc] init];
                     songsListViewController.title = NSLocalizedString(@"All songs", nil);
 
-                    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
                     [self.navigationController pushViewController:songsListViewController animated:YES];
                 }
                     break;
