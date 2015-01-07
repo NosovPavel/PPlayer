@@ -55,6 +55,9 @@
 
 - (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block;
 
+- (void)tracksListFromPLaylist:(PPLibraryPlaylistModel *)playlistModel
+           withCompletionBlock:(void (^)(NSArray *tracksList))block;
+
 #pragma mark - Artists
 
 - (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block;

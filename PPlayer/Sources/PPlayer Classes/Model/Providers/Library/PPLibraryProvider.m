@@ -113,6 +113,64 @@
     });
 }
 
+- (void)tracksListFromPLaylist:(PPLibraryPlaylistModel *)playlistModel
+           withCompletionBlock:(void (^)(NSArray *tracksList))block {
+    __block typeof(self) selfRef = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [selfRef->_libraryDBQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *resultSet = [db executeQuery:[NSString stringWithFormat:@"SELECT \n"
+                                                                                         "tracks.id as track_id, tracks.title as track_title,\n"
+                                                                                         "albums.id as album_id, albums.title as album_title,\n"
+                                                                                         "artists.id as artist_id, artists.title as artist_title,\n"
+                                                                                         "genres.id as genre_id, genres.title as genre_title,\n"
+                                                                                         "playlist%lld.id as playlist_item_id"
+                                                                                         "\n"
+                                                                                         "FROM\n"
+                                                                                         "albums, tracks, artists, genres, playlist%lld\n"
+                                                                                         "\n"
+                                                                                         "WHERE\n"
+                                                                                         "tracks.album_id = albums.id\n"
+                                                                                         "AND\n"
+                                                                                         "albums.artist_id = artists.id\n"
+                                                                                         "AND\n"
+                                                                                         "tracks.genre_id = genres.id\n"
+                                                                                         "AND \n"
+                                                                                         "tracks.id = playlist%lld.track_id", playlistModel.id, playlistModel.id, playlistModel.id]];
+
+            NSMutableArray *tracks = [NSMutableArray array];
+            while ([resultSet next]) {
+                int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
+                NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
+
+                int64_t genreID = [resultSet longLongIntForColumn:@"genre_id"];
+                NSString *genreTitle = [resultSet stringForColumn:@"genre_title"];
+
+                int64_t artistID = [resultSet longLongIntForColumn:@"artist_id"];
+                NSString *artistTitle = [resultSet stringForColumn:@"artist_title"];
+                int64_t albumID = [resultSet longLongIntForColumn:@"album_id"];
+                NSString *albumTitle = [resultSet stringForColumn:@"album_title"];
+
+                PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:genreID title:genreTitle];
+                PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:albumID title:albumTitle
+                                                                       artistModel:[PPLibraryArtistModel modelWithId:artistID
+                                                                                                               title:artistTitle]];
+                PPLibraryTrackModel *trackModel = [PPLibraryTrackModel modelWithId:trackID title:trackTitle
+                                                                        albumModel:albumModel
+                                                                        genreModel:genreModel];
+
+                [tracks addObject:trackModel];
+            }
+            [resultSet close];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block([tracks copy]);
+                });
+            }
+        }];
+    });
+}
+
 #pragma mark - Artists
 
 - (void)artistsListWithCompletionBlock:(void (^)(NSArray *artistsList))block {

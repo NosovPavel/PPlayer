@@ -22,6 +22,7 @@
 #import "PPLibraryPlaylistsListViewController.h"
 #import "PPLibraryProvider.h"
 #import "UIAlertView+Blocks.h"
+#import "PPLibraryAllSongsFromPlaylistListViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *playlistCellIdentifier = @"playlistsCellIdentifier";
@@ -266,5 +267,19 @@ static NSString *playlistCreatingCellIdentifier = @"playlistsCreatingCellIdentif
     NSString *title = playlistModel.title;
     [cell.textLabel setText:title];
 };
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+
+    if (indexPath.section == 0) {
+        PPLibraryPlaylistModel *playlistModel = _sourceArray[(NSUInteger) indexPath.row];
+
+        PPLibraryAllSongsFromPlaylistListViewController *allSongsFromPlaylistListViewController = [PPLibraryAllSongsFromPlaylistListViewController controllerWithPlaylistModel:playlistModel];
+        allSongsFromPlaylistListViewController.title = playlistModel.title;
+
+        [self.navigationController pushViewController:allSongsFromPlaylistListViewController
+                                             animated:YES];
+    }
+}
 
 @end
