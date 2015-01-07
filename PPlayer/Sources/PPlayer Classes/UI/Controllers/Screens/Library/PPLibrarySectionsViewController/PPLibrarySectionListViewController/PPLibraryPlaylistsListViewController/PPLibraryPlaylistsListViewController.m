@@ -32,6 +32,8 @@ static NSString *playlistCellIdentifier = @"playlistsCellIdentifier";
 - (void)_init {
     [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
     [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
+    [self.imageView setImage:[UIImage imageNamed:@"CellIconPlaylist.png"]];
+    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 
 #pragma mark - Lifecycle
@@ -78,7 +80,6 @@ static NSString *playlistCellIdentifier = @"playlistsCellIdentifier";
     if (!cell) {
         cell = [[PPLibraryPlaylistCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                             reuseIdentifier:playlistCellIdentifier];
-        [cell.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
     }
 
     return cell;
@@ -90,14 +91,8 @@ static NSString *playlistCellIdentifier = @"playlistsCellIdentifier";
     PPLibraryTrackModel *track = _sourceArray[(NSUInteger) indexPath.row];
 
     NSString *title = track.title;
-    NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:track.albumModel.artistModel.title
-                                                                                 attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
-    NSAttributedString *albumName = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", track.albumModel.title]
-                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]}];
-    [subtitle appendAttributedString:albumName];
 
     [cell.textLabel setText:title];
-    [cell.detailTextLabel setAttributedText:subtitle];
 };
 
 @end
