@@ -19,32 +19,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPLibraryRootViewController.h"
-#import "PPLibrarySectionsViewController.h"
+#import "PPMenuNavigationViewController.h"
 
-@interface PPLibraryRootViewController () {
-@private
-    PPLibrarySectionsViewController *_sectionsViewController;
-}
-@end
-
-@implementation PPLibraryRootViewController
-
-#pragma mark - Init
-
-- (void)designedInit {
-    [super designedInit];
-
-    _sectionsViewController = [[PPLibrarySectionsViewController alloc] init];
-    _sectionsViewController.title = NSLocalizedString(@"Library", nil);
-
-    [self setViewControllers:@[_sectionsViewController]];
-}
-
-#pragma mark - Lifecycle
-
-- (void)dealloc {
-    _sectionsViewController = nil;
-}
-
+@interface PPPlaylistsRootViewController : PPMenuNavigationViewController
 @end

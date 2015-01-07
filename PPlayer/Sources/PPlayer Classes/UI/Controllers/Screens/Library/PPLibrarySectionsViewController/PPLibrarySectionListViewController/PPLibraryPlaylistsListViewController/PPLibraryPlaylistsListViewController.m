@@ -19,21 +19,17 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPLibraryAllSongsListViewController.h"
+#import "PPLibraryPlaylistsListViewController.h"
 #import "PPLibraryProvider.h"
 
 static const CGFloat cellsHeight = 60.0f;
-static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
+static NSString *playlistCellIdentifier = @"playlistsCellIdentifier";
 
-static const CGFloat leftImageShift = 15.0f;
-static const CGFloat leftTextShift = 5.0f;
-
-@implementation PPLibraryAllSongsCell
+@implementation PPLibraryPlaylistCell
 
 #pragma mark - Init
 
 - (void)_init {
-    [self.imageView setContentMode:UIViewContentModeCenter];
     [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
     [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
 }
@@ -49,31 +45,9 @@ static const CGFloat leftTextShift = 5.0f;
     return self;
 }
 
-#pragma mark - Layout
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    CGRect imageViewFrame = self.imageView.frame;
-    imageViewFrame.origin.x -= leftImageShift;
-    self.imageView.frame = imageViewFrame;
-
-    CGRect titleViewFrame = self.textLabel.frame;
-    titleViewFrame.origin.x -= leftImageShift + leftTextShift;
-    titleViewFrame.size.width += leftImageShift + leftTextShift;
-    self.textLabel.frame = titleViewFrame;
-
-    CGRect subTitleViewFrame = self.detailTextLabel.frame;
-    subTitleViewFrame.origin.x -= leftImageShift + leftTextShift;
-    subTitleViewFrame.size.width += leftImageShift + leftTextShift;
-    self.detailTextLabel.frame = subTitleViewFrame;
-
-    self.separatorInset = UIEdgeInsetsMake(0.0f, self.textLabel.frame.origin.x, 0.0f, 0.0f);
-}
-
 @end
 
-@implementation PPLibraryAllSongsListViewController
+@implementation PPLibraryPlaylistsListViewController
 
 #pragma mark - Init
 
@@ -99,11 +73,11 @@ static const CGFloat leftTextShift = 5.0f;
 #pragma mark - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:playlistCellIdentifier];
 
     if (!cell) {
-        cell = [[PPLibraryAllSongsCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                            reuseIdentifier:tracksCellIdentifier];
+        cell = [[PPLibraryPlaylistCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                            reuseIdentifier:playlistCellIdentifier];
         [cell.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
     }
 

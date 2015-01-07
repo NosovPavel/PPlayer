@@ -119,6 +119,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 
 - (void)commonInit {
     [super commonInit];
+    [self.menuNavigationViewController setMenuHidden:NO animated:NO];
 }
 
 #pragma mark - Lifecycle
@@ -152,6 +153,7 @@ static NSString *folderCellIdentifier = @"folderCellIdentifier";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    [self.menuNavigationViewController setMenuHidden:NO animated:YES];
     [self _reloadFilesList];
 }
 

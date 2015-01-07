@@ -41,11 +41,6 @@
     _filesListViewController.title = NSLocalizedString(@"Storage", nil);
 
     [self setViewControllers:@[_filesListViewController]];
-    [self setMenuHidden:NO animated:NO];
-}
-
-- (void)commonInit {
-    [super commonInit];
 }
 
 #pragma mark - Lifecycle

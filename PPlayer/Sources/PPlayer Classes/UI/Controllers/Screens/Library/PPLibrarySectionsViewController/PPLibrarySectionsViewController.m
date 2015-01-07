@@ -46,6 +46,7 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
 
 - (void)commonInit {
     [super commonInit];
+    [self.menuNavigationViewController setMenuHidden:YES animated:NO];
 }
 
 #pragma mark - Lifecycle

@@ -19,32 +19,32 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPLibraryRootViewController.h"
-#import "PPLibrarySectionsViewController.h"
+#import "PPPlaylistsRootViewController.h"
+#import "PPLibraryPlaylistsListViewController.h"
 
-@interface PPLibraryRootViewController () {
+@interface PPPlaylistsRootViewController () {
 @private
-    PPLibrarySectionsViewController *_sectionsViewController;
+    PPLibraryPlaylistsListViewController *_playlistsListViewController;
 }
 @end
 
-@implementation PPLibraryRootViewController
+@implementation PPPlaylistsRootViewController
 
 #pragma mark - Init
 
 - (void)designedInit {
     [super designedInit];
 
-    _sectionsViewController = [[PPLibrarySectionsViewController alloc] init];
-    _sectionsViewController.title = NSLocalizedString(@"Library", nil);
+    _playlistsListViewController = [[PPLibraryPlaylistsListViewController alloc] init];
+    _playlistsListViewController.title = NSLocalizedString(@"Playlists", nil);
 
-    [self setViewControllers:@[_sectionsViewController]];
+    [self setViewControllers:@[_playlistsListViewController]];
 }
 
 #pragma mark - Lifecycle
 
 - (void)dealloc {
-    _sectionsViewController = nil;
+    _playlistsListViewController = nil;
 }
 
 @end
