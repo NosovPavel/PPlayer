@@ -113,6 +113,9 @@ static const CGFloat leftTextShift = 5.0f;
 - (void)setChecked:(BOOL)checked {
     if (checked != _checked) {
         _checked = checked;
+
+        self.textLabel.textColor = _checked ? [UIColor lightGrayColor] : [UIColor blackColor];
+        self.detailTextLabel.textColor = _checked ? [UIColor lightGrayColor] : [UIColor blackColor];
         self.accessoryView = _checked ? _checkmarkFilledImageView : _checkmarkEmptyImageView;
     }
 }

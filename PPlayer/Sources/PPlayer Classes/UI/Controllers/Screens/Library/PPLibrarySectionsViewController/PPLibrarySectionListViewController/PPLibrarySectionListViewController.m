@@ -52,8 +52,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    self.libraryRootViewController.tracksPickerDoneItem.enabled = NO;
-    self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
+    [self updateDoneButtonState];
 
     if (self.libraryRootViewController.tracksPickerMode) {
         [self.libraryRootViewController.tracksPickerDoneItem setTarget:self];
