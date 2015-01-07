@@ -23,6 +23,9 @@
 #import "PPFilesProvider.h"
 
 #import "PPLibraryTrackModel.h"
+#import "PPLibraryPlaylistModel.h"
+
+@class PPLibraryPlaylistModel;
 
 @interface PPLibraryModule : PPProvider
 @end
@@ -36,6 +39,9 @@
  andCompletionBlock:(void (^)())block;
 
 #pragma mark - Creation
+
+- (void)createPlaylist:(PPLibraryPlaylistModel *)playlistModel
+   withCompletionBlock:(void (^)(PPLibraryPlaylistModel *createdPlaylist))block;
 
 #pragma mark - Editing
 
@@ -60,6 +66,10 @@
 #pragma mark - Genres
 
 - (void)genresListWithCompletionBlock:(void (^)(NSArray *genresList))block;
+
+#pragma mark - Playlists
+
+- (void)playlistsListWithCompletionBlock:(void (^)(NSArray *playlistsList))block;
 
 #pragma mark - Complex
 

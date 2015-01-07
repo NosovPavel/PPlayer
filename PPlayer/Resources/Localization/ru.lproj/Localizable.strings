@@ -47,3 +47,10 @@
 
 //All genres screen
 "Tracks_count.genres" = "Песен";
+
+//Create playlist alert
+"Save" = "Сохранить";
+"Cancel" = "Отмена";
+"New playlist" = "Новый плейлист";
+"Assign the name to this playlist" = "Присвойте название этому плейлисту";
+"Creating" = "Создается";
