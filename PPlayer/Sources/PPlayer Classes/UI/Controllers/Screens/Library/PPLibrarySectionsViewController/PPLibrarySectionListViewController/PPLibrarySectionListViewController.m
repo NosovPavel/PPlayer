@@ -40,6 +40,7 @@
                                                         } title:NSLocalizedString(@"Edit", nil)];
 
     _actionsWhenSelected = @[_editEction, _deleteAction];
+    _pickedArray = [NSMutableArray array];
 }
 
 - (void)commonInit {
@@ -53,9 +54,22 @@
 
     self.libraryRootViewController.tracksPickerDoneItem.enabled = NO;
     self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
+
+    if (self.libraryRootViewController.tracksPickerMode) {
+        [self.libraryRootViewController.tracksPickerDoneItem setTarget:self];
+        [self.libraryRootViewController.tracksPickerDoneItem setAction:@selector(_pickerDoneTapped)];
+    }
+
     [self.menuNavigationViewController setMenuHidden:NO animated:YES];
 
     [self _reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    [self.libraryRootViewController.tracksPickerDoneItem setTarget:nil];
+    [self.libraryRootViewController.tracksPickerDoneItem setAction:nil];
 }
 
 - (void)loadView {
@@ -72,6 +86,7 @@
 - (void)dealloc {
     _sourceTableView = nil;
     _sourceArray = nil;
+    _pickedArray = nil;
 
     _editEction = nil;
     _deleteAction = nil;
@@ -145,6 +160,28 @@
 - (void)doneTapped {
     [super doneTapped];
     [_sourceTableView reloadData];
+}
+
+#pragma mark - Picker Mode Logic
+
+- (BOOL)tracksPickerMode {
+    return self.libraryRootViewController.tracksPickerMode;
+}
+
+- (void)updateDoneButtonState {
+    self.libraryRootViewController.tracksPickerDoneItem.enabled = _pickedArray.count > 0;
+
+    if (self.libraryRootViewController.tracksPickerDoneItem.enabled) {
+        self.libraryRootViewController.tracksPickerDoneItem.title = [NSString stringWithFormat:@"%@ (%d)", NSLocalizedString(@"Add", nil), (int) _pickedArray.count];
+    } else {
+        self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
+    }
+}
+
+- (void)_pickerDoneTapped {
+    if (self.libraryRootViewController.tracksPickerBlock) {
+        self.libraryRootViewController.tracksPickerBlock([_pickedArray copy]);
+    }
 }
 
 @end

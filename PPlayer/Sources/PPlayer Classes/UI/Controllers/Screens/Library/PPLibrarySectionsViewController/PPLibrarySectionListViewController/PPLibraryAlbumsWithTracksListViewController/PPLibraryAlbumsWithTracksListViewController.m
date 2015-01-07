@@ -24,6 +24,7 @@
 
 static const CGFloat cellsHeight = 50.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
+static NSString *tracksPickingCellIdentifier = @"tracksPickingCellIdentifier";
 
 static const CGFloat headersHeight = 100.0f;
 static NSString *albumsHeaderIdentifier = @"albumsHeaderIdentifier";
@@ -64,6 +65,45 @@ UIEdgeInsets edgeInsets() {
     [super layoutSubviews];
 }
 
+@end
+
+@interface PPLibraryAlbumsWithTracksPickingCell : PPLibraryAlbumsWithTracksCell {
+@private
+    UIImageView *_checkmarkEmptyImageView, *_checkmarkFilledImageView;
+    BOOL _checked;
+}
+@property BOOL checked;
+@end
+
+@implementation PPLibraryAlbumsWithTracksPickingCell
+
+- (void)_init {
+    [super _init];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    _checkmarkEmptyImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"CellIconCheckMarkEmpty.png"]
+            imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    _checkmarkFilledImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"CellIconCheckMarkFilled.png"]
+            imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+
+    self.accessoryView = _checkmarkEmptyImageView;
+}
+
+- (void)dealloc {
+    _checkmarkEmptyImageView = nil;
+    _checkmarkFilledImageView = nil;
+}
+
+- (BOOL)checked {
+    return _checked;
+}
+
+- (void)setChecked:(BOOL)checked {
+    if (checked != _checked) {
+        _checked = checked;
+        self.accessoryView = _checked ? _checkmarkFilledImageView : _checkmarkEmptyImageView;
+    }
+}
 
 @end
 
@@ -171,7 +211,7 @@ UIEdgeInsets edgeInsets() {
 
 @implementation PPLibraryAlbumsWithTracksListViewController
 
-#pragma mark - Init
+#pragma mark - initWith:
 
 - (instancetype)initWithArtistModel:(PPLibraryArtistModel *)artistModel {
     self = [super init];
@@ -211,6 +251,8 @@ UIEdgeInsets edgeInsets() {
 + (instancetype)controllerWithArtistModel:(PPLibraryArtistModel *)artistModel {
     return [[self alloc] initWithArtistModel:artistModel];
 }
+
+#pragma mark - Init
 
 - (void)commonInit {
     [super commonInit];
@@ -277,11 +319,22 @@ UIEdgeInsets edgeInsets() {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
+    UITableViewCell *cell;
 
-    if (!cell) {
-        cell = [[PPLibraryAlbumsWithTracksCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                    reuseIdentifier:tracksCellIdentifier];
+    if (!self.tracksPickerMode) {
+        cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
+
+        if (!cell) {
+            cell = [[PPLibraryAlbumsWithTracksCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                        reuseIdentifier:tracksCellIdentifier];
+        }
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:tracksPickingCellIdentifier];
+
+        if (!cell) {
+            cell = [[PPLibraryAlbumsWithTracksPickingCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                               reuseIdentifier:tracksPickingCellIdentifier];
+        }
     }
 
     return cell;
@@ -298,6 +351,13 @@ UIEdgeInsets edgeInsets() {
     [title appendAttributedString:[[NSAttributedString alloc] initWithString:track.title]];
 
     [cell.textLabel setAttributedText:title];
+
+    if (self.tracksPickerMode) {
+        PPLibraryAlbumsWithTracksPickingCell *pickingCell = (PPLibraryAlbumsWithTracksPickingCell *) cell;
+        BOOL picked = [_pickedArray containsObject:track];
+
+        pickingCell.checked = picked;
+    }
 };
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(PPLibraryAlbumsWithTracksHeaderView *)view forSection:(NSInteger)section {
@@ -308,6 +368,23 @@ UIEdgeInsets edgeInsets() {
     [view.titleLabel setText:currentAlbum.title];
     [view.subtitleLabel setAttributedText:[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %lld", NSLocalizedString(@"Tracks_count.albums", nil), (int64_t) tracks.count]
                                                                                  attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}]];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+
+    NSMutableArray *tracks = _tracksArray[(NSUInteger) indexPath.section];
+    PPLibraryTrackModel *track = tracks[(NSUInteger) indexPath.row];
+    BOOL picked = [_pickedArray containsObject:track];
+    if (picked) {
+        [_pickedArray removeObject:track];
+    } else {
+        [_pickedArray addObject:track];
+    }
+
+    [tableView reloadRowsAtIndexPaths:@[indexPath]
+                     withRowAnimation:UITableViewRowAnimationNone];
+    [self updateDoneButtonState];
 }
 
 @end

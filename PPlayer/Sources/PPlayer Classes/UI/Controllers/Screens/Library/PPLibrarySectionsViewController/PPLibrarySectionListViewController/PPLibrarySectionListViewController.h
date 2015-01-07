@@ -21,10 +21,13 @@
 
 #import "PPSelectableActionsViewController.h"
 
+@class PPLibraryRootViewController;
+
 @interface PPLibrarySectionListViewController : PPSelectableActionsViewController <UITableViewDataSource, UITableViewDelegate> {
 @protected
     //Data
     NSMutableArray *_sourceArray;
+    NSMutableArray *_pickedArray;
     PPNavigationBarMenuViewAction *_deleteAction;
     PPNavigationBarMenuViewAction *_editEction;
 
@@ -32,6 +35,10 @@
     UITableView *_sourceTableView;
 }
 
+@property(atomic, readonly) BOOL tracksPickerMode;
+
 - (void)reloadDataWithCompletionBlock:(void (^)())block;
+
+- (void)updateDoneButtonState;
 
 @end

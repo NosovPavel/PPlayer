@@ -21,7 +21,6 @@
 
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryProvider.h"
-#import "PPLibraryRootViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
@@ -120,46 +119,13 @@ static const CGFloat leftTextShift = 5.0f;
 
 @end
 
-@interface PPLibraryAllSongsListViewController () {
-@private
-    NSMutableArray *_pickedTracks;
-}
-@end
-
 @implementation PPLibraryAllSongsListViewController
 
 #pragma mark - Init
 
-- (void)designedInit {
-    [super designedInit];
-    _pickedTracks = [NSMutableArray array];
-}
-
 - (void)commonInit {
     [super commonInit];
     _sourceTableView.rowHeight = cellsHeight;
-}
-
-#pragma mark - Lifecycle
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    if (self.libraryRootViewController.tracksPickerMode) {
-        [self.libraryRootViewController.tracksPickerDoneItem setTarget:self];
-        [self.libraryRootViewController.tracksPickerDoneItem setAction:@selector(_pickerDoneTapped)];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-
-    [self.libraryRootViewController.tracksPickerDoneItem setTarget:nil];
-    [self.libraryRootViewController.tracksPickerDoneItem setAction:nil];
-}
-
-- (void)dealloc {
-    _pickedTracks = nil;
 }
 
 #pragma mark - Reloading
@@ -181,7 +147,7 @@ static const CGFloat leftTextShift = 5.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
 
-    if (!self.libraryRootViewController.tracksPickerMode) {
+    if (!self.tracksPickerMode) {
         cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
 
         if (!cell) {
@@ -217,9 +183,9 @@ static const CGFloat leftTextShift = 5.0f;
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
 
-    if (self.libraryRootViewController.tracksPickerMode) {
+    if (self.tracksPickerMode) {
         PPLibraryAllSongsPickingCell *pickingCell = (PPLibraryAllSongsPickingCell *) cell;
-        BOOL picked = [_pickedTracks containsObject:track];
+        BOOL picked = [_pickedArray containsObject:track];
 
         pickingCell.checked = picked;
     }
@@ -229,34 +195,16 @@ static const CGFloat leftTextShift = 5.0f;
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
 
     PPLibraryTrackModel *track = _sourceArray[(NSUInteger) indexPath.row];
-    BOOL picked = [_pickedTracks containsObject:track];
+    BOOL picked = [_pickedArray containsObject:track];
     if (picked) {
-        [_pickedTracks removeObject:track];
+        [_pickedArray removeObject:track];
     } else {
-        [_pickedTracks addObject:track];
+        [_pickedArray addObject:track];
     }
 
     [tableView reloadRowsAtIndexPaths:@[indexPath]
                      withRowAnimation:UITableViewRowAnimationNone];
-    [self _updateDoneButtonState];
-}
-
-#pragma mark - Picker Mode Logic
-
-- (void)_updateDoneButtonState {
-    self.libraryRootViewController.tracksPickerDoneItem.enabled = _pickedTracks.count > 0;
-
-    if (self.libraryRootViewController.tracksPickerDoneItem.enabled) {
-        self.libraryRootViewController.tracksPickerDoneItem.title = [NSString stringWithFormat:@"%@ (%d)", NSLocalizedString(@"Add", nil), _pickedTracks.count];
-    } else {
-        self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
-    }
-}
-
-- (void)_pickerDoneTapped {
-    if (self.libraryRootViewController.tracksPickerBlock) {
-        self.libraryRootViewController.tracksPickerBlock([_pickedTracks copy]);
-    }
+    [self updateDoneButtonState];
 }
 
 @end
