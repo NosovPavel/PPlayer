@@ -22,4 +22,10 @@
 #import "PPNavigationController.h"
 
 @implementation PPNavigationController
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    viewController.navigationItem.prompt = ((UIViewController *) [self.viewControllers lastObject]).navigationItem.prompt;
+    [super pushViewController:viewController animated:animated];
+}
+
 @end

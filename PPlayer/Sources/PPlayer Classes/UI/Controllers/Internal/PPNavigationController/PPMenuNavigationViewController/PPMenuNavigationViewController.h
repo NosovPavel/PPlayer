@@ -37,5 +37,5 @@
 @end
 
 @interface UIViewController (PPMenuNavigationViewController)
-@property(atomic, strong, readonly) PPMenuNavigationViewController *menuNavigationViewController;
+@property(atomic, weak, readonly) PPMenuNavigationViewController *menuNavigationViewController;
 @end

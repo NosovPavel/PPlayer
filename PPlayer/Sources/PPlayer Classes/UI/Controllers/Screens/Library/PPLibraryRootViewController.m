@@ -25,26 +25,100 @@
 @interface PPLibraryRootViewController () {
 @private
     PPLibrarySectionsViewController *_sectionsViewController;
+    UIBarButtonItem *_cancelItem, *_doneItem, *_spaceItem;
+
+    BOOL _tracksPickerMode;
 }
 @end
 
 @implementation PPLibraryRootViewController
+@synthesize tracksPickerDoneItem = _doneItem;
 
 #pragma mark - Init
 
 - (void)designedInit {
     [super designedInit];
 
+    _cancelItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil)
+                                                   style:UIBarButtonItemStylePlain
+                                                  target:self
+                                                  action:@selector(_pickerCancelTapped)];
+    _doneItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", nil)
+                                                 style:UIBarButtonItemStyleDone
+                                                target:nil
+                                                action:nil];
+    _doneItem.enabled = NO;
+
+    _spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                               target:nil
+                                                               action:nil];
+
     _sectionsViewController = [[PPLibrarySectionsViewController alloc] init];
     _sectionsViewController.title = NSLocalizedString(@"Library", nil);
 
+    [_sectionsViewController setToolbarItems:@[_cancelItem, _spaceItem, _doneItem]];
     [self setViewControllers:@[_sectionsViewController]];
+}
+
+#pragma mark - Picker Logic
+
+- (void)_pickerCancelTapped {
+    if (_tracksPickerBlock) {
+        _tracksPickerBlock(nil);
+    }
+}
+
+#pragma mark - Setters / Getters
+
+- (BOOL)tracksPickerMode {
+    return _tracksPickerMode;
+}
+
+- (void)setTracksPickerMode:(BOOL)tracksPickerMode {
+    _tracksPickerMode = tracksPickerMode;
+
+    [self setToolbarHidden:!_tracksPickerMode
+                  animated:YES];
 }
 
 #pragma mark - Lifecycle
 
 - (void)dealloc {
+    _cancelItem = nil;
+    _doneItem = nil;
+    _spaceItem = nil;
+
     _sectionsViewController = nil;
+}
+
+#pragma mark - Hack
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    viewController.toolbarItems = ((UIViewController *) [self.viewControllers lastObject]).toolbarItems;
+    [super pushViewController:viewController animated:animated];
+}
+
+- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    NSUInteger indexOf = [self.viewControllers indexOfObject:viewController];
+    [self.viewControllers enumerateObjectsUsingBlock:^(UIViewController *vc, NSUInteger idx, BOOL *stop) {
+        if (idx > indexOf) {
+            [vc setToolbarItems:nil animated:YES];
+        }
+    }];
+
+    return [super popToViewController:viewController animated:animated];
+}
+
+@end
+
+@implementation UIViewController (PPLibraryRootViewController)
+- (PPLibraryRootViewController *)libraryRootViewController {
+    if ([self.navigationController isKindOfClass:[PPLibraryRootViewController class]]) {
+        __weak PPLibraryRootViewController *weakLibrary = ((PPLibraryRootViewController *) self.navigationController);
+        return weakLibrary;
+    }
+
+    return nil;
 }
 
 @end

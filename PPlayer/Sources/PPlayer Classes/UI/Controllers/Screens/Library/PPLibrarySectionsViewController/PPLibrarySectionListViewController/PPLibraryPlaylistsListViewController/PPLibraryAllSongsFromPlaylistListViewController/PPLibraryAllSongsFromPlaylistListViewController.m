@@ -21,6 +21,13 @@
 
 #import "PPLibraryAllSongsFromPlaylistListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPLibraryRootViewController.h"
+
+@interface PPLibraryAllSongsFromPlaylistListViewController () {
+@private
+    UIBarButtonItem *_addTracksItem;
+}
+@end
 
 @implementation PPLibraryAllSongsFromPlaylistListViewController
 
@@ -35,6 +42,40 @@
 
 + (instancetype)controllerWithPlaylistModel:(PPLibraryPlaylistModel *)playlistModel {
     return [[self alloc] initWithPlaylistModel:playlistModel];
+}
+
+#pragma mark - Lifecycle
+
+- (void)loadView {
+    [super loadView];
+
+    _addTracksItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                   target:self action:@selector(_addTracksTapped)];
+    self.navigationItem.rightBarButtonItem = _addTracksItem;
+}
+
+- (void)dealloc {
+    _addTracksItem = nil;
+}
+
+#pragma mark - Adding tracks
+
+- (void)_addTracksTapped {
+    PPLibraryRootViewController *libraryRootViewController = [[PPLibraryRootViewController alloc] init];
+    libraryRootViewController.tracksPickerMode = YES;
+
+    NSString *promtString = [NSString stringWithFormat:@"%@ \"%@\"", NSLocalizedString(@"Add tracks to", nil), _playlistModel.title];
+    libraryRootViewController.navigationBar.topItem.prompt = promtString;
+
+    __block typeof(self) selfRef = self;
+    [libraryRootViewController setTracksPickerBlock:^(NSArray *pickedTracks) {
+        [selfRef dismissViewControllerAnimated:YES
+                                    completion:nil];
+    }];
+
+    [self presentViewController:libraryRootViewController
+                       animated:YES
+                     completion:nil];
 }
 
 #pragma mark - Reloading

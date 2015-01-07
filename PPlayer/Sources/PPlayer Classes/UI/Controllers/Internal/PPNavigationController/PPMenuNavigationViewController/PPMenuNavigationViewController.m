@@ -29,6 +29,7 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     PPNavigationBarMenuView *_navigationBarMenuView;
 
     BOOL _menuHidden;
+    BOOL _needToLayoutFromObservation;
 }
 @property(atomic, strong) PPNavigationBarMenuView *navigationBarMenuView;
 
@@ -82,6 +83,9 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 
     [self addSubview:_navigationBarMenuView];
     [self addSubview:_navigationBar];
+
+    _needToLayoutFromObservation = YES;
+    [_navigationBar addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 #pragma mark - Lifecycle
@@ -94,23 +98,9 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self _init];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self _init];
-    }
-    return self;
-}
-
 - (void)dealloc {
+    [_navigationBar removeObserver:self forKeyPath:@"frame"];
+
     _navigationBarMenuView = nil;
     _navigationBar = nil;
 }
@@ -121,17 +111,27 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
     [self sizeToFit];
     [super layoutSubviews];
 
-    self.clipsToBounds = NO;
-
     [self setFrame:CGRectMake(self.frame.origin.x, 0.0f,
             self.bounds.size.width,
             self.bounds.size.height)];
 
+    _needToLayoutFromObservation = NO;
     [_navigationBar setFrame:CGRectMake(0.0f, [UIApplication sharedApplication].statusBarFrame.size.height,
             self.bounds.size.width,
             self.bounds.size.height - (_menuHidden ?: navigationBarMenuHeight))];
+    _needToLayoutFromObservation = YES;
     [_navigationBarMenuView setFrame:CGRectMake(0.0f, _navigationBar.frame.origin.y + _navigationBar.bounds.size.height - (_menuHidden ? navigationBarMenuHeight : 0.0f),
             self.bounds.size.width, navigationBarMenuHeight)];
+}
+
+#pragma mark - Observing
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == _navigationBar && [keyPath isEqualToString:@"frame"]) {
+        if (_needToLayoutFromObservation) {
+            [self layoutSubviews];
+        }
+    }
 }
 
 #pragma mark - Interface
@@ -203,10 +203,11 @@ static const CGFloat navigationBarMenuHeight = 40.0f;
 
 @implementation UIViewController (PPMenuNavigationViewController)
 - (PPMenuNavigationViewController *)menuNavigationViewController {
-    if (![self.navigationController isKindOfClass:[PPMenuNavigationViewController class]]) {
-        return nil;
+    if ([self.navigationController isKindOfClass:[PPMenuNavigationViewController class]]) {
+        __weak PPMenuNavigationViewController *weakMenuNavigation = ((PPMenuNavigationViewController *) self.navigationController);
+        return weakMenuNavigation;
     }
 
-    return ((PPMenuNavigationViewController *) self.navigationController);
+    return nil;
 }
 @end

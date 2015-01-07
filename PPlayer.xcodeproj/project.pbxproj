@@ -193,6 +193,7 @@
 		65CDA730B600220C32574B44 /* NavMenuIconToLibrary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconToLibrary@2x.png"; sourceTree = "<group>"; };
 		65CDA7AF71035AAE22B3C36E /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Blocks.m"; sourceTree = "<group>"; };
 		65CDA7D333D29D78B519EF15 /* PPLibraryItemModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryItemModel.m; sourceTree = "<group>"; };
+		65CDA80C8D477E635C99DDCE /* PPLibraryTracksPickerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryTracksPickerProtocol.h; sourceTree = "<group>"; };
 		65CDA811670F87B634A12A66 /* PPLibraryAllArtistsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryAllArtistsListViewController.h; sourceTree = "<group>"; };
 		65CDA8209C5981398E65176A /* CellIconFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconFile.png; sourceTree = "<group>"; };
 		65CDA85E2CA2295D8AF54AFC /* PPLibraryTrackModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryTrackModel.m; sourceTree = "<group>"; };
@@ -384,6 +385,7 @@
 				65CDAED574AD91E76289873A /* PPLibrarySectionsViewController */,
 				65CDA3668AA954566E2D099E /* PPLibraryRootViewController.m */,
 				65CDAF3A38D593D8EDAD3430 /* PPLibraryRootViewController.h */,
+				65CDA80C8D477E635C99DDCE /* PPLibraryTracksPickerProtocol.h */,
 			);
 			path = Library;
 			sourceTree = "<group>";

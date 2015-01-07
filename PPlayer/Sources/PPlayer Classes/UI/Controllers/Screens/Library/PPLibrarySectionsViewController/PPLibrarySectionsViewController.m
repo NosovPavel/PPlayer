@@ -25,6 +25,7 @@
 #import "PPLibraryAllArtistsListViewController.h"
 #import "PPLibraryAllAlbumsListViewController.h"
 #import "PPLibraryAllGenresListViewController.h"
+#import "PPLibraryRootViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
@@ -66,6 +67,7 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.menuNavigationViewController setMenuHidden:YES animated:YES];
+    self.libraryRootViewController.tracksPickerDoneItem.enabled = NO;
 }
 
 - (void)dealloc {

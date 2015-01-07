@@ -19,15 +19,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPMenuNavigationViewController.h"
-#import "PPLibraryTracksPickerProtocol.h"
+#import <Foundation/Foundation.h>
 
-@interface PPLibraryRootViewController : PPMenuNavigationViewController <PPLibraryTracksPickerProtocol>
-@property(atomic, strong, readonly) UIBarButtonItem *tracksPickerDoneItem;
+@protocol PPLibraryTracksPickerProtocol <NSObject>
+@required
 @property(atomic) BOOL tracksPickerMode;
 @property(atomic, strong) void (^tracksPickerBlock)(NSArray *pickedTracks);
-@end
-
-@interface UIViewController (PPLibraryRootViewController)
-@property(atomic, weak, readonly) PPLibraryRootViewController *libraryRootViewController;
 @end

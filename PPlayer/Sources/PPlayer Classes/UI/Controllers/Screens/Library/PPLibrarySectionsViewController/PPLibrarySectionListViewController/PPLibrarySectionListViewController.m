@@ -20,6 +20,7 @@
 //  THE SOFTWARE.
 
 #import "PPLibrarySectionListViewController.h"
+#import "PPLibraryRootViewController.h"
 
 @implementation PPLibrarySectionListViewController
 
@@ -50,7 +51,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    self.libraryRootViewController.tracksPickerDoneItem.enabled = NO;
     [self.menuNavigationViewController setMenuHidden:NO animated:YES];
+
     [self _reloadData];
 }
 
