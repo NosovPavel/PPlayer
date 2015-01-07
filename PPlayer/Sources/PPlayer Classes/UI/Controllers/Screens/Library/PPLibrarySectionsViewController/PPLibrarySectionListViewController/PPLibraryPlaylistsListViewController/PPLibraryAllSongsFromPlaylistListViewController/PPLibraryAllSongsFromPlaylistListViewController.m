@@ -71,6 +71,8 @@
     [libraryRootViewController setTracksPickerBlock:^(NSArray *pickedTracks) {
         [selfRef dismissViewControllerAnimated:YES
                                     completion:nil];
+
+        NSLog(@"Picked tracks: %@", pickedTracks.description);
     }];
 
     [self presentViewController:libraryRootViewController

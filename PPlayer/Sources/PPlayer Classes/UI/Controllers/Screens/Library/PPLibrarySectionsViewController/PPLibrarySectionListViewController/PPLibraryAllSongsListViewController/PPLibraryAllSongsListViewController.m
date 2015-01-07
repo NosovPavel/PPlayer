@@ -21,12 +21,18 @@
 
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPLibraryRootViewController.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
+static NSString *tracksPickingCellIdentifier = @"tracksPickingCellIdentifier";
 
 static const CGFloat leftImageShift = 15.0f;
 static const CGFloat leftTextShift = 5.0f;
+
+@interface PPLibraryAllSongsCell ()
+- (void)_init;
+@end
 
 @implementation PPLibraryAllSongsCell
 
@@ -34,6 +40,7 @@ static const CGFloat leftTextShift = 5.0f;
 
 - (void)_init {
     [self.imageView setContentMode:UIViewContentModeCenter];
+    [self.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
     [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
     [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
 }
@@ -73,13 +80,86 @@ static const CGFloat leftTextShift = 5.0f;
 
 @end
 
+@interface PPLibraryAllSongsPickingCell : PPLibraryAllSongsCell {
+@private
+    UIImageView *_checkmarkEmptyImageView, *_checkmarkFilledImageView;
+    BOOL _checked;
+}
+@property BOOL checked;
+@end
+
+@implementation PPLibraryAllSongsPickingCell
+
+- (void)_init {
+    [super _init];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    _checkmarkEmptyImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"CellIconCheckMarkEmpty.png"]
+            imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    _checkmarkFilledImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"CellIconCheckMarkFilled.png"]
+            imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+
+    self.accessoryView = _checkmarkEmptyImageView;
+}
+
+- (void)dealloc {
+    _checkmarkEmptyImageView = nil;
+    _checkmarkFilledImageView = nil;
+}
+
+- (BOOL)checked {
+    return _checked;
+}
+
+- (void)setChecked:(BOOL)checked {
+    if (checked != _checked) {
+        _checked = checked;
+        self.accessoryView = _checked ? _checkmarkFilledImageView : _checkmarkEmptyImageView;
+    }
+}
+
+@end
+
+@interface PPLibraryAllSongsListViewController () {
+@private
+    NSMutableArray *_pickedTracks;
+}
+@end
+
 @implementation PPLibraryAllSongsListViewController
 
 #pragma mark - Init
 
+- (void)designedInit {
+    [super designedInit];
+    _pickedTracks = [NSMutableArray array];
+}
+
 - (void)commonInit {
     [super commonInit];
     _sourceTableView.rowHeight = cellsHeight;
+}
+
+#pragma mark - Lifecycle
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    if (self.libraryRootViewController.tracksPickerMode) {
+        [self.libraryRootViewController.tracksPickerDoneItem setTarget:self];
+        [self.libraryRootViewController.tracksPickerDoneItem setAction:@selector(_pickerDoneTapped)];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    [self.libraryRootViewController.tracksPickerDoneItem setTarget:nil];
+    [self.libraryRootViewController.tracksPickerDoneItem setAction:nil];
+}
+
+- (void)dealloc {
+    _pickedTracks = nil;
 }
 
 #pragma mark - Reloading
@@ -99,12 +179,24 @@ static const CGFloat leftTextShift = 5.0f;
 #pragma mark - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
+    UITableViewCell *cell;
 
-    if (!cell) {
-        cell = [[PPLibraryAllSongsCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                            reuseIdentifier:tracksCellIdentifier];
-        [cell.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
+    if (!self.libraryRootViewController.tracksPickerMode) {
+        cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
+
+        if (!cell) {
+            cell = [[PPLibraryAllSongsCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                reuseIdentifier:tracksCellIdentifier];
+
+        }
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:tracksPickingCellIdentifier];
+
+        if (!cell) {
+            cell = [[PPLibraryAllSongsPickingCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                       reuseIdentifier:tracksPickingCellIdentifier];
+
+        }
     }
 
     return cell;
@@ -124,6 +216,47 @@ static const CGFloat leftTextShift = 5.0f;
 
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
+
+    if (self.libraryRootViewController.tracksPickerMode) {
+        PPLibraryAllSongsPickingCell *pickingCell = (PPLibraryAllSongsPickingCell *) cell;
+        BOOL picked = [_pickedTracks containsObject:track];
+
+        pickingCell.checked = picked;
+    }
 };
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+
+    PPLibraryTrackModel *track = _sourceArray[(NSUInteger) indexPath.row];
+    BOOL picked = [_pickedTracks containsObject:track];
+    if (picked) {
+        [_pickedTracks removeObject:track];
+    } else {
+        [_pickedTracks addObject:track];
+    }
+
+    [tableView reloadRowsAtIndexPaths:@[indexPath]
+                     withRowAnimation:UITableViewRowAnimationNone];
+    [self _updateDoneButtonState];
+}
+
+#pragma mark - Picker Mode Logic
+
+- (void)_updateDoneButtonState {
+    self.libraryRootViewController.tracksPickerDoneItem.enabled = _pickedTracks.count > 0;
+
+    if (self.libraryRootViewController.tracksPickerDoneItem.enabled) {
+        self.libraryRootViewController.tracksPickerDoneItem.title = [NSString stringWithFormat:@"%@ (%d)", NSLocalizedString(@"Add", nil), _pickedTracks.count];
+    } else {
+        self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
+    }
+}
+
+- (void)_pickerDoneTapped {
+    if (self.libraryRootViewController.tracksPickerBlock) {
+        self.libraryRootViewController.tracksPickerBlock([_pickedTracks copy]);
+    }
+}
 
 @end

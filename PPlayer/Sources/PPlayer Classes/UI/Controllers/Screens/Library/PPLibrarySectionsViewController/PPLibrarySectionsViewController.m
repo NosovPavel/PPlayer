@@ -68,6 +68,7 @@ static NSString *sectionCellIdentifier = @"sectionCellIdentifier";
     [super viewWillAppear:animated];
     [self.menuNavigationViewController setMenuHidden:YES animated:YES];
     self.libraryRootViewController.tracksPickerDoneItem.enabled = NO;
+    self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
 }
 
 - (void)dealloc {

@@ -43,7 +43,7 @@
                                                    style:UIBarButtonItemStylePlain
                                                   target:self
                                                   action:@selector(_pickerCancelTapped)];
-    _doneItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", nil)
+    _doneItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", nil)
                                                  style:UIBarButtonItemStyleDone
                                                 target:nil
                                                 action:nil];

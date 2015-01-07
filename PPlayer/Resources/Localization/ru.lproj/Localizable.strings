@@ -62,3 +62,6 @@
 
 //Add tracks to playlist promt
 "Add tracks to" = "Добавить песни в";
+
+//Picker buttons
+"Add" = "Добавить";

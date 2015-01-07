@@ -28,6 +28,12 @@
 @property(atomic, strong) PPLibraryAlbumModel *albumModel;
 @property(atomic, strong) PPLibraryGenreModel *genreModel;
 
+- (BOOL)isEqual:(id)other;
+
+- (BOOL)isEqualToModel:(PPLibraryTrackModel *)model;
+
+- (NSUInteger)hash;
+
 - (instancetype)initWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
 
 + (instancetype)modelWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;

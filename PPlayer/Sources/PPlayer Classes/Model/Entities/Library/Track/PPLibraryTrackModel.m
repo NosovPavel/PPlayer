@@ -34,6 +34,38 @@
     return self;
 }
 
+- (BOOL)isEqual:(id)other {
+    if ([other isKindOfClass:[self class]]) {
+        PPLibraryTrackModel *otherModel = other;
+        if (self.id == otherModel.id) {
+            return YES;
+        }
+    }
+
+    if (other == self)
+        return YES;
+    if (!other || ![[other class] isEqual:[self class]])
+        return NO;
+
+    return [self isEqualToModel:other];
+}
+
+- (BOOL)isEqualToModel:(PPLibraryTrackModel *)model {
+    if (self.id == model.id)
+        return YES;
+    if (model == nil)
+        return NO;
+    if (self.id != model.id)
+        return NO;
+    return !(self.title != model.title && ![self.title isEqualToString:model.title]);
+}
+
+- (NSUInteger)hash {
+    NSUInteger hash = (NSUInteger) self.id;
+    hash = hash * 31u + [self.title hash] + [NSStringFromClass([self class]) hash];
+    return hash;
+}
+
 + (instancetype)modelWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel {
     return [[self alloc] initWithId:id title:title albumModel:albumModel genreModel:genreModel];
 }

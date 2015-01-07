@@ -52,6 +52,7 @@
     [super viewWillAppear:animated];
 
     self.libraryRootViewController.tracksPickerDoneItem.enabled = NO;
+    self.libraryRootViewController.tracksPickerDoneItem.title = NSLocalizedString(@"Add", nil);
     [self.menuNavigationViewController setMenuHidden:NO animated:YES];
 
     [self _reloadData];
@@ -96,7 +97,6 @@
 
 - (void)reloadDataWithCompletionBlock:(void (^)())block {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sleep(1);
         if (block) {
             block();
         }
@@ -130,6 +130,10 @@
 }
 
 - (BOOL)canPerformSelection {
+    if (self.libraryRootViewController.tracksPickerMode) {
+        return NO;
+    }
+
     return _sourceArray.count > 0;
 }
 
