@@ -41,7 +41,7 @@
 
 - (void)reloadDataWithCompletionBlock:(void (^)())block {
     __block typeof(self) selfRef = self;
-    [[PPLibraryProvider sharedLibrary].fetcher tracksListFromPLaylist:_playlistModel
+    [[PPLibraryProvider sharedLibrary].fetcher tracksListFromPlaylist:_playlistModel
                                                   withCompletionBlock:^(NSArray *tracksList) {
                                                       selfRef->_sourceArray = [tracksList mutableCopy];
                                                       [selfRef->_sourceTableView reloadSections:[NSIndexSet indexSetWithIndex:0]

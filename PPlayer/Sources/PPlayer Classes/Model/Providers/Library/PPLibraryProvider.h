@@ -43,6 +43,10 @@
 - (void)createPlaylist:(PPLibraryPlaylistModel *)playlistModel
    withCompletionBlock:(void (^)(PPLibraryPlaylistModel *createdPlaylist))block;
 
+- (void)addPlaylistItems:(NSArray *)playlistItems
+              toPlaylist:(PPLibraryPlaylistModel *)playlistModel
+     withCompletionBlock:(void (^)(PPLibraryPlaylistModel *createdPlaylist))block;
+
 #pragma mark - Editing
 
 #pragma mark - Deleting
@@ -55,7 +59,7 @@
 
 - (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block;
 
-- (void)tracksListFromPLaylist:(PPLibraryPlaylistModel *)playlistModel
+- (void)tracksListFromPlaylist:(PPLibraryPlaylistModel *)playlistModel
            withCompletionBlock:(void (^)(NSArray *tracksList))block;
 
 #pragma mark - Artists

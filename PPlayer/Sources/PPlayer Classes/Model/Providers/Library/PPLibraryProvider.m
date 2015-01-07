@@ -113,7 +113,7 @@
     });
 }
 
-- (void)tracksListFromPLaylist:(PPLibraryPlaylistModel *)playlistModel
+- (void)tracksListFromPlaylist:(PPLibraryPlaylistModel *)playlistModel
            withCompletionBlock:(void (^)(NSArray *tracksList))block {
     __block typeof(self) selfRef = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -827,6 +827,11 @@
     });
 }
 
+- (void)addPlaylistItems:(NSArray *)playlistItems
+              toPlaylist:(PPLibraryPlaylistModel *)playlistModel
+     withCompletionBlock:(void (^)(PPLibraryPlaylistModel *createdPlaylist))block {
+    //
+}
 
 @end
 
