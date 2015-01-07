@@ -178,6 +178,15 @@ static NSString *playlistCreatingCellIdentifier = @"playlistsCreatingCellIdentif
                                                                                           atScrollPosition:UITableViewScrollPositionMiddle
                                                                                                   animated:YES];
                                                      }
+
+                                                     if (!createdPlaylist) {
+                                                         UIAlertView *errorAV = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
+                                                                                                           message:NSLocalizedString(@"You cant`t create playlists with same name", nil)
+                                                                                                          delegate:nil
+                                                                                                 cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                                                                                 otherButtonTitles:nil];
+                                                         [errorAV show];
+                                                     }
                                                  }];
         }
     }];

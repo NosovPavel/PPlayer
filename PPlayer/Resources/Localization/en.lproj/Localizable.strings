@@ -54,3 +54,8 @@
 "New playlist" = "New playlist";
 "Assign the name to this playlist" = "Assign the name to this playlist";
 "Creating" = "Creating";
+
+//Create playlist error alert view
+"Error" = "Error";
+"Close" ="Close";
+"You cant`t create playlists with same name" = "You cant`t create playlists with same name";

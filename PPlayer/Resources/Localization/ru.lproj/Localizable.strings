@@ -54,3 +54,8 @@
 "New playlist" = "Новый плейлист";
 "Assign the name to this playlist" = "Присвойте название этому плейлисту";
 "Creating" = "Создается";
+
+//Create playlist error alert view
+"Error" = "Ошибка";
+"Close" ="Закрыть";
+"You cant`t create playlists with same name" = "Вы не можете создавать плейлисты с одинаковыми названиями";

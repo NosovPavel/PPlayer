@@ -470,16 +470,18 @@
     [database executeUpdate:@"create table if not exists playlists(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT NOT NULL)"];
     [database executeUpdate:@"CREATE UNIQUE INDEX if not exists playlists_idx ON playlists(title)"];
 
-    [database executeUpdate:@"insert or IGNORE into playlists(title) values (?)", playlistModel.title];
-
-    FMResultSet *resultSet = [database executeQuery:@"SELECT id FROM playlists WHERE title = ?", playlistModel.title];
-
+    BOOL success = [database executeUpdate:@"insert or FAIL into playlists(title) values (?)", playlistModel.title];
     int64_t resultID = -1;
-    while ([resultSet next]) {
-        resultID = [resultSet longLongIntForColumn:@"id"];
-        break;
+
+    if (success) {
+        FMResultSet *resultSet = [database executeQuery:@"SELECT id FROM playlists WHERE title = ?", playlistModel.title];
+
+        while ([resultSet next]) {
+            resultID = [resultSet longLongIntForColumn:@"id"];
+            break;
+        }
+        [resultSet close];
     }
-    [resultSet close];
 
     return resultID;
 }
