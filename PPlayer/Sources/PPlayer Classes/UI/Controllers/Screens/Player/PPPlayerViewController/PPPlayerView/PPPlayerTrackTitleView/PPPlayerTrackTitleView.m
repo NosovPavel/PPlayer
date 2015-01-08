@@ -22,12 +22,12 @@
 #import "PPPlayerTrackTitleView.h"
 
 static CGFloat sideSize() {
-    return 128.0f * screenK();
+    return 90 * screenK();
 }
 
 @interface PPPlayerTrackTitleView () {
 @private
-    UISlider *_trackSlider;
+    UILabel *_titleLabel, *_subtitleLabel;
 }
 @end
 
@@ -40,24 +40,28 @@ static CGFloat sideSize() {
 
     self.backgroundColor = [UIColor whiteColor];
 
-    _trackSlider = [[UISlider alloc] init];
-    [self addSubview:_trackSlider];
+    _titleLabel = [[UILabel alloc] init];
+    [_titleLabel setFont:[UIFont systemFontOfSize:20.0f]];
+    [_titleLabel setTextColor:[UIColor blackColor]];
+    [self addSubview:_titleLabel];
+
+    _subtitleLabel = [[UILabel alloc] init];
+    [_subtitleLabel setFont:[UIFont systemFontOfSize:15.0f]];
+    [_subtitleLabel setTextColor:[UIColor lightGrayColor]];
+    [self addSubview:_subtitleLabel];
 }
 
 #pragma mark - Lifecycle
 
 - (void)dealloc {
-    _trackSlider = nil;
+    _titleLabel = nil;
+    _subtitleLabel = nil;
 }
 
 #pragma mark - Layout
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    [_trackSlider sizeToFit];
-    [_trackSlider setFrame:CGRectMake(sidePadding(), sidePadding() - _trackSlider.bounds.size.height / 2.0f,
-            _trackSlider.superview.bounds.size.width - sidePadding() * 2.0f, _trackSlider.bounds.size.height)];
 }
 
 #pragma mark - Preferred Size

@@ -21,6 +21,10 @@
 
 #import "PPPlayerPlaybackView.h"
 
+static const CGFloat sidePadding() {
+    return 25.0f * screenK();
+}
+
 static const CGFloat buttonsPadding() {
     return 50.0f * screenK();
 }
@@ -42,7 +46,14 @@ static CGFloat playbackButtonsSize() {
 };
 
 static CGFloat supportButtonsSize() {
-    return 25.0f * screenK();
+    return 25.0f * (2.0f / 3.0f) * screenK();
+}
+
+static UIColor *barTintColor() {
+    return [UIColor colorWithRed:(CGFloat) (247.0f / 255.0)
+                           green:(CGFloat) (247.0f / 255.0)
+                            blue:(CGFloat) (247.0f / 255.0)
+                           alpha:1];
 }
 
 @interface PPPlayerPlaybackView () {

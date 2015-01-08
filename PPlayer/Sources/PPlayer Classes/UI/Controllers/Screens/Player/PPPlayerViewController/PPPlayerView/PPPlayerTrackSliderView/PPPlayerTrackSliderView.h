@@ -19,53 +19,8 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPPlayerCoverView.h"
+#import "PPPlayerView.h"
 
-static const CGFloat sidePadding() {
-    return 25.0f * screenK();
-}
-
-static CGFloat coverPadding() {
-    return sidePadding();
-}
-
-@interface PPPlayerCoverView () {
-@private
-    UIImageView *_coverImageView;
-}
-@end
-
-@implementation PPPlayerCoverView
-
-#pragma mark - Init
-
-- (void)_init {
-    [super _init];
-
-    self.backgroundColor = [UIColor darkGrayColor];
-
-    _coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ArtworkPlaceHolderBig.png"]];
-    _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:_coverImageView];
-}
-
-#pragma mark - Layout
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    [_coverImageView setFrame:CGRectMake(coverPadding(), coverPadding(),
-            self.bounds.size.width - coverPadding() * 2.0f, self.bounds.size.height - coverPadding() * 2.0f)];
-}
-
-#pragma mark - Setters / Getters
-
-- (UIImage *)coverImage {
-    return _coverImageView.image;
-}
-
-- (void)setCoverImage:(UIImage *)coverImage {
-    _coverImageView.image = coverImage;
-}
+@interface PPPlayerTrackSliderView : PPView
 
 @end

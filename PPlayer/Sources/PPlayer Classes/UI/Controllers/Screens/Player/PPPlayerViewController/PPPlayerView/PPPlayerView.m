@@ -22,6 +22,7 @@
 #import "PPPlayerView.h"
 #import "PPPlayerCoverView.h"
 #import "PPPlayerPlaybackView.h"
+#import "PPPlayerTrackSliderView.h"
 #import "PPPlayerTrackTitleView.h"
 
 @implementation PPView
@@ -44,6 +45,7 @@
 @interface PPPlayerView () {
 @private
     PPPlayerCoverView *_coverView;
+    PPPlayerTrackSliderView *_trackSliderView;
     PPPlayerTrackTitleView *_trackTitleView;
     PPPlayerPlaybackView *_playbackView;
 }
@@ -51,8 +53,9 @@
 
 @implementation PPPlayerView
 @synthesize coverView = _coverView;
-@synthesize playbackView = _playbackView;
+@synthesize trackSliderView = _trackSliderView;
 @synthesize trackTitleView = _trackTitleView;
+@synthesize playbackView = _playbackView;
 
 #pragma mark - Init
 
@@ -63,17 +66,22 @@
     _coverView = [[PPPlayerCoverView alloc] init];
     [self addSubview:_coverView];
 
-    _playbackView = [[PPPlayerPlaybackView alloc] init];
-    [self addSubview:_playbackView];
+    _trackSliderView = [[PPPlayerTrackSliderView alloc] init];
+    [self addSubview:_trackSliderView];
 
     _trackTitleView = [[PPPlayerTrackTitleView alloc] init];
     [self addSubview:_trackTitleView];
+
+    _playbackView = [[PPPlayerPlaybackView alloc] init];
+    [self addSubview:_playbackView];
 }
 
 #pragma mark - Lifecycle
 
 - (void)dealloc {
     _coverView = nil;
+    _trackSliderView = nil;
+    _trackTitleView = nil;
     _playbackView = nil;
 }
 
@@ -88,10 +96,14 @@
 
     CGFloat trackTitleHeight = [_trackTitleView preferredSideSize];
     [_trackTitleView setFrame:CGRectMake(0.0f, _trackTitleView.superview.bounds.size.height - (playbackHeight + trackTitleHeight),
-            _trackTitleView.superview.bounds.size.width, trackTitleHeight)];
+            _trackSliderView.superview.bounds.size.width, trackTitleHeight)];
+
+    CGFloat trackSliderHeight = [_trackSliderView preferredSideSize];
+    [_trackSliderView setFrame:CGRectMake(0.0f, _trackSliderView.superview.bounds.size.height - (playbackHeight + trackSliderHeight + trackTitleHeight),
+            _trackSliderView.superview.bounds.size.width, trackSliderHeight)];
 
     [_coverView setFrame:CGRectMake(0.0f, 0.0f,
-            _coverView.superview.bounds.size.width, _coverView.superview.bounds.size.height - (playbackHeight + trackTitleHeight))];
+            _coverView.superview.bounds.size.width, _coverView.superview.bounds.size.height - (playbackHeight + trackSliderHeight + trackTitleHeight))];
 }
 
 @end
