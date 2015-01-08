@@ -101,7 +101,6 @@ static UIColor *barTintColor() {
                    forState:UIControlStateNormal];
     [_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPause.png"]
                       forState:UIControlStateSelected];
-    [_playPauseButton setContentEdgeInsets:UIEdgeInsetsMake(1.0f, 5.5f, 0.0f, 0.0f)];
     [_playPauseButton setBackgroundColor:self.backgroundColor];
     [_playPauseButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_playPauseButton];
