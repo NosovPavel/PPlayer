@@ -69,3 +69,7 @@
 //Tracks adding
 "Adding" = "Добавляется";
 "Unknown error occured, sorry :c" = "При добавлении произошла неизвестная ошибка, простите :c";
+
+//Player
+"Not plaing now" = "Не воспроизводится";
+"Unknown artist - Unkwnown album" = "Неизвестный исполнитель - Неизвестный альбом";

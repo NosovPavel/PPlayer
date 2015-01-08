@@ -61,7 +61,6 @@
 
 - (void)_init {
     [super _init];
-    self.backgroundColor = [UIColor redColor];
 
     _coverView = [[PPPlayerCoverView alloc] init];
     [self addSubview:_coverView];

@@ -33,6 +33,14 @@ static const CGFloat labelsPadding() {
     return 7.0f;
 }
 
+static NSString *titlePlaceholder() {
+    return NSLocalizedString(@"Not plaing now", nil);
+}
+
+static NSString *subTitlePlaceholder() {
+    return NSLocalizedString(@"Unknown artist - Unkwnown album", nil);
+}
+
 @interface PPPlayerTrackTitleView () {
 @private
     UILabel *_titleLabel, *_subtitleLabel;
@@ -60,8 +68,8 @@ static const CGFloat labelsPadding() {
     [_subtitleLabel setTextColor:[UIColor lightGrayColor]];
     [self addSubview:_subtitleLabel];
 
-    [_titleLabel setText:@"I Hate Everything All About You"];
-    [_subtitleLabel setText:@"Three Days Grace - One X"];
+    [_titleLabel setText:titlePlaceholder()];
+    [_subtitleLabel setText:subTitlePlaceholder()];
 }
 
 #pragma mark - Lifecycle

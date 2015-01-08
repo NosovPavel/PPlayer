@@ -69,3 +69,7 @@
 //Tracks adding
 "Adding" = "Adding";
 "Unknown error occured, sorry :c" = "Unknown error occured, sorry :c";
+
+//Player
+"Not plaing now" = "Not plaing now";
+"Unknown artist - Unkwnown album" = "Unknown artist - Unkwnown album";
