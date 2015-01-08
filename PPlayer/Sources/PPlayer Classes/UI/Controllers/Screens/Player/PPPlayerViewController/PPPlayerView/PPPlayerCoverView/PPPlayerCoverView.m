@@ -19,22 +19,50 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "PPPlayerCoverView.h"
 
-static CGFloat screenK() {
-    return ((MIN([UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)) / 414.0f);
+@interface PPPlayerCoverView () {
+@private
+    UIImageView *_coverImageView;
 }
-
-@class PPPlayerCoverView;
-@class PPPlayerPlaybackView;
-
-@interface PPView : UIView
-@property(atomic, readonly) CGFloat preferredSideSize;
-
-- (void)_init;
 @end
 
-@interface PPPlayerView : PPView
-@property PPPlayerCoverView *coverView;
-@property PPPlayerPlaybackView *playbackView;
+static CGFloat coverPadding() {
+    return 25.0f * screenK();
+}
+
+@implementation PPPlayerCoverView
+
+#pragma mark - Init
+
+- (void)_init {
+    [super _init];
+
+    self.backgroundColor = [UIColor yellowColor];
+
+    _coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ArtworkPlaceHolderBig.png"]];
+    _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+    _coverImageView.backgroundColor = [UIColor greenColor];
+    [self addSubview:_coverImageView];
+}
+
+#pragma mark - Layout
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    [_coverImageView setFrame:CGRectMake(coverPadding(), coverPadding(),
+            self.bounds.size.width - coverPadding() * 2.0f, self.bounds.size.height - coverPadding() * 2.0f)];
+}
+
+#pragma mark - Setters / Getters
+
+- (UIImage *)coverImage {
+    return _coverImageView.image;
+}
+
+- (void)setCoverImage:(UIImage *)coverImage {
+    _coverImageView.image = coverImage;
+}
+
 @end

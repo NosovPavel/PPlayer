@@ -20,24 +20,13 @@
 //  THE SOFTWARE.
 
 #import "PPPlayerView.h"
+#import "PPPlayerCoverView.h"
+#import "PPPlayerPlaybackView.h"
 
-@implementation PPPlayerView
-
-#pragma mark - Init
+@implementation PPView
 
 - (void)_init {
-    self.backgroundColor = [UIColor redColor];
-}
-
-#pragma mark - Lifecycle
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self _init];
-    }
-
-    return self;
+    //
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -49,10 +38,50 @@
     return self;
 }
 
+@end
+
+@interface PPPlayerView () {
+@private
+    PPPlayerCoverView *_coverView;
+    PPPlayerPlaybackView *_playbackView;
+}
+@end
+
+@implementation PPPlayerView
+@synthesize coverView = _coverView;
+@synthesize playbackView = _playbackView;
+
+#pragma mark - Init
+
+- (void)_init {
+    [super _init];
+    self.backgroundColor = [UIColor redColor];
+
+    _coverView = [[PPPlayerCoverView alloc] init];
+    [self addSubview:_coverView];
+
+    _playbackView = [[PPPlayerPlaybackView alloc] init];
+    [self addSubview:_playbackView];
+}
+
+#pragma mark - Lifecycle
+
+- (void)dealloc {
+    _coverView = nil;
+    _playbackView = nil;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+
+    CGFloat playbackHeight = [_playbackView preferredSideSize];
+    [_playbackView setFrame:CGRectMake(0.0f, _playbackView.superview.bounds.size.height - playbackHeight,
+            _playbackView.superview.bounds.size.width, playbackHeight)];
+
+    [_coverView setFrame:CGRectMake(0.0f, 0.0f,
+            _coverView.superview.bounds.size.width, _coverView.superview.bounds.size.height - (playbackHeight))];
 }
 
 @end

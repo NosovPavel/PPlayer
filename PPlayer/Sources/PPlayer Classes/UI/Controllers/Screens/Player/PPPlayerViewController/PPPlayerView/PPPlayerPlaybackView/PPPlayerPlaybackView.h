@@ -19,22 +19,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "PPPlayerView.h"
 
-static CGFloat screenK() {
-    return ((MIN([UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)) / 414.0f);
-}
-
-@class PPPlayerCoverView;
-@class PPPlayerPlaybackView;
-
-@interface PPView : UIView
-@property(atomic, readonly) CGFloat preferredSideSize;
-
-- (void)_init;
-@end
-
-@interface PPPlayerView : PPView
-@property PPPlayerCoverView *coverView;
-@property PPPlayerPlaybackView *playbackView;
+@interface PPPlayerPlaybackView : PPView
 @end
