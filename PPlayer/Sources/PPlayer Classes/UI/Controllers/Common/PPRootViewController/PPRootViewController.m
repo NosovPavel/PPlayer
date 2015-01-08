@@ -26,6 +26,7 @@
 #import "PPStorageRootViewController.h"
 #import "PPLibraryRootViewController.h"
 #import "PPPlaylistsRootViewController.h"
+#import "PPPlayerRootViewController.h"
 
 @implementation PPRootViewController {
 @private
@@ -78,14 +79,12 @@
     [playlistsRootViewController setTabBarItem:playlistsItem];
 
     //Player
-    UIViewController *playerRootViewController = [[UIViewController alloc] init];
-    PPNavigationController *playerNavigationController = [[PPNavigationController alloc]
-            initWithRootViewController:playerRootViewController];
+    PPPlayerRootViewController *playerRootViewController = [[PPPlayerRootViewController alloc] init];
     UITabBarItem *playerItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Player",
                     nil)
                                                              image:[UIImage imageNamed:@"TabIconPlayer.png"]
                                                      selectedImage:nil];
-    [playerNavigationController setTabBarItem:playerItem];
+    [playerRootViewController setTabBarItem:playerItem];
 
     //Settings
     UIViewController *settingsRootViewController = [[UIViewController alloc] init];
@@ -99,7 +98,7 @@
 
     PPTabBarController *tabBarController = [[PPTabBarController alloc] init];
     [tabBarController setViewControllers:@[storageRootViewController, libraryRootViewController,
-            playlistsRootViewController, playerNavigationController, settingsNavigationController]];
+            playlistsRootViewController, playerRootViewController, settingsNavigationController]];
 
     _tabBarController = tabBarController;
 }
