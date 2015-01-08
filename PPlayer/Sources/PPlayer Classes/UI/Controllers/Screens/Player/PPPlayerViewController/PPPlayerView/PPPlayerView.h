@@ -21,6 +21,12 @@
 
 #import <UIKit/UIKit.h>
 
+static UIColor *barTintColor() {
+    return [UIColor colorWithRed:(CGFloat) (247.0f / 255.0)
+                           green:(CGFloat) (247.0f / 255.0)
+                            blue:(CGFloat) (247.0f / 255.0) alpha:1];
+}
+
 static CGFloat screenK() {
     return ((MIN([UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)) / 414.0f);
 }

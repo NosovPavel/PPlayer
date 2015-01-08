@@ -26,15 +26,15 @@ static const CGFloat sidePadding() {
 }
 
 static const CGFloat buttonsPadding() {
-    return 25.0f * screenK();
+    return 30.0f * screenK();
 }
 
 static CGFloat sideSize() {
-    return 100.0f * screenK();
+    return 80.0f * screenK();
 }
 
 static CGFloat borderWidth() {
-    return sideSize() / 60.0f;
+    return sideSize() / 45.0f;
 }
 
 static CGFloat playButtonSize() {
@@ -42,7 +42,7 @@ static CGFloat playButtonSize() {
 }
 
 static CGFloat prevNextButtonsSize() {
-    return (3.0f / 4.0f) * playButtonSize();
+    return 25.0f * screenK();
 };
 
 static CGFloat supportButtonsSize() {
@@ -63,20 +63,20 @@ static CGFloat supportButtonsSize() {
 - (void)_init {
     [super _init];
 
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = barTintColor();
 
     //repeat and shuffle
     _repeatButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_repeatButton setImage:[UIImage imageNamed:@"PlayerIconRepeat.png"]
                    forState:UIControlStateNormal];
-    [_repeatButton setBackgroundColor:[UIColor whiteColor]];
+    [_repeatButton setBackgroundColor:self.backgroundColor];
     [_repeatButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_repeatButton];
 
     _shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_shuffleButton setImage:[UIImage imageNamed:@"PlayerIconShuffle.png"]
                     forState:UIControlStateNormal];
-    [_shuffleButton setBackgroundColor:[UIColor whiteColor]];
+    [_shuffleButton setBackgroundColor:self.backgroundColor];
     [_shuffleButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_shuffleButton];
 
@@ -90,29 +90,29 @@ static CGFloat supportButtonsSize() {
     [_playPauseButton.layer setBorderColor:[UIColor blackColor].CGColor];
     [_playPauseButton.layer setBorderWidth:borderWidth()];
     [_playPauseButton.layer setCornerRadius:playButtonSize() / 2.0f];
-    [_playPauseButton setBackgroundColor:[UIColor whiteColor]];
+    [_playPauseButton setBackgroundColor:self.backgroundColor];
     [_playPauseButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_playPauseButton];
 
     _prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    /*[_prevButton setImage:[UIImage imageNamed:@"PlayerIconPrev.png"]
-                      forState:UIControlStateNormal];*/
-    [_prevButton setClipsToBounds:YES];
-    [_prevButton.layer setBorderColor:[UIColor blackColor].CGColor];
-    [_prevButton.layer setBorderWidth:borderWidth()];
-    [_prevButton.layer setCornerRadius:prevNextButtonsSize() / 2.0f];
-    [_prevButton setBackgroundColor:[UIColor whiteColor]];
+    [_prevButton setImage:[UIImage imageNamed:@"PlayerIconPrev.png"]
+                 forState:UIControlStateNormal];
+//    [_prevButton setClipsToBounds:YES];
+//    [_prevButton.layer setBorderColor:[UIColor blackColor].CGColor];
+//    [_prevButton.layer setBorderWidth:nextPrevBorderWidth()];
+//    [_prevButton.layer setCornerRadius:prevNextButtonsSize() / 2.0f];
+    [_prevButton setBackgroundColor:self.backgroundColor];
     [_prevButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_prevButton];
 
     _nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    /*[_nextButton setImage:[UIImage imageNamed:@"PlayerIconNext.png"]
-                 forState:UIControlStateNormal];*/
-    [_nextButton setClipsToBounds:YES];
-    [_nextButton.layer setBorderColor:[UIColor blackColor].CGColor];
-    [_nextButton.layer setBorderWidth:borderWidth()];
-    [_nextButton.layer setCornerRadius:prevNextButtonsSize() / 2.0f];
-    [_nextButton setBackgroundColor:[UIColor whiteColor]];
+    [_nextButton setImage:[UIImage imageNamed:@"PlayerIconNext.png"]
+                 forState:UIControlStateNormal];
+//    [_nextButton setClipsToBounds:YES];
+//    [_nextButton.layer setBorderColor:[UIColor blackColor].CGColor];
+//    [_nextButton.layer setBorderWidth:nextPrevBorderWidth()];
+//    [_nextButton.layer setCornerRadius:prevNextButtonsSize() / 2.0f];
+    [_nextButton setBackgroundColor:self.backgroundColor];
     [_nextButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_nextButton];
 }
