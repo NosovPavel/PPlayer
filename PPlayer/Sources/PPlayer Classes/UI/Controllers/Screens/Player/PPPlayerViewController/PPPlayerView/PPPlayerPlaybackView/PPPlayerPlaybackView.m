@@ -21,12 +21,8 @@
 
 #import "PPPlayerPlaybackView.h"
 
-static const CGFloat sidePadding() {
-    return 25.0f * screenK();
-}
-
 static const CGFloat buttonsPadding() {
-    return 30.0f * screenK();
+    return 50.0f * screenK();
 }
 
 static CGFloat sideSize() {
@@ -34,14 +30,14 @@ static CGFloat sideSize() {
 }
 
 static CGFloat borderWidth() {
-    return sideSize() / 45.0f;
+    return sideSize() / 75.0f;
 }
 
-static CGFloat playButtonSize() {
+static CGFloat playButtonBorderSize() {
     return sideSize() - (1.0f / 3.0f) * sideSize();
 }
 
-static CGFloat prevNextButtonsSize() {
+static CGFloat playbackButtonsSize() {
     return 25.0f * screenK();
 };
 
@@ -53,6 +49,7 @@ static CGFloat supportButtonsSize() {
 @private
     UIButton *_repeatButton, *_shuffleButton;
     UIButton *_prevButton, *_playPauseButton, *_nextButton;
+    UIView *_playCircle;
 }
 @end
 
@@ -81,15 +78,19 @@ static CGFloat supportButtonsSize() {
     [self addSubview:_shuffleButton];
 
     //playback
+    _playCircle = [[UIView alloc] init];
+    [_playCircle setClipsToBounds:YES];
+    [_playCircle.layer setBorderColor:[UIColor blackColor].CGColor];
+    [_playCircle.layer setBorderWidth:borderWidth()];
+    [_playCircle.layer setCornerRadius:playButtonBorderSize() / 2.0f];
+    [self addSubview:_playCircle];
+
     _playPauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    /*[_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPlay.png"]
+    [_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPlay.png"]
                    forState:UIControlStateNormal];
     [_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPause.png"]
-                      forState:UIControlStateSelected];*/
-    [_playPauseButton setClipsToBounds:YES];
-    [_playPauseButton.layer setBorderColor:[UIColor blackColor].CGColor];
-    [_playPauseButton.layer setBorderWidth:borderWidth()];
-    [_playPauseButton.layer setCornerRadius:playButtonSize() / 2.0f];
+                      forState:UIControlStateSelected];
+    [_playPauseButton setContentEdgeInsets:UIEdgeInsetsMake(1.0f * screenK(), 5.5f * screenK(), 0.0f, 0.0f)];
     [_playPauseButton setBackgroundColor:self.backgroundColor];
     [_playPauseButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_playPauseButton];
@@ -97,10 +98,6 @@ static CGFloat supportButtonsSize() {
     _prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_prevButton setImage:[UIImage imageNamed:@"PlayerIconPrev.png"]
                  forState:UIControlStateNormal];
-//    [_prevButton setClipsToBounds:YES];
-//    [_prevButton.layer setBorderColor:[UIColor blackColor].CGColor];
-//    [_prevButton.layer setBorderWidth:nextPrevBorderWidth()];
-//    [_prevButton.layer setCornerRadius:prevNextButtonsSize() / 2.0f];
     [_prevButton setBackgroundColor:self.backgroundColor];
     [_prevButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_prevButton];
@@ -108,10 +105,6 @@ static CGFloat supportButtonsSize() {
     _nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_nextButton setImage:[UIImage imageNamed:@"PlayerIconNext.png"]
                  forState:UIControlStateNormal];
-//    [_nextButton setClipsToBounds:YES];
-//    [_nextButton.layer setBorderColor:[UIColor blackColor].CGColor];
-//    [_nextButton.layer setBorderWidth:nextPrevBorderWidth()];
-//    [_nextButton.layer setCornerRadius:prevNextButtonsSize() / 2.0f];
     [_nextButton setBackgroundColor:self.backgroundColor];
     [_nextButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_nextButton];
@@ -145,20 +138,22 @@ static CGFloat supportButtonsSize() {
     [_shuffleButton setCenter:CGPointMake(_shuffleButton.center.x, _shuffleButton.superview.bounds.size.height / 2.0f)];
 
     //playback
-    [_playPauseButton setFrame:CGRectMake(0.0f, 0.0f, playButtonSize(), playButtonSize())];
+    [_playPauseButton setFrame:CGRectMake(0.0f, 0.0f, playbackButtonsSize(), playbackButtonsSize())];
     [_playPauseButton setCenter:[_playPauseButton.superview convertPoint:_playPauseButton.superview.center
                                                                 fromView:_playPauseButton.superview.superview]];
+    [_playCircle setFrame:CGRectMake(0.0f, 0.0f, playButtonBorderSize(), playButtonBorderSize())];
+    [_playCircle setCenter:_playPauseButton.center];
 
-    [_prevButton setFrame:CGRectMake(_playPauseButton.frame.origin.x - buttonsPadding() - prevNextButtonsSize(),
+    [_prevButton setFrame:CGRectMake(_playPauseButton.frame.origin.x - buttonsPadding() - playbackButtonsSize(),
             0.0f,
-            prevNextButtonsSize(), prevNextButtonsSize())];
-    [_prevButton setCenter:CGPointMake(_prevButton.frame.origin.x + prevNextButtonsSize() / 2.0f,
+            playbackButtonsSize(), playbackButtonsSize())];
+    [_prevButton setCenter:CGPointMake(_prevButton.frame.origin.x + playbackButtonsSize() / 2.0f,
             _playPauseButton.center.y)];
 
     [_nextButton setFrame:CGRectMake(_playPauseButton.frame.origin.x + _playPauseButton.bounds.size.width + buttonsPadding(),
             0.0f,
-            prevNextButtonsSize(), prevNextButtonsSize())];
-    [_nextButton setCenter:CGPointMake(_nextButton.frame.origin.x + prevNextButtonsSize() / 2.0f,
+            playbackButtonsSize(), playbackButtonsSize())];
+    [_nextButton setCenter:CGPointMake(_nextButton.frame.origin.x + playbackButtonsSize() / 2.0f,
             _playPauseButton.center.y)];
 }
 

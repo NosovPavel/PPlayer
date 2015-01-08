@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		65CDA026E0F79BF1663C3FA4 /* PPPlayerTrackTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA70C8799A87B1E3BAE37 /* PPPlayerTrackTitleView.m */; };
 		65CDA0454C178A1C55EDA446 /* TabIconLibrary.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA255BF0DE9ABCE66E092 /* TabIconLibrary.png */; };
 		65CDA046210836B5340F2473 /* PPLibraryAllArtistsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA1B9D5328585104FB80F /* PPLibraryAllArtistsListViewController.m */; };
 		65CDA056E0EDDFF2892C32CE /* NavMenuIconCancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA647CF198E2D3C6DCB4A /* NavMenuIconCancel.png */; };
@@ -230,6 +231,7 @@
 		65CDA6D447ECB51A69F5E71B /* PPNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPNavigationController.m; sourceTree = "<group>"; };
 		65CDA6E9B03DEE5170902ABB /* PPLibraryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryProvider.m; sourceTree = "<group>"; };
 		65CDA6FD4998BA9557E8A523 /* PlayerIconRepeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlayerIconRepeat.png; sourceTree = "<group>"; };
+		65CDA70C8799A87B1E3BAE37 /* PPPlayerTrackTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPlayerTrackTitleView.m; sourceTree = "<group>"; };
 		65CDA721BA61352E5DAB320A /* PPSelectableActionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPSelectableActionsViewController.m; sourceTree = "<group>"; };
 		65CDA730B600220C32574B44 /* NavMenuIconToLibrary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconToLibrary@2x.png"; sourceTree = "<group>"; };
 		65CDA7A158ED29C988E4F711 /* PlayerIconShuffle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlayerIconShuffle.png; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 		65CDAB5734ACD96E9FD87E96 /* PPProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPProvider.m; sourceTree = "<group>"; };
 		65CDAB82A1C4ED432D232322 /* TabIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconSettings@2x.png"; sourceTree = "<group>"; };
 		65CDABBA8C3CE8F2A0228D1B /* NavMenuIconEdit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconEdit@2x.png"; sourceTree = "<group>"; };
+		65CDABEE7E0BC4CDC15150CC /* PPPlayerTrackTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPlayerTrackTitleView.h; sourceTree = "<group>"; };
 		65CDAC3644806D8ED697BF93 /* PPLibraryAlbumsWithTracksListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryAlbumsWithTracksListViewController.m; sourceTree = "<group>"; };
 		65CDAC4CB1BABD30A83D9AB3 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Blocks.h"; sourceTree = "<group>"; };
 		65CDAC6FE255CA1E9C84B888 /* PPLibraryAllGenresListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryAllGenresListViewController.m; sourceTree = "<group>"; };
@@ -381,6 +384,15 @@
 				65CDAFB640B99E8F1959D331 /* UI */,
 			);
 			path = "PPlayer Classes";
+			sourceTree = "<group>";
+		};
+		65CDA1A95E1DBC6D7B218950 /* PPPlayerTrackTitleView */ = {
+			isa = PBXGroup;
+			children = (
+				65CDA70C8799A87B1E3BAE37 /* PPPlayerTrackTitleView.m */,
+				65CDABEE7E0BC4CDC15150CC /* PPPlayerTrackTitleView.h */,
+			);
+			path = PPPlayerTrackTitleView;
 			sourceTree = "<group>";
 		};
 		65CDA1EB6A22E86F59E14980 /* PPLibraryAlbumsWithTracksListViewController */ = {
@@ -735,6 +747,7 @@
 				65CDA0AD4798E72E380FE20C /* PPPlayerView.h */,
 				65CDA4C9F67189C6B998FB38 /* PPPlayerCoverView */,
 				65CDA25806598F619D95CA1A /* PPPlayerPlaybackView */,
+				65CDA1A95E1DBC6D7B218950 /* PPPlayerTrackTitleView */,
 			);
 			path = PPPlayerView;
 			sourceTree = "<group>";
@@ -1327,6 +1340,7 @@
 				65CDA9376CDE4215E636A8DB /* PPPlayerView.m in Sources */,
 				65CDA4F917A1D65CC6023EB2 /* PPPlayerCoverView.m in Sources */,
 				65CDA54C15267A366C96D450 /* PPPlayerPlaybackView.m in Sources */,
+				65CDA026E0F79BF1663C3FA4 /* PPPlayerTrackTitleView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

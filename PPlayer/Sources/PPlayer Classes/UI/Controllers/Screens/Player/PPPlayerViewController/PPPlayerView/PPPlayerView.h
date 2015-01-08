@@ -24,15 +24,21 @@
 static UIColor *barTintColor() {
     return [UIColor colorWithRed:(CGFloat) (247.0f / 255.0)
                            green:(CGFloat) (247.0f / 255.0)
-                            blue:(CGFloat) (247.0f / 255.0) alpha:1];
+                            blue:(CGFloat) (247.0f / 255.0)
+                           alpha:1];
 }
 
 static CGFloat screenK() {
     return ((MIN([UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)) / 414.0f);
 }
 
+static const CGFloat sidePadding() {
+    return 25.0f * screenK();
+}
+
 @class PPPlayerCoverView;
 @class PPPlayerPlaybackView;
+@class PPPlayerTrackTitleView;
 
 @interface PPView : UIView
 @property(atomic, readonly) CGFloat preferredSideSize;
@@ -42,5 +48,6 @@ static CGFloat screenK() {
 
 @interface PPPlayerView : PPView
 @property PPPlayerCoverView *coverView;
+@property PPPlayerTrackTitleView *trackTitleView;
 @property PPPlayerPlaybackView *playbackView;
 @end

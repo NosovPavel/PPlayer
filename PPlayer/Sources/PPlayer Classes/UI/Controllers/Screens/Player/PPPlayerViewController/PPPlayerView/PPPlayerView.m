@@ -22,6 +22,7 @@
 #import "PPPlayerView.h"
 #import "PPPlayerCoverView.h"
 #import "PPPlayerPlaybackView.h"
+#import "PPPlayerTrackTitleView.h"
 
 @implementation PPView
 
@@ -43,6 +44,7 @@
 @interface PPPlayerView () {
 @private
     PPPlayerCoverView *_coverView;
+    PPPlayerTrackTitleView *_trackTitleView;
     PPPlayerPlaybackView *_playbackView;
 }
 @end
@@ -50,6 +52,7 @@
 @implementation PPPlayerView
 @synthesize coverView = _coverView;
 @synthesize playbackView = _playbackView;
+@synthesize trackTitleView = _trackTitleView;
 
 #pragma mark - Init
 
@@ -62,6 +65,9 @@
 
     _playbackView = [[PPPlayerPlaybackView alloc] init];
     [self addSubview:_playbackView];
+
+    _trackTitleView = [[PPPlayerTrackTitleView alloc] init];
+    [self addSubview:_trackTitleView];
 }
 
 #pragma mark - Lifecycle
@@ -80,8 +86,12 @@
     [_playbackView setFrame:CGRectMake(0.0f, _playbackView.superview.bounds.size.height - playbackHeight,
             _playbackView.superview.bounds.size.width, playbackHeight)];
 
+    CGFloat trackTitleHeight = [_trackTitleView preferredSideSize];
+    [_trackTitleView setFrame:CGRectMake(0.0f, _trackTitleView.superview.bounds.size.height - (playbackHeight + trackTitleHeight),
+            _trackTitleView.superview.bounds.size.width, trackTitleHeight)];
+
     [_coverView setFrame:CGRectMake(0.0f, 0.0f,
-            _coverView.superview.bounds.size.width, _coverView.superview.bounds.size.height - (playbackHeight))];
+            _coverView.superview.bounds.size.width, _coverView.superview.bounds.size.height - (playbackHeight + trackTitleHeight))];
 }
 
 @end

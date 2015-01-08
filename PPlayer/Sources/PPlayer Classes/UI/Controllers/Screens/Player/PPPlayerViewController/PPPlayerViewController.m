@@ -79,8 +79,8 @@
     CGFloat tabbarHeightReduction = (self.tabBarController.tabBar.translucent ? self.tabBarController.tabBar.bounds.size.height : 0.0f);
     CGFloat heightReduction = navbarHeightReduction + tabbarHeightReduction + statusBarHeightReduction;
 
-    [_playerView setFrame:CGRectMake(0.0f, 0.0f + navbarHeightReduction + statusBarHeightReduction,
-            _playerView.superview.bounds.size.width, _playerView.superview.bounds.size.height - heightReduction)];
+    [_playerView setFrame:CGRectMake(0.0f, -1.0f + navbarHeightReduction + statusBarHeightReduction,
+            _playerView.superview.bounds.size.width, 1.0f + _playerView.superview.bounds.size.height - heightReduction)];
 }
 
 #pragma mark - Actions

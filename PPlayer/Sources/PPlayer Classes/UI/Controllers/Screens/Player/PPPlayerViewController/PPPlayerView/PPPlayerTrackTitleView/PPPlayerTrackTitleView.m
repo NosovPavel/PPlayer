@@ -19,30 +19,35 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPPlayerCoverView.h"
+#import "PPPlayerTrackTitleView.h"
 
-@interface PPPlayerCoverView () {
+static CGFloat sideSize() {
+    return 128.0f * screenK();
+}
+
+@interface PPPlayerTrackTitleView () {
 @private
-    UIImageView *_coverImageView;
+    UISlider *_trackSlider;
 }
 @end
 
-static CGFloat coverPadding() {
-    return sidePadding();
-}
-
-@implementation PPPlayerCoverView
+@implementation PPPlayerTrackTitleView
 
 #pragma mark - Init
 
 - (void)_init {
     [super _init];
 
-    self.backgroundColor = [UIColor darkGrayColor];
+    self.backgroundColor = [UIColor whiteColor];
 
-    _coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ArtworkPlaceHolderBig.png"]];
-    _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:_coverImageView];
+    _trackSlider = [[UISlider alloc] init];
+    [self addSubview:_trackSlider];
+}
+
+#pragma mark - Lifecycle
+
+- (void)dealloc {
+    _trackSlider = nil;
 }
 
 #pragma mark - Layout
@@ -50,18 +55,15 @@ static CGFloat coverPadding() {
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    [_coverImageView setFrame:CGRectMake(coverPadding(), coverPadding(),
-            self.bounds.size.width - coverPadding() * 2.0f, self.bounds.size.height - coverPadding() * 2.0f)];
+    [_trackSlider sizeToFit];
+    [_trackSlider setFrame:CGRectMake(sidePadding(), sidePadding() - _trackSlider.bounds.size.height / 2.0f,
+            _trackSlider.superview.bounds.size.width - sidePadding() * 2.0f, _trackSlider.bounds.size.height)];
 }
 
-#pragma mark - Setters / Getters
+#pragma mark - Preferred Size
 
-- (UIImage *)coverImage {
-    return _coverImageView.image;
-}
-
-- (void)setCoverImage:(UIImage *)coverImage {
-    _coverImageView.image = coverImage;
+- (CGFloat)preferredSideSize {
+    return sideSize();
 }
 
 @end
