@@ -22,15 +22,15 @@
 #import "PPPlayerPlaybackView.h"
 
 static const CGFloat sidePadding() {
-    return 25.0f * screenK();
+    return 25.0f;
 }
 
 static const CGFloat buttonsPadding() {
-    return 50.0f * screenK();
+    return 50.0f;
 }
 
 static CGFloat sideSize() {
-    return 80.0f * screenK();
+    return 80.0f;
 }
 
 static CGFloat borderWidth() {
@@ -42,11 +42,11 @@ static CGFloat playButtonBorderSize() {
 }
 
 static CGFloat playbackButtonsSize() {
-    return 25.0f * screenK();
+    return 25.0f;
 };
 
 static CGFloat supportButtonsSize() {
-    return 25.0f * (2.0f / 3.0f) * screenK();
+    return 25.0f * (2.0f / 3.0f);
 }
 
 static UIColor *barTintColor() {
@@ -101,7 +101,7 @@ static UIColor *barTintColor() {
                    forState:UIControlStateNormal];
     [_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPause.png"]
                       forState:UIControlStateSelected];
-    [_playPauseButton setContentEdgeInsets:UIEdgeInsetsMake(1.0f * screenK(), 5.5f * screenK(), 0.0f, 0.0f)];
+    [_playPauseButton setContentEdgeInsets:UIEdgeInsetsMake(1.0f, 5.5f, 0.0f, 0.0f)];
     [_playPauseButton setBackgroundColor:self.backgroundColor];
     [_playPauseButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_playPauseButton];

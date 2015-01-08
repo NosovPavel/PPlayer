@@ -22,7 +22,7 @@
 #import "PPPlayerTrackSliderView.h"
 
 static const CGFloat sidePadding() {
-    return 25.0f * screenK();
+    return 25.0f;
 }
 
 static CGFloat sideSize() {

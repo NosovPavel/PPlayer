@@ -21,10 +21,6 @@
 
 #import <UIKit/UIKit.h>
 
-static CGFloat screenK() {
-    return ((MIN([UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)) / 414.0f);
-}
-
 @class PPPlayerCoverView;
 @class PPPlayerPlaybackView;
 @class PPPlayerTrackSliderView;

@@ -21,8 +21,16 @@
 
 #import "PPPlayerTrackTitleView.h"
 
+static const CGFloat sidePadding() {
+    return 25.0f;
+}
+
 static CGFloat sideSize() {
-    return 90 * screenK();
+    return 90;
+}
+
+static const CGFloat labelsPadding() {
+    return 7.0f;
 }
 
 @interface PPPlayerTrackTitleView () {
@@ -41,14 +49,19 @@ static CGFloat sideSize() {
     self.backgroundColor = [UIColor whiteColor];
 
     _titleLabel = [[UILabel alloc] init];
-    [_titleLabel setFont:[UIFont systemFontOfSize:20.0f]];
+    [_titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [_titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
     [_titleLabel setTextColor:[UIColor blackColor]];
     [self addSubview:_titleLabel];
 
     _subtitleLabel = [[UILabel alloc] init];
-    [_subtitleLabel setFont:[UIFont systemFontOfSize:15.0f]];
+    [_subtitleLabel setTextAlignment:NSTextAlignmentCenter];
+    [_subtitleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     [_subtitleLabel setTextColor:[UIColor lightGrayColor]];
     [self addSubview:_subtitleLabel];
+
+    [_titleLabel setText:@"I Hate Everything All About You"];
+    [_subtitleLabel setText:@"Three Days Grace - One X"];
 }
 
 #pragma mark - Lifecycle
@@ -62,6 +75,18 @@ static CGFloat sideSize() {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+
+    [_titleLabel sizeToFit];
+    [_titleLabel setFrame:CGRectMake(sidePadding(),
+            1.0f + [_titleLabel.superview convertPoint:_titleLabel.superview.center fromView:_titleLabel.superview.superview].y - _titleLabel.bounds.size.height - (labelsPadding() / 2.0f),
+            _titleLabel.superview.bounds.size.width - sidePadding() * 2.0f,
+            _titleLabel.bounds.size.height)];
+
+    [_subtitleLabel sizeToFit];
+    [_subtitleLabel setFrame:CGRectMake(sidePadding(),
+            1.0f + [_subtitleLabel.superview convertPoint:_subtitleLabel.superview.center fromView:_subtitleLabel.superview.superview].y + (labelsPadding() / 2.0f),
+            _subtitleLabel.superview.bounds.size.width - sidePadding() * 2.0f,
+            _subtitleLabel.bounds.size.height)];
 }
 
 #pragma mark - Preferred Size
