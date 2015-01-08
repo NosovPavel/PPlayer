@@ -65,3 +65,7 @@
 
 //Picker buttons
 "Add" = "Add";
+
+//Tracks adding
+"Adding" = "Adding";
+"Unknown error occured, sorry :c" = "Unknown error occured, sorry :c";

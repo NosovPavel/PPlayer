@@ -24,6 +24,7 @@
 
 #import "PPLibraryTrackModel.h"
 #import "PPLibraryPlaylistModel.h"
+#import "PPLibraryPlaylistItemModel.h"
 
 @class PPLibraryPlaylistModel;
 
@@ -45,7 +46,7 @@
 
 - (void)addPlaylistItems:(NSArray *)playlistItems
               toPlaylist:(PPLibraryPlaylistModel *)playlistModel
-     withCompletionBlock:(void (^)(PPLibraryPlaylistModel *createdPlaylist))block;
+        withCompletionBlock:(void (^)(NSArray *createdItems))block;
 
 #pragma mark - Editing
 
@@ -59,8 +60,8 @@
 
 - (void)tracksListWithCompletionBlock:(void (^)(NSArray *tracksList))block;
 
-- (void)tracksListFromPlaylist:(PPLibraryPlaylistModel *)playlistModel
-           withCompletionBlock:(void (^)(NSArray *tracksList))block;
+- (void)playlistsItemsFromPlaylist:(PPLibraryPlaylistModel *)playlistModel
+               withCompletionBlock:(void (^)(NSArray *playlistsItemsList))block;
 
 #pragma mark - Artists
 

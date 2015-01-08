@@ -113,8 +113,8 @@
     });
 }
 
-- (void)tracksListFromPlaylist:(PPLibraryPlaylistModel *)playlistModel
-           withCompletionBlock:(void (^)(NSArray *tracksList))block {
+- (void)playlistsItemsFromPlaylist:(PPLibraryPlaylistModel *)playlistModel
+               withCompletionBlock:(void (^)(NSArray *playlistsItemsList))block {
     __block typeof(self) selfRef = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [selfRef->_libraryDBQueue inDatabase:^(FMDatabase *db) {
@@ -137,7 +137,7 @@
                                                                                          "AND \n"
                                                                                          "tracks.id = playlist%lld.track_id", playlistModel.id, playlistModel.id, playlistModel.id]];
 
-            NSMutableArray *tracks = [NSMutableArray array];
+            NSMutableArray *items = [NSMutableArray array];
             while ([resultSet next]) {
                 int64_t trackID = [resultSet longLongIntForColumn:@"track_id"];
                 NSString *trackTitle = [resultSet stringForColumn:@"track_title"];
@@ -150,6 +150,8 @@
                 int64_t albumID = [resultSet longLongIntForColumn:@"album_id"];
                 NSString *albumTitle = [resultSet stringForColumn:@"album_title"];
 
+                int64_t itemID = [resultSet longLongIntForColumn:@"playlist_item_id"];
+
                 PPLibraryGenreModel *genreModel = [PPLibraryGenreModel modelWithId:genreID title:genreTitle];
                 PPLibraryAlbumModel *albumModel = [PPLibraryAlbumModel modelWithId:albumID title:albumTitle
                                                                        artistModel:[PPLibraryArtistModel modelWithId:artistID
@@ -157,14 +159,17 @@
                 PPLibraryTrackModel *trackModel = [PPLibraryTrackModel modelWithId:trackID title:trackTitle
                                                                         albumModel:albumModel
                                                                         genreModel:genreModel];
+                PPLibraryPlaylistItemModel *itemModel = [PPLibraryPlaylistItemModel modelWithId:itemID
+                                                                                          title:nil];
+                itemModel.trackModel = trackModel;
 
-                [tracks addObject:trackModel];
+                [items addObject:itemModel];
             }
             [resultSet close];
 
             if (block) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    block([tracks copy]);
+                    block([items copy]);
                 });
             }
         }];
@@ -520,6 +525,46 @@
 
 #pragma mark - Internal
 
+- (NSArray *)_addPlaylistItems:(NSArray *)playlistItems
+                    toPlaylist:(PPLibraryPlaylistModel *)playlistModel inDatabase:(FMDatabase *)database {
+    __block NSMutableArray *resultArray = [NSMutableArray array];
+    [playlistItems enumerateObjectsUsingBlock:^(PPLibraryPlaylistItemModel *currentPlaylistItem, NSUInteger idx, BOOL *stop) {
+        if (![currentPlaylistItem isKindOfClass:[PPLibraryPlaylistItemModel class]] || (currentPlaylistItem.trackModel.id < 0)) {
+            resultArray = nil;
+            *stop = YES;
+        }
+    }];
+
+    if (!resultArray || playlistModel.id < 0) {
+        return nil;
+    }
+
+    [playlistItems enumerateObjectsUsingBlock:^(PPLibraryPlaylistItemModel *currentPlaylistItem, NSUInteger idx, BOOL *stop) {
+        [database executeUpdate:[NSString stringWithFormat:@"create table if not exists playlist%lld(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, track_id INTEGER NOT NULL, FOREIGN KEY(track_id) REFERENCES tracks(id))", playlistModel.id]];
+
+        BOOL success = [database executeUpdate:[NSString stringWithFormat:@"insert or FAIL into playlist%lld(track_id) values (?)", playlistModel.id], @(currentPlaylistItem.trackModel.id)];
+        int64_t resultID = -1;
+
+        if (success) {
+            FMResultSet *resultSet = [database executeQuery:[NSString stringWithFormat:@"SELECT id FROM playlist%lld WHERE track_id = ?", playlistModel.id], @(currentPlaylistItem.trackModel.id)];
+
+            while ([resultSet next]) {
+                resultID = [resultSet longLongIntForColumn:@"id"];
+                break;
+            }
+            [resultSet close];
+        }
+
+        PPLibraryPlaylistItemModel *createdModel = [PPLibraryPlaylistItemModel modelWithId:resultID
+                                                                                     title:nil];
+        createdModel.trackModel = currentPlaylistItem.trackModel;
+
+        [resultArray addObject:createdModel];
+    }];
+
+    return resultArray;
+}
+
 - (int64_t)_createPlaylist:(PPLibraryPlaylistModel *)playlistModel inDatabase:(FMDatabase *)database {
     if (!playlistModel.title) {
         return -1;
@@ -829,8 +874,21 @@
 
 - (void)addPlaylistItems:(NSArray *)playlistItems
               toPlaylist:(PPLibraryPlaylistModel *)playlistModel
-     withCompletionBlock:(void (^)(PPLibraryPlaylistModel *createdPlaylist))block {
-    //
+        withCompletionBlock:(void (^)(NSArray *createdItems))block {
+    __block typeof(self) selfRef = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [selfRef->_libraryDBQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+            NSArray *_createdItems = [selfRef _addPlaylistItems:playlistItems
+                                                     toPlaylist:playlistModel
+                                                     inDatabase:db];
+
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block(_createdItems);
+                });
+            }
+        }];
+    });
 }
 
 @end

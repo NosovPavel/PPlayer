@@ -174,7 +174,7 @@ static const CGFloat leftTextShift = 5.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PPLibraryTrackModel *track = _sourceArray[(NSUInteger) indexPath.row];
+    PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
 
     NSString *title = track.title;
     NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:track.albumModel.artistModel.title
@@ -197,7 +197,7 @@ static const CGFloat leftTextShift = 5.0f;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
 
-    PPLibraryTrackModel *track = _sourceArray[(NSUInteger) indexPath.row];
+    PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
     BOOL picked = [_pickedArray containsObject:track];
     if (picked) {
         [_pickedArray removeObject:track];
@@ -208,6 +208,12 @@ static const CGFloat leftTextShift = 5.0f;
     [tableView reloadRowsAtIndexPaths:@[indexPath]
                      withRowAnimation:UITableViewRowAnimationNone];
     [self updateDoneButtonState];
+}
+
+#pragma mark - Configuration
+
+- (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath {
+    return _sourceArray[(NSUInteger) indexPath.row];
 }
 
 @end

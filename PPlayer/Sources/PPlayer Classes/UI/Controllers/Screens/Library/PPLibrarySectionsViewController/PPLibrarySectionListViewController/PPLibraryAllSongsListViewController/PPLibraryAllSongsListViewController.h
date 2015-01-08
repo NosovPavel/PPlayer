@@ -21,8 +21,12 @@
 
 #import "PPLibrarySectionListViewController.h"
 
+@class PPLibraryTrackModel;
+
 @interface PPLibraryAllSongsCell : UITableViewCell
+- (void)_init;
 @end
 
 @interface PPLibraryAllSongsListViewController : PPLibrarySectionListViewController
+- (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath;
 @end

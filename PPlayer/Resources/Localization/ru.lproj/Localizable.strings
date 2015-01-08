@@ -65,3 +65,7 @@
 
 //Picker buttons
 "Add" = "Добавить";
+
+//Tracks adding
+"Adding" = "Добавляется";
+"Unknown error occured, sorry :c" = "При добавлении произошла неизвестная ошибка, простите :c";

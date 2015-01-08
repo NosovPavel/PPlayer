@@ -188,6 +188,8 @@ static NSString *playlistCreatingCellIdentifier = @"playlistsCreatingCellIdentif
                                                                                                  otherButtonTitles:nil];
                                                          [errorAV show];
                                                      }
+
+                                                     [selfRef updateActionsState];
                                                  }];
         }
     }];
