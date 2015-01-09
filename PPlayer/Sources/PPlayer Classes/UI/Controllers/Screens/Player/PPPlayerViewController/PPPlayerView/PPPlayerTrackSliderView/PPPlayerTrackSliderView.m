@@ -147,8 +147,8 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 
 #pragma mark - Interface
 
-- (void)setupCurrentTime:(NSTimeInterval)current andTotal:(NSTimeInterval)total {
-    if (_ignoreTriesToSetupSliderValueProgramatically) {
+- (void)setupCurrentTime:(NSTimeInterval)current andTotal:(NSTimeInterval)total forced:(BOOL)forced {
+    if (_ignoreTriesToSetupSliderValueProgramatically && !forced) {
         return;
     }
 

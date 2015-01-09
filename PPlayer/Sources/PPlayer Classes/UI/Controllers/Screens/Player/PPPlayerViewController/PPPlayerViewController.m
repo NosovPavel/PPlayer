@@ -33,6 +33,8 @@
 @private
     UIBarButtonItem *_currentPlaylistItem;
     PPPlayerView *_playerView;
+
+    int64_t _lastPlayedItemID;
 }
 @end
 
@@ -169,7 +171,7 @@
 }
 
 - (void)_updatePlayerVisualTrackingStateByNotificaion:(NSNotification *)notification {
-    [self _updatePlayerVisualTrackingState:notification.object];
+    [self _updatePlayerVisualTrackingState:notification.object forced:NO];
 }
 
 - (void)_updatePlayerVisualStateByNotificaion:(NSNotification *)notification {
@@ -180,7 +182,7 @@
 
 - (void)_updatePlayerState {
     [self _updatePlayerVisualState:[PPPlayer sharedPlayer]];
-    [self _updatePlayerVisualTrackingState:[PPPlayer sharedPlayer]];
+    [self _updatePlayerVisualTrackingState:[PPPlayer sharedPlayer] forced:NO];
 }
 
 - (void)_updatePlayerVisualState:(PPPlayer *)player {
@@ -198,11 +200,18 @@
                                 andTrackAlbum:player.currentPlaylistItem.trackModel.albumModel.title];
 
     _playerView.trackSliderView.trackSlider.enabled = player.currentPlaylistItem != nil;
+
+    if (_lastPlayedItemID != player.currentPlaylistItem.id) {
+        [self _updatePlayerVisualTrackingState:player
+                                        forced:YES];
+    }
+    _lastPlayedItemID = player.currentPlaylistItem.id;
 }
 
-- (void)_updatePlayerVisualTrackingState:(PPPlayer *)player {
+- (void)_updatePlayerVisualTrackingState:(PPPlayer *)player forced:(BOOL)forced {
     [_playerView.trackSliderView setupCurrentTime:player.currentItemTime
-                                         andTotal:player.totalItemTime];
+                                         andTotal:player.totalItemTime
+                                           forced:forced];
 }
 
 @end
