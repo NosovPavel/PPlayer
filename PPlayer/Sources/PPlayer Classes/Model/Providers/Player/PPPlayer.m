@@ -156,6 +156,12 @@
     return NO;
 }
 
+- (void)setCurrentItemTime:(NSTimeInterval)currentItemTime {
+    if (currentItemTime >= 0 && currentItemTime < self.totalItemTime) {
+        _avAudioPlayer.currentTime = currentItemTime;
+    }
+}
+
 - (NSTimeInterval)currentItemTime {
     return _avAudioPlayer.currentTime;
 }

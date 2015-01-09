@@ -80,6 +80,12 @@
     [_playerView.playbackView.playPauseButton addTarget:self
                                                  action:@selector(_togglePlayPauseTapped)
                                        forControlEvents:UIControlEventTouchUpInside];
+    [_playerView.trackSliderView.trackSlider addTarget:self
+                                                action:@selector(_setPlayerCurrentTime)
+                                      forControlEvents:UIControlEventTouchUpOutside];
+    [_playerView.trackSliderView.trackSlider addTarget:self
+                                                action:@selector(_setPlayerCurrentTime)
+                                      forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -135,6 +141,10 @@
 
 - (void)_togglePlayPauseTapped {
     [[PPPlayer sharedPlayer] togglePlaing];
+}
+
+- (void)_setPlayerCurrentTime {
+    [[PPPlayer sharedPlayer] setCurrentItemTime:_playerView.trackSliderView.trackSlider.value];
 }
 
 - (void)_currentPlaylistTapped {

@@ -57,6 +57,8 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 @private
     UISlider *_trackSlider;
     UILabel *_pastTimeLabel, *_remindsTimeLabel;
+
+    BOOL _ignoreTriesToSetupSliderValueProgramatically;
 }
 @end
 
@@ -71,10 +73,19 @@ static NSString *timeLabelsPlaceholder = @"0:00";
     self.backgroundColor = barTintColor();
 
     _trackSlider = [[UISlider alloc] init];
-    _trackSlider.userInteractionEnabled = NO;
+    _trackSlider.enabled = NO;
     [_trackSlider addTarget:self
                      action:@selector(_sliderValueChanged)
            forControlEvents:UIControlEventValueChanged];
+    [_trackSlider addTarget:self
+                     action:@selector(_sliderStartsScrubbing)
+           forControlEvents:UIControlEventTouchDown];
+    [_trackSlider addTarget:self
+                     action:@selector(_sliderEndsScrubbing)
+           forControlEvents:UIControlEventTouchUpInside];
+    [_trackSlider addTarget:self
+                     action:@selector(_sliderEndsScrubbing)
+           forControlEvents:UIControlEventTouchUpOutside];
     [self addSubview:_trackSlider];
 
     _pastTimeLabel = [[UILabel alloc] init];
@@ -137,6 +148,10 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 #pragma mark - Interface
 
 - (void)setupCurrentTime:(NSTimeInterval)current andTotal:(NSTimeInterval)total {
+    if (_ignoreTriesToSetupSliderValueProgramatically) {
+        return;
+    }
+
     _trackSlider.minimumValue = 0.0f;
     _trackSlider.maximumValue = (float) total;
     _trackSlider.value = ((float) current);
@@ -145,6 +160,14 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 }
 
 #pragma mark - Interaction
+
+- (void)_sliderStartsScrubbing {
+    _ignoreTriesToSetupSliderValueProgramatically = YES;
+}
+
+- (void)_sliderEndsScrubbing {
+    _ignoreTriesToSetupSliderValueProgramatically = NO;
+}
 
 - (void)_sliderValueChanged {
     [self _updateLabels];
