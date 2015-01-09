@@ -24,6 +24,15 @@
 #import "PPLibraryProvider.h"
 
 #import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
+
+static NSString *titlePlaceholder() {
+    return NSLocalizedString(@"Not plaing now", nil);
+}
+
+static NSString *subTitlePlaceholder() {
+    return NSLocalizedString(@"Unknown artist - Unkwnown album", nil);
+}
 
 @interface PPPlayer () <AVAudioPlayerDelegate> {
 @private
@@ -103,11 +112,32 @@
 - (void)_updateState {
     [[NSNotificationCenter defaultCenter] postNotificationName:PPPlayerStateChangedNotificationName
                                                         object:self];
+    [self _updateRemoteControlsState];
 }
 
 - (void)_updateTrackingState {
     [[NSNotificationCenter defaultCenter] postNotificationName:PPPlayerStateTrackingChangedNotificationName
                                                         object:self];
+    [self _updateRemoteControlsState];
+}
+
+- (void)_updateRemoteControlsState {
+    if (self == [PPPlayer sharedPlayer]) {
+        NSMutableDictionary *songInfo = [[NSMutableDictionary alloc] init];
+
+        songInfo[MPMediaItemPropertyTitle] = _currentPlaylistItem.trackModel.title.length > 0 ?
+                _currentPlaylistItem.trackModel.title :
+                titlePlaceholder();
+        songInfo[MPMediaItemPropertyArtist] = _currentPlaylistItem.trackModel.albumModel.artistModel.title.length +
+                _currentPlaylistItem.trackModel.albumModel.title.length > 0 ?
+                [NSString stringWithFormat:@"%@ - %@", _currentPlaylistItem.trackModel.albumModel.artistModel.title, _currentPlaylistItem.trackModel.albumModel.title] :
+                subTitlePlaceholder();
+
+        songInfo[MPMediaItemPropertyPlaybackDuration] = @(self.totalItemTime);
+        songInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(self.currentItemTime);
+
+        [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:songInfo];
+    }
 }
 
 #pragma mark - Setters / Getters

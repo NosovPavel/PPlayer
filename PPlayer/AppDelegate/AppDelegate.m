@@ -21,6 +21,7 @@
 
 #import "AppDelegate.h"
 #import "PPRootViewController.h"
+#import "PPPlayer.h"
 
 @interface AppDelegate ()
 
@@ -28,8 +29,9 @@
 
 @implementation AppDelegate
 
-- (BOOL)          application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [application beginReceivingRemoteControlEvents];
+
     PPRootViewController *rootViewController = [[PPRootViewController alloc] init];
 
     [self setWindow:[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
@@ -39,11 +41,44 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     return YES;
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    [application endReceivingRemoteControlEvents];
+}
+
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     return YES;
+}
+
+#pragma mark - Remote Control Events
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    if (event.type == UIEventTypeRemoteControl) {
+        switch (event.subtype) {
+
+            case UIEventSubtypeRemoteControlPlay:
+            case UIEventSubtypeRemoteControlPause:
+                [[PPPlayer sharedPlayer] togglePlaing];
+                break;
+
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                [[PPPlayer sharedPlayer] prevTrack];
+                break;
+
+            case UIEventSubtypeRemoteControlNextTrack:
+                [[PPPlayer sharedPlayer] nextTrack];
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
 @end

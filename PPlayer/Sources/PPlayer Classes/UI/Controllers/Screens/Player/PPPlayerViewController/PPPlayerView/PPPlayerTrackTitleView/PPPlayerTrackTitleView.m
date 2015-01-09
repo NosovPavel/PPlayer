@@ -110,5 +110,4 @@ static NSString *subTitlePlaceholder() {
     [_subtitleLabel setText:artist.length + album.length > 0 ? [NSString stringWithFormat:@"%@ - %@", artist, album] : subTitlePlaceholder()];
 }
 
-
 @end
