@@ -110,7 +110,7 @@ return ret;
         }
     }
 
-    //If this is not done FMDatabase instance stays out of pool
+    //If this is not done FMDatabase sharedPlayer stays out of pool
     [rs close];
 
     return returnBool;

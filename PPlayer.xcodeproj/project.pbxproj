@@ -117,6 +117,7 @@
 		65CDAD2B9B3DAB713A8A09D1 /* CellIconCheckMarkFilled@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA6492E7508D5C0E49DAD /* CellIconCheckMarkFilled@3x.png */; };
 		65CDAD2DD7848C9BAC985D82 /* PPLibraryAlbumsWithTracksListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC3644806D8ED697BF93 /* PPLibraryAlbumsWithTracksListViewController.m */; };
 		65CDAD5DC5D6CF7ED7A605BC /* PlayerIconPrev@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA1CDE7741B8B3255C8E3 /* PlayerIconPrev@3x.png */; };
+		65CDAD6CD12E3FC155705F93 /* PPPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAEAC50653894E66726C2 /* PPPlayer.m */; };
 		65CDAD73977D3CBC5364D382 /* PPModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA3D1E264811EBC735A72 /* PPModel.m */; };
 		65CDADABB7F22C1C931FC707 /* ArtworkPlaceHolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADCE3EFA431CDDA82934 /* ArtworkPlaceHolderIcon@3x.png */; };
 		65CDADB3454E9750EE138F8C /* NSString+EncodingFixing.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAF8CA7E021ADB356871F /* NSString+EncodingFixing.m */; };
@@ -218,6 +219,7 @@
 		65CDA5834910126889C0076A /* PPMenuNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPMenuNavigationViewController.h; sourceTree = "<group>"; };
 		65CDA5A549DD4A927B52CD82 /* CellIconLibrarySectionsAllSongs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconLibrarySectionsAllSongs@2x.png"; sourceTree = "<group>"; };
 		65CDA5DA2FF2D5A7C3F8021B /* PPPlayerPlaybackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPlayerPlaybackView.m; sourceTree = "<group>"; };
+		65CDA5FC9F46FD57F8A56FC3 /* PPPlayerNotifications-State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PPPlayerNotifications-State.h"; sourceTree = "<group>"; };
 		65CDA61246E8EFE6DC982D5C /* PPLibraryTrackModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryTrackModel.h; sourceTree = "<group>"; };
 		65CDA627AB23528D09C2266F /* PlayerIconNext@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PlayerIconNext@3x.png"; sourceTree = "<group>"; };
 		65CDA63A4DB188E255AD81C3 /* NavMenuIconDelete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconDelete@2x.png"; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 		65CDAAEBD49412A5ECA374B4 /* PPFilesProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesProvider.m; sourceTree = "<group>"; };
 		65CDAAEDC88376F40A700A3D /* CellIconFolder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFolder@2x.png"; sourceTree = "<group>"; };
 		65CDAAFA636680020870026C /* PPPlayerCoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPlayerCoverView.m; sourceTree = "<group>"; };
+		65CDAAFC15058C84FBB2CD27 /* PPPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPlayer.h; sourceTree = "<group>"; };
 		65CDAB0FE8CED06B215C8A58 /* NavMenuIconDone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavMenuIconDone@3x.png"; sourceTree = "<group>"; };
 		65CDAB2FF49B60CADE864B14 /* TabIconStorage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconStorage@2x.png"; sourceTree = "<group>"; };
 		65CDAB5734ACD96E9FD87E96 /* PPProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPProvider.m; sourceTree = "<group>"; };
@@ -310,6 +313,7 @@
 		65CDAE38C76ED5933195559C /* CellIconCheckMarkEmpty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconCheckMarkEmpty@2x.png"; sourceTree = "<group>"; };
 		65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlaylist.png; sourceTree = "<group>"; };
 		65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesListViewController.m; sourceTree = "<group>"; };
+		65CDAEAC50653894E66726C2 /* PPPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPlayer.m; sourceTree = "<group>"; };
 		65CDAECF0EB14AA263C764F7 /* PPTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPTabBarController.h; sourceTree = "<group>"; };
 		65CDAECF8C3C20F2DCA9A3DE /* PPPlaylistsRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPlaylistsRootViewController.h; sourceTree = "<group>"; };
 		65CDAED186C06508E38B518C /* TabIconStorage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconStorage@3x.png"; sourceTree = "<group>"; };
@@ -593,6 +597,7 @@
 				65CDA244CA75B1D27F875E84 /* PPProvider.h */,
 				65CDA2EB40C7AD46FEAD96CD /* Files */,
 				65CDAA1E7545F02A2F05A42C /* Library */,
+				65CDAF4C0F2C8B371099C150 /* Player */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -890,6 +895,16 @@
 				65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */,
 			);
 			path = LLACircularProgressView;
+			sourceTree = "<group>";
+		};
+		65CDAF4C0F2C8B371099C150 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				65CDAEAC50653894E66726C2 /* PPPlayer.m */,
+				65CDAAFC15058C84FBB2CD27 /* PPPlayer.h */,
+				65CDA5FC9F46FD57F8A56FC3 /* PPPlayerNotifications-State.h */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 		65CDAFB640B99E8F1959D331 /* UI */ = {
@@ -1355,6 +1370,7 @@
 				65CDA54C15267A366C96D450 /* PPPlayerPlaybackView.m in Sources */,
 				65CDA026E0F79BF1663C3FA4 /* PPPlayerTrackSliderView.m in Sources */,
 				65CDA09BD369F6BB62AA6C74 /* PPPlayerTrackTitleView.m in Sources */,
+				65CDAD6CD12E3FC155705F93 /* PPPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

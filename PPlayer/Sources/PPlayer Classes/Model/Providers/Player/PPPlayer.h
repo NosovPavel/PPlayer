@@ -19,28 +19,37 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "PPProvider.h"
+#import "PPPlayerNotifications-State.h"
 
-#import "PPLibraryItemModel.h"
-#import "PPLibraryArtistModel.h"
-#import "PPLibraryAlbumModel.h"
-#import "PPLibraryGenreModel.h"
+@class PPLibraryPlaylistItemModel;
 
-@interface PPLibraryTrackModel : PPLibraryItemModel
-@property(atomic, strong) PPLibraryAlbumModel *albumModel;
-@property(atomic, strong) PPLibraryGenreModel *genreModel;
+@interface PPPlayer : PPProvider
 
-//Cover
-@property(atomic, strong, readonly) UIImage *artworkThumbnail;
+//State
+@property(atomic, readonly) BOOL nextTrackExists, prevTrackExists;
+@property(atomic, readonly) BOOL plaing;
+@property(atomic, readonly) BOOL shuffleEnabled, repeatEnabled;
 
-- (BOOL)isEqual:(id)other;
+@property(atomic, strong, readonly) PPLibraryPlaylistItemModel *currentPlaylistItem;
+@property(atomic, strong) NSArray *currentPlaylistItems;
 
-- (BOOL)isEqualToModel:(PPLibraryTrackModel *)model;
+#pragma mark - Singleton
 
-- (NSUInteger)hash;
++ (PPPlayer *)sharedPlayer;
 
-- (instancetype)initWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
+#pragma mark - Playback Controls
 
-+ (instancetype)modelWithId:(int64_t)id title:(NSString *)title albumModel:(PPLibraryAlbumModel *)albumModel genreModel:(PPLibraryGenreModel *)genreModel;
+- (void)startPlaingItem:(PPLibraryPlaylistItemModel *)playlistItem;
+
+- (void)togglePlaing;
+
+- (void)nextTrack;
+
+- (void)prevTrack;
+
+- (void)toggleShuffle;
+
+- (void)toggleRepeat;
 
 @end
