@@ -22,4 +22,6 @@
 #import "PPPlayerView.h"
 
 @interface PPPlayerPlaybackView : PPView
+@property(atomic, strong, readonly) UIButton *repeatButton, *shuffleButton;
+@property(atomic, strong, readonly) UIButton *prevButton, *playPauseButton, *nextButton;
 @end

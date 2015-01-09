@@ -22,6 +22,11 @@
 #import "PPPlayerViewController.h"
 #import "PPMenuNavigationViewController.h"
 #import "PPPlayerView.h"
+#import "PPPlayer.h"
+#import "PPPlayerPlaybackView.h"
+#import "PPPlayerTrackTitleView.h"
+#import "PPLibraryPlaylistItemModel.h"
+#import "PPLibraryTrackModel.h"
 
 @interface PPPlayerViewController () {
 @private
@@ -57,11 +62,37 @@
                                                            target:self
                                                            action:@selector(_currentPlaylistTapped)];
     self.navigationItem.rightBarButtonItem = _currentPlaylistItem;
+
+    [_playerView.playbackView.repeatButton addTarget:self
+                                              action:@selector(_toggleRepeatTapped)
+                                    forControlEvents:UIControlEventTouchUpInside];
+    [_playerView.playbackView.shuffleButton addTarget:self
+                                               action:@selector(_toggleShuffleTapped)
+                                     forControlEvents:UIControlEventTouchUpInside];
+
+    [_playerView.playbackView.prevButton addTarget:self
+                                            action:@selector(_prevButtonTapped)
+                                  forControlEvents:UIControlEventTouchUpInside];
+    [_playerView.playbackView.nextButton addTarget:self
+                                            action:@selector(_nextButtonTapped)
+                                  forControlEvents:UIControlEventTouchUpInside];
+    [_playerView.playbackView.playPauseButton addTarget:self
+                                                 action:@selector(_togglePlayPauseTapped)
+                                       forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.menuNavigationViewController setMenuHidden:YES animated:YES];
+
+    [self _updatePlayerState];
+    [self _startObservingPlayerState];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    [self _stopObservingPlayerState];
 }
 
 - (void)dealloc {
@@ -85,8 +116,78 @@
 
 #pragma mark - Actions
 
+- (void)_toggleRepeatTapped {
+    [[PPPlayer sharedPlayer] toggleRepeat];
+}
+
+- (void)_toggleShuffleTapped {
+    [[PPPlayer sharedPlayer] toggleShuffle];
+}
+
+- (void)_prevButtonTapped {
+    [[PPPlayer sharedPlayer] prevTrack];
+}
+
+- (void)_nextButtonTapped {
+    [[PPPlayer sharedPlayer] nextTrack];
+}
+
+- (void)_togglePlayPauseTapped {
+    [[PPPlayer sharedPlayer] togglePlaing];
+}
+
 - (void)_currentPlaylistTapped {
     //
+}
+
+#pragma mark - NSNotificationCenter Observing
+
+- (void)_startObservingPlayerState {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_updatePlayerVisualStateByNotificaion:)
+                                                 name:PPPlayerStateChangedNotificationName
+                                               object:NULL];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_updatePlayerVisualTrackingStateByNotificaion:)
+                                                 name:PPPlayerStateTrackingChangedNotificationName
+                                               object:NULL];
+}
+
+- (void)_stopObservingPlayerState {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)_updatePlayerVisualTrackingStateByNotificaion:(NSNotification *)notification {
+    [self _updatePlayerVisualTrackingState:notification.object];
+}
+
+- (void)_updatePlayerVisualStateByNotificaion:(NSNotification *)notification {
+    [self _updatePlayerVisualState:notification.object];
+}
+
+#pragma mark - Updating Visual State
+
+- (void)_updatePlayerState {
+    [self _updatePlayerVisualState:[PPPlayer sharedPlayer]];
+    [self _updatePlayerVisualTrackingState:[PPPlayer sharedPlayer]];
+}
+
+- (void)_updatePlayerVisualState:(PPPlayer *)player {
+    _playerView.playbackView.repeatButton.selected = player.repeatEnabled;
+    _playerView.playbackView.shuffleButton.selected = player.shuffleEnabled;
+
+    _playerView.playbackView.prevButton.enabled = player.prevTrackExists;
+    _playerView.playbackView.nextButton.enabled = player.nextTrackExists;
+
+    _playerView.playbackView.playPauseButton.enabled = player.currentPlaylistItem != nil;
+    _playerView.playbackView.playPauseButton.selected = player.plaing;
+
+    [_playerView.trackTitleView setTrackTitle:player.currentPlaylistItem.trackModel.title
+                                  trackArtist:player.currentPlaylistItem.trackModel.albumModel.artistModel.title
+                                andTrackAlbum:player.currentPlaylistItem.trackModel.albumModel.title];
+}
+
+- (void)_updatePlayerVisualTrackingState:(PPPlayer *)player {
 }
 
 @end

@@ -22,4 +22,5 @@
 #import "PPPlayerView.h"
 
 @interface PPPlayerTrackTitleView : PPView
+- (void)setTrackTitle:(NSString *)title trackArtist:(NSString *)artist andTrackAlbum:(NSString *)album;
 @end

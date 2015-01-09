@@ -97,7 +97,8 @@
 #pragma mark - Internal
 
 - (void)_updateState {
-    //
+    [[NSNotificationCenter defaultCenter] postNotificationName:PPPlayerStateChangedNotificationName
+                                                        object:self];
 }
 
 #pragma mark - Setters / Getters
@@ -129,8 +130,8 @@
 - (BOOL)prevTrackExists {
     NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
 
-    if (indexOfCurrentItem != NSNotFound) {
-        return _repeatEnabled ? _currentPlaylistItems.count > 0 : indexOfCurrentItem > 0;
+    if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
+        return _repeatEnabled ? _currentPlaylistItems.count > 0 : (indexOfCurrentItem > 0);
     }
 
     return NO;
@@ -139,8 +140,8 @@
 - (BOOL)nextTrackExists {
     NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
 
-    if (indexOfCurrentItem != NSNotFound) {
-        return _repeatEnabled ? _currentPlaylistItems.count > 0 : indexOfCurrentItem < (_currentPlaylistItems.count - 1);
+    if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
+        return _repeatEnabled ? _currentPlaylistItems.count > 0 : (indexOfCurrentItem < (_currentPlaylistItems.count - 1));
     }
 
     return NO;
@@ -178,7 +179,7 @@
 - (void)nextTrack {
     if ([self nextTrackExists]) {
         NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
-        if (indexOfCurrentItem != NSNotFound) {
+        if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
             NSUInteger indexOfNextItem = indexOfCurrentItem + 1;
             BOOL inBounds = NSLocationInRange(indexOfNextItem, NSMakeRange(0, _currentPlaylistItems.count));
 
@@ -198,7 +199,7 @@
 - (void)prevTrack {
     if ([self prevTrackExists]) {
         NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
-        if (indexOfCurrentItem != NSNotFound) {
+        if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
             NSUInteger indexOfPrevItem = indexOfCurrentItem - 1;
             BOOL inBounds = NSLocationInRange(indexOfPrevItem, NSMakeRange(0, _currentPlaylistItems.count));
 

@@ -103,4 +103,12 @@ static NSString *subTitlePlaceholder() {
     return sideSize();
 }
 
+#pragma mark - Interface
+
+- (void)setTrackTitle:(NSString *)title trackArtist:(NSString *)artist andTrackAlbum:(NSString *)album {
+    [_titleLabel setText:title.length > 0 ? title : titlePlaceholder()];
+    [_subtitleLabel setText:artist.length + album.length > 0 ? [NSString stringWithFormat:@"%@ - %@", artist, album] : subTitlePlaceholder()];
+}
+
+
 @end
