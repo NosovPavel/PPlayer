@@ -19,44 +19,41 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPProvider.h"
-#import "PPPlayerNotifications-State.h"
-#import <UIKit/UIKit.h>
+#import "PPPlayerVisualizer.h"
 
-@class PPLibraryPlaylistItemModel;
+static const CGSize snapshotSize() {
+    return CGSizeMake(350.0f, 350.0f);
+}
 
-@interface PPPlayer : PPProvider
+@implementation PPPlayerVisualizer
 
-//State
-@property(atomic, readonly) BOOL nextTrackExists, prevTrackExists;
-@property(atomic, readonly) BOOL plaing;
-@property(atomic, readonly) BOOL shuffleEnabled, repeatEnabled;
+#pragma mark - Setters / Getters
 
-@property(atomic, strong, readonly) PPLibraryPlaylistItemModel *currentPlaylistItem;
-@property(atomic, strong) NSArray *currentPlaylistItems;
+- (UIImage *)currentSnapshot {
+    UIImage *snapshot = nil;
 
-@property(atomic) NSTimeInterval currentItemTime;
-@property(atomic, readonly) NSTimeInterval totalItemTime;
+    UIGraphicsBeginImageContextWithOptions(snapshotSize(), NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
 
-@property(atomic, strong, readonly) UIImage *currentArtwork;
-@property(atomic) BOOL visualizationInsteadArtwork;
+    CGContextSetBlendMode(context, kCGBlendModeMultiply);
 
-#pragma mark - Singleton
+    CGFloat margin = 0.0f;
+    for (int c = 0; c < _channelsValues.count; c++) {
+        float width = snapshotSize().width / _channelsValues.count - margin;
+        float x = width * c;
+        float height = snapshotSize().height;
 
-+ (PPPlayer *)sharedPlayer;
+        float normalizedLevel = (float) ((([_channelsValues[(NSUInteger) c] floatValue] + 160) / 160.f) * 0.85);
+        float levelHeight = height * normalizedLevel;
 
-#pragma mark - Playback Controls
+        CGContextSetFillColorWithColor(context, [[UIColor greenColor] CGColor]);
+        CGContextFillRect(context, CGRectMake(x, height - levelHeight, width, levelHeight));
+    }
 
-- (void)startPlaingItem:(PPLibraryPlaylistItemModel *)playlistItem;
+    snapshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
 
-- (void)togglePlaing;
-
-- (void)nextTrack;
-
-- (void)prevTrack;
-
-- (void)toggleShuffle;
-
-- (void)toggleRepeat;
+    return snapshot;
+}
 
 @end

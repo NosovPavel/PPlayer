@@ -22,6 +22,7 @@
 #import "PPPlayer.h"
 #import "PPLibraryPlaylistItemModel.h"
 #import "PPLibraryProvider.h"
+#import "PPPlayerVisualizer.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -44,14 +45,16 @@ static UIImage *artworkPlaceholder() {
     NSMutableArray *_currentPlaylistItems;
     PPLibraryPlaylistItemModel *_currentPlaylistItem;
     CADisplayLink *_displayLink;
+    PPPlayerVisualizer *_visualizer;
 
-    BOOL _shuffleEnabled, _repeatEnabled;
+    BOOL _shuffleEnabled, _repeatEnabled, _visualizationInsteadArtwork;
 }
 @end
 
 @implementation PPPlayer
 @synthesize shuffleEnabled = _shuffleEnabled;
 @synthesize repeatEnabled = _repeatEnabled;
+@synthesize visualizationInsteadArtwork = _visualizationInsteadArtwork;
 
 #pragma mark - Singleton
 
@@ -69,6 +72,18 @@ static UIImage *artworkPlaceholder() {
 
 #pragma mark - Init
 
+- (void)_init {
+    //configure session until success
+    NSError *error = [self _configurateSession];
+
+    while (error) {
+        error = [self _configurateSession];
+    }
+
+    _visualizationInsteadArtwork = YES;
+    _visualizer = [PPPlayerVisualizer new];
+}
+
 - (NSError *)_configurateSession {
     NSError *error = nil;
 
@@ -78,15 +93,6 @@ static UIImage *artworkPlaceholder() {
                                          error:&error];
 
     return error;
-}
-
-- (void)_init {
-    //configure session until success
-    NSError *error = [self _configurateSession];
-
-    while (error) {
-        error = [self _configurateSession];
-    }
 }
 
 #pragma mark - Lifecycle
@@ -213,7 +219,18 @@ static UIImage *artworkPlaceholder() {
 #pragma mark -
 
 - (UIImage *)currentArtwork {
-    return artworkPlaceholder();
+    [_avAudioPlayer updateMeters];
+
+    NSMutableArray *channelsValues = [NSMutableArray array];
+
+    for (int c = 0; c < 128; c++) {
+        float level = [_avAudioPlayer averagePowerForChannel:(NSUInteger) c];
+        [channelsValues addObject:@(level)];
+    }
+
+    [_visualizer setChannelsValues:channelsValues];
+
+    return [_visualizer currentSnapshot];
 }
 
 #pragma mark - Playback Control
@@ -232,6 +249,7 @@ static UIImage *artworkPlaceholder() {
         _avAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[PPLibraryProvider trackURLForID:playlistItem.trackModel.id]
                                                                 error:&error];
         _avAudioPlayer.delegate = self;
+        _avAudioPlayer.meteringEnabled = YES;
 
         if (!error) {
             [_avAudioPlayer play];

@@ -216,6 +216,9 @@
     [_playerView.trackSliderView setupCurrentTime:player.currentItemTime
                                          andTotal:player.totalItemTime
                                            forced:forced];
+    if (player.visualizationInsteadArtwork) {
+        _playerView.coverView.coverImage = player.currentArtwork;
+    }
 }
 
 @end

@@ -19,44 +19,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "PPProvider.h"
-#import "PPPlayerNotifications-State.h"
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@class PPLibraryPlaylistItemModel;
-
-@interface PPPlayer : PPProvider
-
-//State
-@property(atomic, readonly) BOOL nextTrackExists, prevTrackExists;
-@property(atomic, readonly) BOOL plaing;
-@property(atomic, readonly) BOOL shuffleEnabled, repeatEnabled;
-
-@property(atomic, strong, readonly) PPLibraryPlaylistItemModel *currentPlaylistItem;
-@property(atomic, strong) NSArray *currentPlaylistItems;
-
-@property(atomic) NSTimeInterval currentItemTime;
-@property(atomic, readonly) NSTimeInterval totalItemTime;
-
-@property(atomic, strong, readonly) UIImage *currentArtwork;
-@property(atomic) BOOL visualizationInsteadArtwork;
-
-#pragma mark - Singleton
-
-+ (PPPlayer *)sharedPlayer;
-
-#pragma mark - Playback Controls
-
-- (void)startPlaingItem:(PPLibraryPlaylistItemModel *)playlistItem;
-
-- (void)togglePlaing;
-
-- (void)nextTrack;
-
-- (void)prevTrack;
-
-- (void)toggleShuffle;
-
-- (void)toggleRepeat;
-
+@interface PPPlayerVisualizer : NSObject
+@property(atomic, strong, readonly) UIImage *currentSnapshot;
+@property(atomic, strong) NSMutableArray *channelsValues;
 @end
