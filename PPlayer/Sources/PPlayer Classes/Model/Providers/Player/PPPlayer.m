@@ -25,7 +25,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@interface PPPlayer () {
+@interface PPPlayer () <AVAudioPlayerDelegate> {
 @private
     AVAudioPlayer *_avAudioPlayer;
     NSMutableArray *_currentPlaylistItems;
@@ -54,20 +54,24 @@
 }
 
 #pragma mark - Init
-- (void)_init {
-    //configure session until success
+
+- (NSError *)_configurateSession {
     NSError *error = nil;
 
-    [[AVAudioSession sharedInstance] setActive:YES
-                                         error:&error];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
                                            error:&error];
+    [[AVAudioSession sharedInstance] setActive:YES
+                                         error:&error];
+
+    return error;
+}
+
+- (void)_init {
+    //configure session until success
+    NSError *error = [self _configurateSession];
 
     while (error) {
-        [[AVAudioSession sharedInstance] setActive:YES
-                                             error:&error];
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
-                                               error:&error];
+        error = [self _configurateSession];
     }
 }
 
@@ -150,27 +154,63 @@
 
     NSError *error;
     _currentPlaylistItem = playlistItem;
-    _avAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[PPLibraryProvider trackURLForID:playlistItem.trackModel.id]
-                                                            error:&error];
 
-    if (!error) {
-        [_avAudioPlayer play];
+    if (_currentPlaylistItem) {
+        _avAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[PPLibraryProvider trackURLForID:playlistItem.trackModel.id]
+                                                                error:&error];
+        _avAudioPlayer.delegate = self;
+
+        if (!error) {
+            [_avAudioPlayer play];
+        }
     }
 
     [self _updateState];
 }
 
 - (void)togglePlaing {
-
-    [self _updateState];
+    if (_avAudioPlayer) {
+        _avAudioPlayer.playing ? [_avAudioPlayer pause] : [_avAudioPlayer play];
+        [self _updateState];
+    }
 }
 
 - (void)nextTrack {
+    if ([self nextTrackExists]) {
+        NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
+        if (indexOfCurrentItem != NSNotFound) {
+            NSUInteger indexOfNextItem = indexOfCurrentItem + 1;
+            BOOL inBounds = NSLocationInRange(indexOfNextItem, NSMakeRange(0, _currentPlaylistItems.count));
+
+            if (inBounds) {
+                [self startPlaingItem:_currentPlaylistItems[indexOfNextItem]];
+                return;
+            } else if (_repeatEnabled && _currentPlaylistItems.count > 0) {
+                [self startPlaingItem:[_currentPlaylistItems firstObject]];
+                return;
+            }
+        }
+    }
 
     [self _updateState];
 }
 
 - (void)prevTrack {
+    if ([self prevTrackExists]) {
+        NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
+        if (indexOfCurrentItem != NSNotFound) {
+            NSUInteger indexOfPrevItem = indexOfCurrentItem - 1;
+            BOOL inBounds = NSLocationInRange(indexOfPrevItem, NSMakeRange(0, _currentPlaylistItems.count));
+
+            if (inBounds) {
+                [self startPlaingItem:_currentPlaylistItems[indexOfPrevItem]];
+                return;
+            } else if (_repeatEnabled && _currentPlaylistItems.count > 0) {
+                [self startPlaingItem:[_currentPlaylistItems lastObject]];
+                return;
+            }
+        }
+    }
 
     [self _updateState];
 }
@@ -182,6 +222,27 @@
 
 - (void)toggleRepeat {
     _repeatEnabled = !_repeatEnabled;
+    [self _updateState];
+}
+
+#pragma mark - AVAudioPlayerDelegate
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    [self nextTrack];
+}
+
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error {
+    [self nextTrack];
+}
+
+- (void)audioPlayerBeginInterruption:(AVAudioPlayer *)player {
+    [self _updateState];
+}
+
+- (void)audioPlayerEndInterruption:(AVAudioPlayer *)player {
+    if (!player.playing) {
+        [player play];
+    }
     [self _updateState];
 }
 
