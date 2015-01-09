@@ -43,7 +43,7 @@ static const CGSize snapshotSize() {
         float x = width * c;
         float height = snapshotSize().height;
 
-        float normalizedLevel = (float) ((([_channelsValues[(NSUInteger) c] floatValue] + 160) / 160.f) * 0.85);
+        float normalizedLevel = ((([_channelsValues[(NSUInteger) c] floatValue] + 160) / 160.f));
         float levelHeight = height * normalizedLevel;
 
         CGContextSetFillColorWithColor(context, [[UIColor greenColor] CGColor]);

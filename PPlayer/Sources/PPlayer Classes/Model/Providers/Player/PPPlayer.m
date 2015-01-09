@@ -223,7 +223,7 @@ static UIImage *artworkPlaceholder() {
 
     NSMutableArray *channelsValues = [NSMutableArray array];
 
-    for (int c = 0; c < 128; c++) {
+    for (int c = 0; c < _avAudioPlayer.numberOfChannels; c++) {
         float level = [_avAudioPlayer averagePowerForChannel:(NSUInteger) c];
         [channelsValues addObject:@(level)];
     }
