@@ -37,6 +37,8 @@ static CGFloat supportButtonsSize() {
     return 25.0f * (2.0f / 3.0f);
 }
 
+static CGFloat buttonsExtendedTouchArea = 25.0f;
+
 static UIColor *barTintColor() {
     return [UIColor colorWithRed:(CGFloat) (247.0f / 255.0)
                            green:(CGFloat) (247.0f / 255.0)
@@ -44,10 +46,23 @@ static UIColor *barTintColor() {
                            alpha:1];
 }
 
+@interface PPPlayerPlaybackButton : UIButton
+@end
+
+@implementation PPPlayerPlaybackButton
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    CGFloat margin = buttonsExtendedTouchArea;
+    CGRect area = CGRectInset(self.bounds, -margin, -margin);
+
+    return CGRectContainsPoint(area, point);
+}
+
+@end
+
 @interface PPPlayerPlaybackView () {
 @private
-    UIButton *_repeatButton, *_shuffleButton;
-    UIButton *_prevButton, *_playPauseButton, *_nextButton;
+    PPPlayerPlaybackButton *_repeatButton, *_shuffleButton;
+    PPPlayerPlaybackButton *_prevButton, *_playPauseButton, *_nextButton;
 }
 @end
 
@@ -66,7 +81,7 @@ static UIColor *barTintColor() {
     self.backgroundColor = barTintColor();
 
     //repeat and shuffle
-    _repeatButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _repeatButton = [PPPlayerPlaybackButton buttonWithType:UIButtonTypeCustom];
     [_repeatButton setImage:[UIImage imageNamed:@"PlayerIconRepeat.png"]
                    forState:UIControlStateNormal];
     [_repeatButton setImage:[[UIImage imageNamed:@"PlayerIconRepeat.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
@@ -75,7 +90,7 @@ static UIColor *barTintColor() {
     [_repeatButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_repeatButton];
 
-    _shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _shuffleButton = [PPPlayerPlaybackButton buttonWithType:UIButtonTypeCustom];
     [_shuffleButton setImage:[UIImage imageNamed:@"PlayerIconShuffle.png"]
                     forState:UIControlStateNormal];
     [_shuffleButton setImage:[[UIImage imageNamed:@"PlayerIconShuffle.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
@@ -84,7 +99,7 @@ static UIColor *barTintColor() {
     [_shuffleButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_shuffleButton];
 
-    _playPauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _playPauseButton = [PPPlayerPlaybackButton buttonWithType:UIButtonTypeCustom];
     [_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPlay.png"]
                    forState:UIControlStateNormal];
     [_playPauseButton setImage:[UIImage imageNamed:@"PlayerIconPause.png"]
@@ -93,14 +108,14 @@ static UIColor *barTintColor() {
     [_playPauseButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_playPauseButton];
 
-    _prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _prevButton = [PPPlayerPlaybackButton buttonWithType:UIButtonTypeCustom];
     [_prevButton setImage:[UIImage imageNamed:@"PlayerIconPrev.png"]
                  forState:UIControlStateNormal];
     [_prevButton setBackgroundColor:self.backgroundColor];
     [_prevButton setAutoresizingMask:UIViewAutoresizingNone];
     [self addSubview:_prevButton];
 
-    _nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _nextButton = [PPPlayerPlaybackButton buttonWithType:UIButtonTypeCustom];
     [_nextButton setImage:[UIImage imageNamed:@"PlayerIconNext.png"]
                  forState:UIControlStateNormal];
     [_nextButton setBackgroundColor:self.backgroundColor];
