@@ -21,6 +21,7 @@
 
 #import "PPProvider.h"
 #import "PPPlayerNotifications-State.h"
+#import <UIKit/UIKit.h>
 
 @class PPLibraryPlaylistItemModel;
 
@@ -36,6 +37,8 @@
 
 @property(atomic) NSTimeInterval currentItemTime;
 @property(atomic, readonly) NSTimeInterval totalItemTime;
+
+@property(atomic, strong, readonly) UIImage *currentArtwork;
 
 #pragma mark - Singleton
 

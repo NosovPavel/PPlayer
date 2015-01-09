@@ -28,6 +28,7 @@
 #import "PPLibraryPlaylistItemModel.h"
 #import "PPLibraryTrackModel.h"
 #import "PPPlayerTrackSliderView.h"
+#import "PPPlayerCoverView.h"
 
 @interface PPPlayerViewController () {
 @private
@@ -194,6 +195,8 @@
 
     _playerView.playbackView.playPauseButton.enabled = player.currentPlaylistItem != nil;
     _playerView.playbackView.playPauseButton.selected = player.plaing;
+
+    _playerView.coverView.coverImage = player.currentArtwork;
 
     [_playerView.trackTitleView setTrackTitle:player.currentPlaylistItem.trackModel.title
                                   trackArtist:player.currentPlaylistItem.trackModel.albumModel.artistModel.title

@@ -34,6 +34,10 @@ static NSString *subTitlePlaceholder() {
     return NSLocalizedString(@"Unknown artist - Unkwnown album", nil);
 }
 
+static UIImage *artworkPlaceholder() {
+    return [UIImage imageNamed:@"ArtworkPlaceHolderBig.png"];
+}
+
 @interface PPPlayer () <AVAudioPlayerDelegate> {
 @private
     AVAudioPlayer *_avAudioPlayer;
@@ -136,6 +140,8 @@ static NSString *subTitlePlaceholder() {
         songInfo[MPMediaItemPropertyPlaybackDuration] = @(self.totalItemTime);
         songInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(self.currentItemTime);
 
+        songInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:self.currentArtwork];
+
         [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:songInfo];
     }
 }
@@ -162,6 +168,8 @@ static NSString *subTitlePlaceholder() {
     return _currentPlaylistItems;
 }
 
+#pragma mark -
+
 - (BOOL)plaing {
     return _avAudioPlayer.playing;
 }
@@ -186,6 +194,8 @@ static NSString *subTitlePlaceholder() {
     return NO;
 }
 
+#pragma mark -
+
 - (void)setCurrentItemTime:(NSTimeInterval)currentItemTime {
     if (currentItemTime >= 0 && currentItemTime < self.totalItemTime) {
         _avAudioPlayer.currentTime = currentItemTime;
@@ -198,6 +208,12 @@ static NSString *subTitlePlaceholder() {
 
 - (NSTimeInterval)totalItemTime {
     return _avAudioPlayer.duration;
+}
+
+#pragma mark -
+
+- (UIImage *)currentArtwork {
+    return artworkPlaceholder();
 }
 
 #pragma mark - Playback Control
