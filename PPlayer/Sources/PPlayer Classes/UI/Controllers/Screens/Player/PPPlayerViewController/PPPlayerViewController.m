@@ -202,6 +202,7 @@
     _playerView.trackSliderView.trackSlider.enabled = player.currentPlaylistItem != nil;
 
     if (_lastPlayedItemID != player.currentPlaylistItem.id) {
+        [_playerView.trackSliderView.trackSlider cancelTrackingWithEvent:nil];
         [self _updatePlayerVisualTrackingState:player
                                         forced:YES];
     }

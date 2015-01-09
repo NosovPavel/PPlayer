@@ -86,6 +86,9 @@ static NSString *timeLabelsPlaceholder = @"0:00";
     [_trackSlider addTarget:self
                      action:@selector(_sliderEndsScrubbing)
            forControlEvents:UIControlEventTouchUpOutside];
+    [_trackSlider addTarget:self
+                     action:@selector(_sliderEndsScrubbing)
+           forControlEvents:UIControlEventTouchCancel];
     [self addSubview:_trackSlider];
 
     _pastTimeLabel = [[UILabel alloc] init];
