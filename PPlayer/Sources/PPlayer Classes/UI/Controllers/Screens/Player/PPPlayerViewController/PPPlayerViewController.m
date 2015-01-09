@@ -27,6 +27,7 @@
 #import "PPPlayerTrackTitleView.h"
 #import "PPLibraryPlaylistItemModel.h"
 #import "PPLibraryTrackModel.h"
+#import "PPPlayerTrackSliderView.h"
 
 @interface PPPlayerViewController () {
 @private
@@ -185,9 +186,13 @@
     [_playerView.trackTitleView setTrackTitle:player.currentPlaylistItem.trackModel.title
                                   trackArtist:player.currentPlaylistItem.trackModel.albumModel.artistModel.title
                                 andTrackAlbum:player.currentPlaylistItem.trackModel.albumModel.title];
+
+    _playerView.trackSliderView.trackSlider.enabled = player.currentPlaylistItem != nil;
 }
 
 - (void)_updatePlayerVisualTrackingState:(PPPlayer *)player {
+    [_playerView.trackSliderView setupCurrentTime:player.currentItemTime
+                                         andTotal:player.totalItemTime];
 }
 
 @end

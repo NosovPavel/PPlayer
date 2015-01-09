@@ -30,6 +30,7 @@
     AVAudioPlayer *_avAudioPlayer;
     NSMutableArray *_currentPlaylistItems;
     PPLibraryPlaylistItemModel *_currentPlaylistItem;
+    CADisplayLink *_displayLink;
 
     BOOL _shuffleEnabled, _repeatEnabled;
 }
@@ -90,6 +91,9 @@
     [_avAudioPlayer stop];
     _avAudioPlayer = nil;
 
+    [_displayLink invalidate];
+    _displayLink = nil;
+
     _currentPlaylistItems = nil;
     _currentPlaylistItem = nil;
 }
@@ -98,6 +102,11 @@
 
 - (void)_updateState {
     [[NSNotificationCenter defaultCenter] postNotificationName:PPPlayerStateChangedNotificationName
+                                                        object:self];
+}
+
+- (void)_updateTrackingState {
+    [[NSNotificationCenter defaultCenter] postNotificationName:PPPlayerStateTrackingChangedNotificationName
                                                         object:self];
 }
 
@@ -147,11 +156,22 @@
     return NO;
 }
 
+- (NSTimeInterval)currentItemTime {
+    return _avAudioPlayer.currentTime;
+}
+
+- (NSTimeInterval)totalItemTime {
+    return _avAudioPlayer.duration;
+}
+
 #pragma mark - Playback Control
 
 - (void)startPlaingItem:(PPLibraryPlaylistItemModel *)playlistItem {
     [_avAudioPlayer stop];
     _avAudioPlayer = nil;
+
+    [_displayLink invalidate];
+    _displayLink = nil;
 
     NSError *error;
     _currentPlaylistItem = playlistItem;
@@ -163,10 +183,15 @@
 
         if (!error) {
             [_avAudioPlayer play];
+            _displayLink = [CADisplayLink displayLinkWithTarget:self
+                                                       selector:@selector(onDisplay)];
+            [_displayLink addToRunLoop:[NSRunLoop currentRunLoop]
+                               forMode:NSDefaultRunLoopMode];
         }
     }
 
     [self _updateState];
+    [self _updateTrackingState];
 }
 
 - (void)togglePlaing {
@@ -245,6 +270,12 @@
         [player play];
     }
     [self _updateState];
+}
+
+#pragma mark - CADisplayLink Callback
+
+- (void)onDisplay {
+    [self _updateTrackingState];
 }
 
 @end

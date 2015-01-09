@@ -34,6 +34,8 @@
 @property(atomic, strong, readonly) PPLibraryPlaylistItemModel *currentPlaylistItem;
 @property(atomic, strong) NSArray *currentPlaylistItems;
 
+@property(atomic, readonly) NSTimeInterval currentItemTime, totalItemTime;
+
 #pragma mark - Singleton
 
 + (PPPlayer *)sharedPlayer;

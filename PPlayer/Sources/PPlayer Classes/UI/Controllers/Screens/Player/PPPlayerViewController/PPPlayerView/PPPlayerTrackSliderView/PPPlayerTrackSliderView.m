@@ -21,6 +21,17 @@
 
 #import "PPPlayerTrackSliderView.h"
 
+static NSString *displayValueFromSeconds(long seconds) {
+    return seconds > 9 ? [NSString stringWithFormat:@"%ld", seconds] : [NSString stringWithFormat:@"0%ld", seconds];
+}
+
+static NSString *displayMinSecValueFromSeconds(long seconds) {
+    long min = seconds / 60;
+    long secondsReminder = seconds % 60;
+
+    return [NSString stringWithFormat:@"%ld:%@", min, displayValueFromSeconds(secondsReminder)];
+}
+
 static const CGFloat sidePadding() {
     return 25.0f;
 }
@@ -50,6 +61,7 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 @end
 
 @implementation PPPlayerTrackSliderView
+@synthesize trackSlider = _trackSlider;
 
 #pragma mark - Init
 
@@ -60,6 +72,9 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 
     _trackSlider = [[UISlider alloc] init];
     _trackSlider.userInteractionEnabled = NO;
+    [_trackSlider addTarget:self
+                     action:@selector(_sliderValueChanged)
+           forControlEvents:UIControlEventValueChanged];
     [self addSubview:_trackSlider];
 
     _pastTimeLabel = [[UILabel alloc] init];
@@ -108,6 +123,31 @@ static NSString *timeLabelsPlaceholder = @"0:00";
 
 - (CGFloat)preferredSideSize {
     return sideSize();
+}
+
+#pragma mark - Internal
+
+- (void)_updateLabels {
+    [_pastTimeLabel setText:displayMinSecValueFromSeconds(lroundf(_trackSlider.value))];
+    [_remindsTimeLabel setText:displayMinSecValueFromSeconds(lroundf(_trackSlider.maximumValue))];
+
+    [self layoutSubviews];
+}
+
+#pragma mark - Interface
+
+- (void)setupCurrentTime:(NSTimeInterval)current andTotal:(NSTimeInterval)total {
+    _trackSlider.minimumValue = 0.0f;
+    _trackSlider.maximumValue = (float) total;
+    _trackSlider.value = ((float) current);
+
+    [self _updateLabels];
+}
+
+#pragma mark - Interaction
+
+- (void)_sliderValueChanged {
+    [self _updateLabels];
 }
 
 @end

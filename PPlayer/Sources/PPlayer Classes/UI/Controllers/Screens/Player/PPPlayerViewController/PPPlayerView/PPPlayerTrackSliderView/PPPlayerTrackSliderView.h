@@ -22,5 +22,7 @@
 #import "PPPlayerView.h"
 
 @interface PPPlayerTrackSliderView : PPView
+@property(atomic, strong, readonly) UISlider *trackSlider;
 
+- (void)setupCurrentTime:(NSTimeInterval)current andTotal:(NSTimeInterval)total;
 @end
