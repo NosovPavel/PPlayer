@@ -54,7 +54,6 @@ static UIImage *artworkPlaceholder() {
 @implementation PPPlayer
 @synthesize shuffleEnabled = _shuffleEnabled;
 @synthesize repeatEnabled = _repeatEnabled;
-@synthesize visualizationInsteadArtwork = _visualizationInsteadArtwork;
 
 #pragma mark - Singleton
 
@@ -80,7 +79,7 @@ static UIImage *artworkPlaceholder() {
         error = [self _configurateSession];
     }
 
-    _visualizationInsteadArtwork = YES;
+    _visualizationInsteadArtwork = NO;
     _visualizer = [PPPlayerVisualizer new];
 }
 
@@ -219,18 +218,33 @@ static UIImage *artworkPlaceholder() {
 #pragma mark -
 
 - (UIImage *)currentArtwork {
-    [_avAudioPlayer updateMeters];
+    if (_visualizationInsteadArtwork) {
+        [_avAudioPlayer updateMeters];
 
-    NSMutableArray *channelsValues = [NSMutableArray array];
+        NSMutableArray *channelsValues = [NSMutableArray array];
 
-    for (int c = 0; c < _avAudioPlayer.numberOfChannels; c++) {
-        float level = [_avAudioPlayer averagePowerForChannel:(NSUInteger) c];
-        [channelsValues addObject:@(level)];
+        for (int c = 0; c < _avAudioPlayer.numberOfChannels; c++) {
+            float level = [_avAudioPlayer averagePowerForChannel:(NSUInteger) c];
+            [channelsValues addObject:@(level)];
+        }
+
+        [_visualizer setChannelsValues:channelsValues];
+
+        return [_visualizer currentSnapshot];
     }
 
-    [_visualizer setChannelsValues:channelsValues];
+    return artworkPlaceholder();
+}
 
-    return [_visualizer currentSnapshot];
+#pragma mark -
+
+- (BOOL)visualizationInsteadArtwork {
+    return _visualizationInsteadArtwork;
+}
+
+- (void)setVisualizationInsteadArtwork:(BOOL)visualizationInsteadArtwork {
+    _visualizationInsteadArtwork = visualizationInsteadArtwork;
+    _avAudioPlayer.meteringEnabled = _visualizationInsteadArtwork;
 }
 
 #pragma mark - Playback Control
@@ -249,7 +263,7 @@ static UIImage *artworkPlaceholder() {
         _avAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[PPLibraryProvider trackURLForID:playlistItem.trackModel.id]
                                                                 error:&error];
         _avAudioPlayer.delegate = self;
-        _avAudioPlayer.meteringEnabled = YES;
+        _avAudioPlayer.meteringEnabled = _visualizationInsteadArtwork;
 
         if (!error) {
             [_avAudioPlayer play];
