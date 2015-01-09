@@ -1173,6 +1173,11 @@
 					A7C448951A501F1E00FE096B = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = J3FXQPLD5W;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
