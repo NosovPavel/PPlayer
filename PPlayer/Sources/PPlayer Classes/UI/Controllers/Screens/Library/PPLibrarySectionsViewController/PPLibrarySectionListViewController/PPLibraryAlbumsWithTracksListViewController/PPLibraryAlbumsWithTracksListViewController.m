@@ -372,21 +372,50 @@ UIEdgeInsets edgeInsets() {
                                                                                  attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}]];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+#pragma mark - Configuration
 
+- (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *tracks = _tracksArray[(NSUInteger) indexPath.section];
     PPLibraryTrackModel *track = tracks[(NSUInteger) indexPath.row];
-    BOOL picked = [_pickedArray containsObject:track];
-    if (picked) {
-        [_pickedArray removeObject:track];
-    } else {
-        [_pickedArray addObject:track];
-    }
 
-    [tableView reloadRowsAtIndexPaths:@[indexPath]
-                     withRowAnimation:UITableViewRowAnimationNone];
-    [self updateDoneButtonState];
+    return track;
+}
+
+- (NSArray *)playlistItemsForCurrentContent {
+    NSMutableArray *playlistItems = [NSMutableArray array];
+
+    __block NSUInteger indexOfItem = 0;
+    [_tracksArray enumerateObjectsUsingBlock:^(NSArray *tracks, NSUInteger idx, BOOL *stop) {
+        [tracks enumerateObjectsUsingBlock:^(PPLibraryTrackModel *track, NSUInteger idx2, BOOL *stop2) {
+            PPLibraryPlaylistItemModel *item = [PPLibraryPlaylistItemModel modelWithId:-(indexOfItem + idx2) title:nil];
+            item.trackModel = track;
+
+            [playlistItems addObject:item];
+        }];
+        indexOfItem += tracks.count;
+    }];
+
+    return playlistItems;
+}
+
+- (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath {
+    PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
+
+    __block NSUInteger indexOfItem = 0;
+    [_tracksArray enumerateObjectsUsingBlock:^(NSArray *tracks, NSUInteger idx, BOOL *stop) {
+        if (![tracks containsObject:track]) {
+            indexOfItem += tracks.count;
+        } else {
+            NSUInteger indexOfTrack = [tracks indexOfObject:track];
+            indexOfItem += indexOfTrack;
+            *stop = YES;
+        }
+    }];
+
+    PPLibraryPlaylistItemModel *item = [PPLibraryPlaylistItemModel modelWithId:-indexOfItem title:nil];
+    item.trackModel = track;
+
+    return item;
 }
 
 @end

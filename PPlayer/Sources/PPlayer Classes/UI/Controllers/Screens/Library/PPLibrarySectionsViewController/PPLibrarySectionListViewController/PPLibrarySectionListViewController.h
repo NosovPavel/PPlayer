@@ -22,6 +22,8 @@
 #import "PPSelectableActionsViewController.h"
 
 @class PPLibraryRootViewController;
+@class PPLibraryPlaylistItemModel;
+@class PPLibraryTrackModel;
 
 @interface PPLibrarySectionListViewController : PPSelectableActionsViewController <UITableViewDataSource, UITableViewDelegate> {
 @protected
@@ -40,5 +42,12 @@
 - (void)reloadDataWithCompletionBlock:(void (^)())block;
 
 - (void)updateDoneButtonState;
+
+//Config
+- (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath;
+
+- (NSArray *)playlistItemsForCurrentContent;
+
+- (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath;
 
 @end

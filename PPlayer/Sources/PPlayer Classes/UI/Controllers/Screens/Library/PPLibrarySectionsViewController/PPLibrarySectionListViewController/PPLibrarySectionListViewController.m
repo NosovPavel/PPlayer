@@ -21,6 +21,9 @@
 
 #import "PPLibrarySectionListViewController.h"
 #import "PPLibraryRootViewController.h"
+#import "PPLibraryPlaylistItemModel.h"
+#import "PPLibraryTrackModel.h"
+#import "PPPlayer.h"
 
 @implementation PPLibrarySectionListViewController
 
@@ -135,6 +138,23 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    if (self.tracksPickerMode) {
+        PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
+        BOOL picked = [_pickedArray containsObject:track];
+        if (picked) {
+            [_pickedArray removeObject:track];
+        } else {
+            [_pickedArray addObject:track];
+        }
+
+        [tableView reloadRowsAtIndexPaths:@[indexPath]
+                         withRowAnimation:UITableViewRowAnimationNone];
+        [self updateDoneButtonState];
+    } else {
+        [[PPPlayer sharedPlayer] setCurrentPlaylistItems:[self playlistItemsForCurrentContent]];
+        [[PPPlayer sharedPlayer] startPlaingItem:[self playlistItemForIndexPath:indexPath]];
+    }
 }
 
 #pragma mark - PPSelectableActionsViewController Logic
@@ -181,6 +201,20 @@
     if (self.libraryRootViewController.tracksPickerBlock) {
         self.libraryRootViewController.tracksPickerBlock([_pickedArray copy]);
     }
+}
+
+#pragma mark - Configuration
+
+- (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath {
+    return nil;
+}
+
+- (NSArray *)playlistItemsForCurrentContent {
+    return nil;
+}
+
+- (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath {
+    return nil;
 }
 
 @end

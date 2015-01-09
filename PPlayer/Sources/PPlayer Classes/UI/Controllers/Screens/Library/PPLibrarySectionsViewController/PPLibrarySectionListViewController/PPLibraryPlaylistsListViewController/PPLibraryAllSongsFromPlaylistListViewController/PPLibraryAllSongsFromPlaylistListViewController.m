@@ -273,10 +273,26 @@ static NSString *tracksPlaceholderIdentifier = @"tracksPlaceholderIdentifier";
 
     if (indexPath.section == 1) {
         itemModel = _placeholdersArray[(NSUInteger) indexPath.row];
-
     }
 
     return itemModel.trackModel;
+}
+
+- (NSArray *)playlistItemsForCurrentContent {
+    return [_sourceArray copy];
+}
+
+- (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath {
+    PPLibraryPlaylistItemModel *itemModel;
+    if (indexPath.section == 0) {
+        itemModel = _sourceArray[(NSUInteger) indexPath.row];
+    }
+
+    if (indexPath.section == 1) {
+        itemModel = _placeholdersArray[(NSUInteger) indexPath.row];
+    }
+
+    return itemModel;
 }
 
 @end

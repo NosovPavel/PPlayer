@@ -271,7 +271,7 @@ static NSString *playlistCreatingCellIdentifier = @"playlistsCreatingCellIdentif
 };
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     if (indexPath.section == 0) {
         PPLibraryPlaylistModel *playlistModel = _sourceArray[(NSUInteger) indexPath.row];

@@ -54,10 +54,15 @@
 }
 
 #pragma mark - Init
-
 - (void)_init {
     //configure session until success
-    NSError *error = [NSError new];
+    NSError *error = nil;
+
+    [[AVAudioSession sharedInstance] setActive:YES
+                                         error:&error];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+                                           error:&error];
+
     while (error) {
         [[AVAudioSession sharedInstance] setActive:YES
                                              error:&error];

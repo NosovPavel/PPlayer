@@ -129,7 +129,7 @@ static const CGFloat leftTextShift = 0.0f;
 };
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     PPLibraryArtistModel *artistModel = _sourceArray[(NSUInteger) indexPath.row];
     PPLibraryAlbumsWithTracksListViewController *albumsWithTracksListViewController = [PPLibraryAlbumsWithTracksListViewController

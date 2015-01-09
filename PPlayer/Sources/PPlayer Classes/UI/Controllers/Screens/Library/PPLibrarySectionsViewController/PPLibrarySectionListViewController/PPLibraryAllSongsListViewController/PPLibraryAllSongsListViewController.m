@@ -21,6 +21,7 @@
 
 #import "PPLibraryAllSongsListViewController.h"
 #import "PPLibraryProvider.h"
+#import "PPPlayer.h"
 
 static const CGFloat cellsHeight = 60.0f;
 static NSString *tracksCellIdentifier = @"tracksCellIdentifier";
@@ -194,26 +195,32 @@ static const CGFloat leftTextShift = 5.0f;
     }
 };
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-
-    PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
-    BOOL picked = [_pickedArray containsObject:track];
-    if (picked) {
-        [_pickedArray removeObject:track];
-    } else {
-        [_pickedArray addObject:track];
-    }
-
-    [tableView reloadRowsAtIndexPaths:@[indexPath]
-                     withRowAnimation:UITableViewRowAnimationNone];
-    [self updateDoneButtonState];
-}
-
 #pragma mark - Configuration
 
 - (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath {
     return _sourceArray[(NSUInteger) indexPath.row];
+}
+
+- (NSArray *)playlistItemsForCurrentContent {
+    NSMutableArray *playlistItems = [NSMutableArray array];
+
+    [_sourceArray enumerateObjectsUsingBlock:^(PPLibraryTrackModel *currentTrack, NSUInteger idx, BOOL *stop) {
+        PPLibraryPlaylistItemModel *item = [PPLibraryPlaylistItemModel modelWithId:-idx title:nil];
+        item.trackModel = currentTrack;
+
+        [playlistItems addObject:item];
+    }];
+
+    return playlistItems;
+}
+
+- (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath {
+    PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
+
+    PPLibraryPlaylistItemModel *item = [PPLibraryPlaylistItemModel modelWithId:-indexPath.row title:nil];
+    item.trackModel = track;
+
+    return item;
 }
 
 @end
