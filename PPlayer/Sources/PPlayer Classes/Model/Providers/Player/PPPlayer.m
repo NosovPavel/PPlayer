@@ -285,6 +285,10 @@ static UIImage *artworkPlaceholder() {
     _currentPlaylistItem = playlistItem;
 
     if (_currentPlaylistItem) {
+        if (_shuffleEnabled && ![_shuffledPlaylistItems containsObject:_currentPlaylistItem]) {
+            [_shuffledPlaylistItems addObject:_currentPlaylistItem];
+        }
+
         _avAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[PPLibraryProvider trackURLForID:playlistItem.trackModel.id]
                                                                 error:&error];
         _avAudioPlayer.delegate = self;
