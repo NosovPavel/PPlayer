@@ -43,6 +43,8 @@
     PPNavigationBarMenuViewAction *_deleteAction;
     PPNavigationBarMenuViewAction *_editAction;
 
+    BOOL _selectingMode;
+
     //Visual
     UITableView *_sourceTableView;
 }
@@ -56,6 +58,8 @@
 #pragma mark - Picker Mode Logic
 
 - (BOOL)isPickedIndexPath:(NSIndexPath *)indexPath;
+
+- (NSObject *)pickedItemAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)updateDoneButtonState;
 

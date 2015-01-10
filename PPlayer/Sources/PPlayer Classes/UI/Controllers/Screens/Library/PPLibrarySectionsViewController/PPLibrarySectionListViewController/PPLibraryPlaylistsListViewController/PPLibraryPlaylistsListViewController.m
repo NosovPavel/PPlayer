@@ -70,6 +70,15 @@ static NSString *playlistCreatingCellIdentifier = @"playlistsCreatingCellIdentif
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
 
+- (void)setNeedsDisplay {
+    [super setNeedsDisplay];
+    self.accessoryView = nil;
+}
+
+- (void)setSelected:(BOOL)selected {
+    return;
+}
+
 @end
 
 @interface PPLibraryPlaylistsListViewController () {

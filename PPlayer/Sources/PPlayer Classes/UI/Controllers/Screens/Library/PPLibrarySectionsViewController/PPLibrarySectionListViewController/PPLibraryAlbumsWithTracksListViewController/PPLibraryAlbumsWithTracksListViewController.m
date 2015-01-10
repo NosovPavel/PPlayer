@@ -345,7 +345,7 @@ UIEdgeInsets edgeInsets() {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
 
-    if (!self.tracksPickerMode) {
+    if (!(self.tracksPickerMode || _selectingMode)) {
         cell = [tableView dequeueReusableCellWithIdentifier:tracksCellIdentifier];
 
         if (!cell) {

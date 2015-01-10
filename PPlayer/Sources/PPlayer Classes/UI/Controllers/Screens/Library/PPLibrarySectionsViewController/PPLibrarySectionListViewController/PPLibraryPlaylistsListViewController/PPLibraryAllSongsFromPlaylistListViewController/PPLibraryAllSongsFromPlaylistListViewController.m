@@ -38,6 +38,15 @@ static NSString *tracksPlaceholderIdentifier = @"tracksPlaceholderIdentifier";
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
 
+- (void)setNeedsDisplay {
+    [super setNeedsDisplay];
+    self.accessoryView = nil;
+}
+
+- (void)setSelected:(BOOL)selected {
+    return;
+}
+
 @end
 
 @interface PPLibraryAllSongsFromPlaylistListViewController () {
@@ -262,6 +271,12 @@ static NSString *tracksPlaceholderIdentifier = @"tracksPlaceholderIdentifier";
     if (indexPath.section == 1) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
+}
+
+#pragma mark - Picking Mode
+
+- (NSObject *)pickedItemAtIndexPath:(NSIndexPath *)indexPath {
+    return [self playlistItemForIndexPath:indexPath];
 }
 
 #pragma mark - Configuration

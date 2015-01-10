@@ -157,7 +157,7 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell <PPLibraryPickingCellProtocol, PPLibraryNowPlaingCellProtocol> *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.tracksPickerMode && [cell conformsToProtocol:@protocol(PPLibraryPickingCellProtocol)]) {
+    if ((self.tracksPickerMode || _selectingMode) && [cell conformsToProtocol:@protocol(PPLibraryPickingCellProtocol)]) {
         cell.checked = [self isPickedIndexPath:indexPath];
     } else {
         if ([cell conformsToProtocol:@protocol(PPLibraryNowPlaingCellProtocol)]) {
@@ -169,8 +169,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    if (self.tracksPickerMode) {
-        PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
+    if (self.tracksPickerMode || _selectingMode) {
+        NSObject *track = [self pickedItemAtIndexPath:indexPath];
         BOOL picked = [_pickedArray containsObject:track];
         if (picked) {
             [_pickedArray removeObject:track];
@@ -180,7 +180,10 @@
 
         [tableView reloadRowsAtIndexPaths:@[indexPath]
                          withRowAnimation:UITableViewRowAnimationNone];
-        [self updateDoneButtonState];
+
+        if (self.tracksPickerMode && !_selectingMode) {
+            [self updateDoneButtonState];
+        }
     } else {
         [[PPPlayer sharedPlayer] setCurrentPlaylistItems:[self playlistItemsForCurrentContent]];
         [[PPPlayer sharedPlayer] startPlaingItem:[self playlistItemForIndexPath:indexPath]];
@@ -216,12 +219,22 @@
 
 - (void)selectTapped {
     [super selectTapped];
-    [_sourceTableView reloadData];
+
+    _selectingMode = YES;
+    _pickedArray = [NSMutableArray array];
+
+    [_sourceTableView reloadRowsAtIndexPaths:[_sourceTableView indexPathsForVisibleRows]
+                            withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)doneTapped {
     [super doneTapped];
-    [_sourceTableView reloadData];
+
+    _selectingMode = NO;
+    _pickedArray = nil;
+
+    [_sourceTableView reloadRowsAtIndexPaths:[_sourceTableView indexPathsForVisibleRows]
+                            withRowAnimation:UITableViewRowAnimationFade];
 }
 
 #pragma mark - Picker Mode Logic
@@ -240,8 +253,12 @@
     }
 }
 
+- (NSObject *)pickedItemAtIndexPath:(NSIndexPath *)indexPath {
+    return [self trackForIndexPath:indexPath];
+}
+
 - (BOOL)isPickedIndexPath:(NSIndexPath *)indexPath {
-    return [_pickedArray containsObject:[self trackForIndexPath:indexPath]];
+    return [_pickedArray containsObject:[self pickedItemAtIndexPath:indexPath]];
 }
 
 - (void)_pickerDoneTapped {
