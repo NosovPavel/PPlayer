@@ -30,7 +30,11 @@ static NSString *tracksPickingCellIdentifier = @"tracksPickingCellIdentifier";
 static const CGFloat leftImageShift = 15.0f;
 static const CGFloat leftTextShift = 5.0f;
 
-@interface PPLibraryAllSongsCell ()
+@interface PPLibraryAllSongsCell () <PPLibraryNowPlaingCellProtocol> {
+@private
+    UIImageView *_nowPlaingView;
+    BOOL _nowPlaing;
+}
 - (void)_init;
 @end
 
@@ -43,6 +47,9 @@ static const CGFloat leftTextShift = 5.0f;
     [self.imageView setImage:[UIImage imageNamed:@"ArtworkPlaceHolderIcon.png"]];
     [self.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
     [self.detailTextLabel setFont:[UIFont systemFontOfSize:13.0f]];
+
+    _nowPlaingView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"CellIconNowPlaying.png"]
+            imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
 }
 
 #pragma mark - Lifecycle
@@ -54,6 +61,10 @@ static const CGFloat leftTextShift = 5.0f;
     }
 
     return self;
+}
+
+- (void)dealloc {
+    _nowPlaingView = nil;
 }
 
 #pragma mark - Layout
@@ -78,9 +89,23 @@ static const CGFloat leftTextShift = 5.0f;
     self.separatorInset = UIEdgeInsetsMake(0.0f, self.textLabel.frame.origin.x, 0.0f, 0.0f);
 }
 
+#pragma mark - Setters / Getters
+
+- (BOOL)nowPlaing {
+    return _nowPlaing;
+}
+
+- (void)setNowPlaing:(BOOL)nowPlaing {
+    if (nowPlaing != _nowPlaing) {
+        _nowPlaing = nowPlaing;
+
+        self.accessoryView = _nowPlaing ? _nowPlaingView : nil;
+    }
+}
+
 @end
 
-@interface PPLibraryAllSongsPickingCell : PPLibraryAllSongsCell {
+@interface PPLibraryAllSongsPickingCell : PPLibraryAllSongsCell <PPLibraryPickingCellProtocol> {
 @private
     UIImageView *_checkmarkEmptyImageView, *_checkmarkFilledImageView;
     BOOL _checked;
@@ -175,6 +200,8 @@ static const CGFloat leftTextShift = 5.0f;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+
     PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
 
     NSString *title = track.title;
@@ -186,13 +213,6 @@ static const CGFloat leftTextShift = 5.0f;
 
     [cell.textLabel setText:title];
     [cell.detailTextLabel setAttributedText:subtitle];
-
-    if (self.tracksPickerMode) {
-        PPLibraryAllSongsPickingCell *pickingCell = (PPLibraryAllSongsPickingCell *) cell;
-        BOOL picked = [_pickedArray containsObject:track];
-
-        pickingCell.checked = picked;
-    }
 };
 
 #pragma mark - Configuration

@@ -49,6 +49,7 @@
 		65CDA4A0F5DDFB777D2E78FB /* TabIconPlaylist@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA3D13BD9885EE030E8E6 /* TabIconPlaylist@3x.png */; };
 		65CDA4E1C2672CE14613B59A /* PPLibraryGenreModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA0E154167848700E464B /* PPLibraryGenreModel.m */; };
 		65CDA4F917A1D65CC6023EB2 /* PPPlayerCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAAFA636680020870026C /* PPPlayerCoverView.m */; };
+		65CDA524C8D18D7DFADABC97 /* CellIconNowPlaying@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF7C4E9E372488C0B588 /* CellIconNowPlaying@2x.png */; };
 		65CDA530D53381B3BB2B38C1 /* ArtworkPlaceHolderBig.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA32E413022B00FCDAC4D /* ArtworkPlaceHolderBig.png */; };
 		65CDA530FB7A003A0D86DF41 /* PlayerIconRepeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA6FD4998BA9557E8A523 /* PlayerIconRepeat.png */; };
 		65CDA5335098AFAC7451BA05 /* NavMenuIconToLibrary.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA41D62DD04BEA30A06F5 /* NavMenuIconToLibrary.png */; };
@@ -81,6 +82,7 @@
 		65CDA850869CC9BF039BD1E5 /* NavMenuIconCancel@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAF1408DDACAF696C3352 /* NavMenuIconCancel@3x.png */; };
 		65CDA86105D57C9F97DAFAC1 /* CellIconCheckMarkEmpty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDADEF4637A89FDFF68878 /* CellIconCheckMarkEmpty@3x.png */; };
 		65CDA864B1743002EFC1EA11 /* LLACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC8DA10B7A0FA7444CA0 /* LLACircularProgressView.m */; };
+		65CDA8B6D60EA1539426E1CE /* CellIconNowPlaying@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA9D87EC6E0EC1C44D4FC /* CellIconNowPlaying@3x.png */; };
 		65CDA8C4F6EAC1A21C6667BA /* NavMenuIconDelete@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA03B803E410AE50C0F3A /* NavMenuIconDelete@3x.png */; };
 		65CDA91EFF4DE2B481E31060 /* NavMenuIconToLibrary@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAC7451B5A4B5F8897390 /* NavMenuIconToLibrary@3x.png */; };
 		65CDA9376CDE4215E636A8DB /* PPPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAC8629ED3FEB7897D4A1 /* PPPlayerView.m */; };
@@ -93,6 +95,7 @@
 		65CDA9E71B7796A77133002F /* NavMenuIconDone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAB0FE8CED06B215C8A58 /* NavMenuIconDone@3x.png */; };
 		65CDA9F1BC864FAFB43749F1 /* NavMenuIconToLibrary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA730B600220C32574B44 /* NavMenuIconToLibrary@2x.png */; };
 		65CDA9FFB212ED45AC4DF808 /* TabIconPlaylist.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */; };
+		65CDAA185DDA1ED06BC7469B /* CellIconNowPlaying.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAE8EAC33EF86D01558C2 /* CellIconNowPlaying.png */; };
 		65CDAA2C393F33F9E8D1FA08 /* PPFilesProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CDAAEBD49412A5ECA374B4 /* PPFilesProvider.m */; };
 		65CDAA6CD895D6C796833623 /* PlayerIconShuffle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDA1362D3C6F8C10158B44 /* PlayerIconShuffle@3x.png */; };
 		65CDAA79AD0DCCF53C404A9B /* CellIconLibrarySectionsAlbums@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65CDAED8C3AF1FFDCD17CD0F /* CellIconLibrarySectionsAlbums@3x.png */; };
@@ -266,6 +269,7 @@
 		65CDA98D6BF7BB84D87192FA /* CellIconPlaylist@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconPlaylist@3x.png"; sourceTree = "<group>"; };
 		65CDA98E737B5636BC61C4BF /* CellIconFolder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconFolder@3x.png"; sourceTree = "<group>"; };
 		65CDA9AD398C849E711123B6 /* PPNavigationBarMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPNavigationBarMenuView.h; sourceTree = "<group>"; };
+		65CDA9D87EC6E0EC1C44D4FC /* CellIconNowPlaying@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconNowPlaying@3x.png"; sourceTree = "<group>"; };
 		65CDA9EE55DCAAC0CEF528D1 /* PPFileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFileModel.m; sourceTree = "<group>"; };
 		65CDAA2D33E1340472BAC753 /* CellIconLibrarySectionsAllSongs@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconLibrarySectionsAllSongs@3x.png"; sourceTree = "<group>"; };
 		65CDAA425F97AC96EC82F988 /* TabIconPlaylist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconPlaylist@2x.png"; sourceTree = "<group>"; };
@@ -315,6 +319,7 @@
 		65CDAE335C7D78B0BA2B5953 /* PPLibraryPlaylistsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLibraryPlaylistsListViewController.h; sourceTree = "<group>"; };
 		65CDAE38C76ED5933195559C /* CellIconCheckMarkEmpty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconCheckMarkEmpty@2x.png"; sourceTree = "<group>"; };
 		65CDAE7FE7FE361ECFF18599 /* TabIconPlaylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconPlaylist.png; sourceTree = "<group>"; };
+		65CDAE8EAC33EF86D01558C2 /* CellIconNowPlaying.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconNowPlaying.png; sourceTree = "<group>"; };
 		65CDAE9A89FB2D8E0A321322 /* PPFilesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFilesListViewController.m; sourceTree = "<group>"; };
 		65CDAEAC50653894E66726C2 /* PPPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPlayer.m; sourceTree = "<group>"; };
 		65CDAECF0EB14AA263C764F7 /* PPTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPTabBarController.h; sourceTree = "<group>"; };
@@ -328,6 +333,7 @@
 		65CDAF42EAC4001D983C0CD1 /* PPLibraryAllSongsFromPlaylistListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLibraryAllSongsFromPlaylistListViewController.m; sourceTree = "<group>"; };
 		65CDAF5304950264E53DBF1E /* PlayerIconPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlayerIconPlay.png; sourceTree = "<group>"; };
 		65CDAF5EF14B72F9BEF8B70C /* TabIconLibrary@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabIconLibrary@3x.png"; sourceTree = "<group>"; };
+		65CDAF7C4E9E372488C0B588 /* CellIconNowPlaying@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellIconNowPlaying@2x.png"; sourceTree = "<group>"; };
 		65CDAF8CA7E021ADB356871F /* NSString+EncodingFixing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+EncodingFixing.m"; sourceTree = "<group>"; };
 		65CDAF989A55704CFAB57B0B /* CellIconLibrarySectionsArtists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CellIconLibrarySectionsArtists.png; sourceTree = "<group>"; };
 		65CDAFC9D7C30E1CC9D42F09 /* TabIconStorage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabIconStorage.png; sourceTree = "<group>"; };
@@ -855,6 +861,9 @@
 				65CDAF989A55704CFAB57B0B /* CellIconLibrarySectionsArtists.png */,
 				65CDAF26A70C986A71C33969 /* CellIconLibrarySectionsGenres.png */,
 				65CDA42E4E75F3329C9EA0F5 /* CellIconLibrarySectionsAlbums@2x.png */,
+				65CDA9D87EC6E0EC1C44D4FC /* CellIconNowPlaying@3x.png */,
+				65CDAE8EAC33EF86D01558C2 /* CellIconNowPlaying.png */,
+				65CDAF7C4E9E372488C0B588 /* CellIconNowPlaying@2x.png */,
 			);
 			path = "Library Sections";
 			sourceTree = "<group>";
@@ -1311,6 +1320,9 @@
 				65CDABB2439140573A240E6E /* PlayerIconPause@3x.png in Resources */,
 				65CDAC8B867B5A2B5C65D353 /* PlayerIconRepeat@3x.png in Resources */,
 				65CDA95C5CBE713717F5B28B /* PlayerIconPause@2x.png in Resources */,
+				65CDA8B6D60EA1539426E1CE /* CellIconNowPlaying@3x.png in Resources */,
+				65CDAA185DDA1ED06BC7469B /* CellIconNowPlaying.png in Resources */,
+				65CDA524C8D18D7DFADABC97 /* CellIconNowPlaying@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

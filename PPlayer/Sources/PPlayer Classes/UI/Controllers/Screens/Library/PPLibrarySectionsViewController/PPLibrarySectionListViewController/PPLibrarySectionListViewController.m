@@ -37,12 +37,12 @@
                                                               //
                                                           } title:NSLocalizedString(@"Delete", nil)];
 
-    _editEction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconEdit.png"]
+    _editAction = [PPNavigationBarMenuViewAction actionWithIcon:[UIImage imageNamed:@"NavMenuIconEdit.png"]
                                                         handler:^{
                                                             //
                                                         } title:NSLocalizedString(@"Edit", nil)];
 
-    _actionsWhenSelected = @[_editEction, _deleteAction];
+    _actionsWhenSelected = @[_editAction, _deleteAction];
     _pickedArray = [NSMutableArray array];
 }
 
@@ -64,14 +64,18 @@
 
     [self.menuNavigationViewController setMenuHidden:NO animated:YES];
 
+    [self _subscribeOnCurrentPlayerItemChange];
+
     [self _reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-
     [self.libraryRootViewController.tracksPickerDoneItem setTarget:nil];
     [self.libraryRootViewController.tracksPickerDoneItem setAction:nil];
+
+    [self _unsubscribeFromCurrentPlayerItemChange];
+
+    [super viewWillDisappear:animated];
 }
 
 - (void)loadView {
@@ -86,12 +90,28 @@
 }
 
 - (void)dealloc {
-    _sourceTableView = nil;
     _sourceArray = nil;
     _pickedArray = nil;
 
-    _editEction = nil;
+    _editAction = nil;
     _deleteAction = nil;
+
+    _sourceTableView = nil;
+}
+
+#pragma mark - NSNotificationCenter Observing
+
+- (void)_subscribeOnCurrentPlayerItemChange {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_currentPlayingItemChanged)
+                                                 name:PPPlayerStateNowPlayingItemChangedNotificationName
+                                               object:NULL];
+}
+
+- (void)_unsubscribeFromCurrentPlayerItemChange {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PPPlayerStateNowPlayingItemChangedNotificationName
+                                                  object:NULL];
 }
 
 #pragma mark - Layout
@@ -136,6 +156,16 @@
 
 #pragma mark - UITableViewDelegate
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell <PPLibraryPickingCellProtocol, PPLibraryNowPlaingCellProtocol> *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.tracksPickerMode && [cell conformsToProtocol:@protocol(PPLibraryPickingCellProtocol)]) {
+        cell.checked = [self isPickedIndexPath:indexPath];
+    } else {
+        if ([cell conformsToProtocol:@protocol(PPLibraryNowPlaingCellProtocol)]) {
+            cell.nowPlaing = [self isNowPlayingIndexPath:indexPath];
+        }
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
@@ -154,7 +184,20 @@
     } else {
         [[PPPlayer sharedPlayer] setCurrentPlaylistItems:[self playlistItemsForCurrentContent]];
         [[PPPlayer sharedPlayer] startPlaingItem:[self playlistItemForIndexPath:indexPath]];
+
+        [tableView selectRowAtIndexPath:indexPath
+                               animated:NO
+                         scrollPosition:UITableViewScrollPositionNone];
+        [tableView deselectRowAtIndexPath:indexPath
+                                 animated:YES];
     }
+}
+
+#pragma mark - NSNotificationCenter Callbacks
+
+- (void)_currentPlayingItemChanged {
+    [_sourceTableView reloadRowsAtIndexPaths:[_sourceTableView indexPathsForVisibleRows]
+                            withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - PPSelectableActionsViewController Logic
@@ -197,6 +240,10 @@
     }
 }
 
+- (BOOL)isPickedIndexPath:(NSIndexPath *)indexPath {
+    return [_pickedArray containsObject:[self trackForIndexPath:indexPath]];
+}
+
 - (void)_pickerDoneTapped {
     if (self.libraryRootViewController.tracksPickerBlock) {
         self.libraryRootViewController.tracksPickerBlock([_pickedArray copy]);
@@ -215,6 +262,12 @@
 
 - (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath {
     return nil;
+}
+
+#pragma mark - Now Playing
+
+- (BOOL)isNowPlayingIndexPath:(NSIndexPath *)indexPath {
+    return [self trackForIndexPath:indexPath].id == [PPPlayer sharedPlayer].currentPlaylistItem.trackModel.id;
 }
 
 @end

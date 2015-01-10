@@ -22,6 +22,7 @@
 #import "PPLibraryAllSongsFromPlaylistListViewController.h"
 #import "PPLibraryProvider.h"
 #import "PPLibraryRootViewController.h"
+#import "PPPlayer.h"
 
 static NSString *tracksPlaceholderIdentifier = @"tracksPlaceholderIdentifier";
 
@@ -293,6 +294,12 @@ static NSString *tracksPlaceholderIdentifier = @"tracksPlaceholderIdentifier";
     }
 
     return itemModel;
+}
+
+#pragma mark - Now Playing
+
+- (BOOL)isNowPlayingIndexPath:(NSIndexPath *)indexPath {
+    return [super isNowPlayingIndexPath:indexPath] && [self playlistItemForIndexPath:indexPath].id == [PPPlayer sharedPlayer].currentPlaylistItem.id;
 }
 
 @end

@@ -131,6 +131,11 @@ static UIImage *artworkPlaceholder() {
     [self _updateRemoteControlsState];
 }
 
+- (void)_updateNowPlayingItemState {
+    [[NSNotificationCenter defaultCenter] postNotificationName:PPPlayerStateNowPlayingItemChangedNotificationName
+                                                        object:self];
+}
+
 - (void)_updateRemoteControlsState {
     if (self == [PPPlayer sharedPlayer]) {
         NSMutableDictionary *songInfo = [[NSMutableDictionary alloc] init];
@@ -300,6 +305,8 @@ static UIImage *artworkPlaceholder() {
                                                        selector:@selector(onDisplay)];
             [_displayLink addToRunLoop:[NSRunLoop currentRunLoop]
                                forMode:NSDefaultRunLoopMode];
+
+            [self _updateNowPlayingItemState];
         }
     }
 

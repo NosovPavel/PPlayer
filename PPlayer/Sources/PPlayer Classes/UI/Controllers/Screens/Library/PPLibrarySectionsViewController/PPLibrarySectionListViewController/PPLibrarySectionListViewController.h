@@ -25,13 +25,23 @@
 @class PPLibraryPlaylistItemModel;
 @class PPLibraryTrackModel;
 
+@protocol PPLibraryPickingCellProtocol <NSObject>
+@required
+@property BOOL checked;
+@end
+
+@protocol PPLibraryNowPlaingCellProtocol <NSObject>
+@required
+@property BOOL nowPlaing;
+@end
+
 @interface PPLibrarySectionListViewController : PPSelectableActionsViewController <UITableViewDataSource, UITableViewDelegate> {
 @protected
     //Data
     NSMutableArray *_sourceArray;
     NSMutableArray *_pickedArray;
     PPNavigationBarMenuViewAction *_deleteAction;
-    PPNavigationBarMenuViewAction *_editEction;
+    PPNavigationBarMenuViewAction *_editAction;
 
     //Visual
     UITableView *_sourceTableView;
@@ -39,15 +49,26 @@
 
 @property(atomic, readonly) BOOL tracksPickerMode;
 
+#pragma mark - Reloading
+
 - (void)reloadDataWithCompletionBlock:(void (^)())block;
+
+#pragma mark - Picker Mode Logic
+
+- (BOOL)isPickedIndexPath:(NSIndexPath *)indexPath;
 
 - (void)updateDoneButtonState;
 
-//Config
+#pragma mark - Configuration
+
 - (PPLibraryTrackModel *)trackForIndexPath:(NSIndexPath *)indexPath;
 
 - (NSArray *)playlistItemsForCurrentContent;
 
 - (PPLibraryPlaylistItemModel *)playlistItemForIndexPath:(NSIndexPath *)indexPath;
+
+#pragma mark - Now Playing
+
+- (BOOL)isNowPlayingIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -33,6 +33,13 @@ UIEdgeInsets edgeInsets() {
     return UIEdgeInsetsMake(0.0f, 10.0f, 0.0f, 10.0f);
 }
 
+@interface PPLibraryAlbumsWithTracksCell () <PPLibraryNowPlaingCellProtocol> {
+@private
+    UIImageView *_nowPlaingView;
+    BOOL _nowPlaing;
+}
+@end
+
 @implementation PPLibraryAlbumsWithTracksCell
 
 #pragma mark - Init
@@ -46,6 +53,9 @@ UIEdgeInsets edgeInsets() {
         [self setPreservesSuperviewLayoutMargins:NO];
     }
     self.separatorInset = edgeInsets();
+
+    _nowPlaingView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"CellIconNowPlaying.png"]
+            imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
 }
 
 #pragma mark - Lifecycle
@@ -59,15 +69,27 @@ UIEdgeInsets edgeInsets() {
     return self;
 }
 
-#pragma mark - Layout
+- (void)dealloc {
+    _nowPlaingView = nil;
+}
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+#pragma mark - Setters / Getters
+
+- (BOOL)nowPlaing {
+    return _nowPlaing;
+}
+
+- (void)setNowPlaing:(BOOL)nowPlaing {
+    if (nowPlaing != _nowPlaing) {
+        _nowPlaing = nowPlaing;
+
+        self.accessoryView = _nowPlaing ? _nowPlaingView : nil;
+    }
 }
 
 @end
 
-@interface PPLibraryAlbumsWithTracksPickingCell : PPLibraryAlbumsWithTracksCell {
+@interface PPLibraryAlbumsWithTracksPickingCell : PPLibraryAlbumsWithTracksCell <PPLibraryPickingCellProtocol> {
 @private
     UIImageView *_checkmarkEmptyImageView, *_checkmarkFilledImageView;
     BOOL _checked;
@@ -345,21 +367,13 @@ UIEdgeInsets edgeInsets() {
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *tracks = _tracksArray[(NSUInteger) indexPath.section];
-    PPLibraryTrackModel *track = tracks[(NSUInteger) indexPath.row];
+    [super tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
 
+    PPLibraryTrackModel *track = [self trackForIndexPath:indexPath];
     NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lld  ", ((int64_t) (indexPath.row + 1))]
                                                                               attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:17.0f]}];
     [title appendAttributedString:[[NSAttributedString alloc] initWithString:track.title]];
-
     [cell.textLabel setAttributedText:title];
-
-    if (self.tracksPickerMode) {
-        PPLibraryAlbumsWithTracksPickingCell *pickingCell = (PPLibraryAlbumsWithTracksPickingCell *) cell;
-        BOOL picked = [_pickedArray containsObject:track];
-
-        pickingCell.checked = picked;
-    }
 };
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(PPLibraryAlbumsWithTracksHeaderView *)view forSection:(NSInteger)section {
