@@ -42,7 +42,7 @@ static UIImage *artworkPlaceholder() {
 @interface PPPlayer () <AVAudioPlayerDelegate> {
 @private
     AVAudioPlayer *_avAudioPlayer;
-    NSMutableArray *_currentPlaylistItems;
+    NSMutableArray *_currentPlaylistItems, *_shuffledPlaylistItems;
     PPLibraryPlaylistItemModel *_currentPlaylistItem;
     CADisplayLink *_displayLink;
     PPPlayerVisualizer *_visualizer;
@@ -113,6 +113,7 @@ static UIImage *artworkPlaceholder() {
     _displayLink = nil;
 
     _currentPlaylistItems = nil;
+    _shuffledPlaylistItems = nil;
     _currentPlaylistItem = nil;
 }
 
@@ -166,6 +167,11 @@ static UIImage *artworkPlaceholder() {
     }];
 
     _currentPlaylistItems = newPlaylistItems;
+
+    if (_shuffleEnabled) {
+        _shuffledPlaylistItems = [NSMutableArray array];
+    }
+
     [self _updateState];
 }
 
@@ -180,20 +186,39 @@ static UIImage *artworkPlaceholder() {
 }
 
 - (BOOL)prevTrackExists {
-    NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
+    if (_currentPlaylistItems != nil) {
+        NSMutableArray *currentSourceOfItems;
+        currentSourceOfItems = !_shuffleEnabled ? _currentPlaylistItems : _shuffledPlaylistItems;
 
-    if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
-        return _repeatEnabled ? _currentPlaylistItems.count > 0 : (indexOfCurrentItem > 0);
+        NSUInteger indexOfCurrentItem = [currentSourceOfItems indexOfObject:_currentPlaylistItem];
+
+        if (currentSourceOfItems != nil && indexOfCurrentItem != NSNotFound) {
+            return _repeatEnabled ? _currentPlaylistItems.count > 0 : (indexOfCurrentItem > 0);
+        }
     }
 
     return NO;
 }
 
 - (BOOL)nextTrackExists {
-    NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
+    if (_currentPlaylistItems != nil) {
+        NSMutableArray *currentSourceOfItems;
+        NSUInteger extraIndex = 0;
+        if (!_shuffleEnabled) {
+            currentSourceOfItems = _currentPlaylistItems;
+        } else {
+            currentSourceOfItems = _shuffledPlaylistItems;
 
-    if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
-        return _repeatEnabled ? _currentPlaylistItems.count > 0 : (indexOfCurrentItem < (_currentPlaylistItems.count - 1));
+            if (_shuffledPlaylistItems.count < _currentPlaylistItems.count) {
+                extraIndex = 1;
+            }
+        }
+
+        NSUInteger indexOfCurrentItem = [currentSourceOfItems indexOfObject:_currentPlaylistItem];
+
+        if (currentSourceOfItems != nil && indexOfCurrentItem != NSNotFound) {
+            return _repeatEnabled ? _currentPlaylistItems.count > 0 : (indexOfCurrentItem < (_currentPlaylistItems.count - 1 + extraIndex));
+        }
     }
 
     return NO;
@@ -287,16 +312,37 @@ static UIImage *artworkPlaceholder() {
 
 - (void)nextTrack {
     if ([self nextTrackExists]) {
-        NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
-        if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
+        if (_currentPlaylistItems != nil) {
+            NSMutableArray *currentSourceOfItems;
+            if (!_shuffleEnabled) {
+                currentSourceOfItems = _currentPlaylistItems;
+            } else {
+                currentSourceOfItems = _shuffledPlaylistItems;
+
+                if (_shuffledPlaylistItems.count < _currentPlaylistItems.count) {
+                    NSUInteger randomIndexOfNextShuffledTrack = 0;
+                    while ([_shuffledPlaylistItems containsObject:_currentPlaylistItems[randomIndexOfNextShuffledTrack]]) {
+                        randomIndexOfNextShuffledTrack = arc4random_uniform((unsigned int) _currentPlaylistItems.count);
+                    }
+                    [_shuffledPlaylistItems addObject:_currentPlaylistItems[randomIndexOfNextShuffledTrack]];
+                }
+            }
+
+            NSUInteger indexOfCurrentItem = [currentSourceOfItems indexOfObject:_currentPlaylistItem];
+
+            if (indexOfCurrentItem == NSNotFound) {
+                [self _updateState];
+                return;
+            }
+
             NSUInteger indexOfNextItem = indexOfCurrentItem + 1;
-            BOOL inBounds = NSLocationInRange(indexOfNextItem, NSMakeRange(0, _currentPlaylistItems.count));
+            BOOL inBounds = NSLocationInRange(indexOfNextItem, NSMakeRange(0, currentSourceOfItems.count));
 
             if (inBounds) {
-                [self startPlaingItem:_currentPlaylistItems[indexOfNextItem]];
+                [self startPlaingItem:currentSourceOfItems[indexOfNextItem]];
                 return;
-            } else if (_repeatEnabled && _currentPlaylistItems.count > 0) {
-                [self startPlaingItem:[_currentPlaylistItems firstObject]];
+            } else if (_repeatEnabled && currentSourceOfItems.count > 0) {
+                [self startPlaingItem:[currentSourceOfItems firstObject]];
                 return;
             }
         }
@@ -307,16 +353,29 @@ static UIImage *artworkPlaceholder() {
 
 - (void)prevTrack {
     if ([self prevTrackExists]) {
-        NSUInteger indexOfCurrentItem = [_currentPlaylistItems indexOfObject:_currentPlaylistItem];
-        if (_currentPlaylistItems != nil && indexOfCurrentItem != NSNotFound) {
-            NSUInteger indexOfPrevItem = indexOfCurrentItem - 1;
-            BOOL inBounds = NSLocationInRange(indexOfPrevItem, NSMakeRange(0, _currentPlaylistItems.count));
+        if (_currentPlaylistItems != nil) {
+            NSMutableArray *currentSourceOfItems;
+            if (!_shuffleEnabled) {
+                currentSourceOfItems = _currentPlaylistItems;
+            } else {
+                currentSourceOfItems = _shuffledPlaylistItems;
+            }
+
+            NSUInteger indexOfCurrentItem = [currentSourceOfItems indexOfObject:_currentPlaylistItem];
+
+            if (indexOfCurrentItem == NSNotFound) {
+                [self _updateState];
+                return;
+            }
+
+            NSUInteger indexOfNextItem = indexOfCurrentItem - 1;
+            BOOL inBounds = NSLocationInRange(indexOfNextItem, NSMakeRange(0, currentSourceOfItems.count));
 
             if (inBounds) {
-                [self startPlaingItem:_currentPlaylistItems[indexOfPrevItem]];
+                [self startPlaingItem:currentSourceOfItems[indexOfNextItem]];
                 return;
-            } else if (_repeatEnabled && _currentPlaylistItems.count > 0) {
-                [self startPlaingItem:[_currentPlaylistItems lastObject]];
+            } else if (_repeatEnabled && currentSourceOfItems.count > 0) {
+                [self startPlaingItem:[currentSourceOfItems lastObject]];
                 return;
             }
         }
@@ -327,6 +386,12 @@ static UIImage *artworkPlaceholder() {
 
 - (void)toggleShuffle {
     _shuffleEnabled = !_shuffleEnabled;
+    _shuffledPlaylistItems = _shuffleEnabled ? [NSMutableArray array] : nil;
+
+    if (_currentPlaylistItem) {
+        [_shuffledPlaylistItems addObject:_currentPlaylistItem];
+    }
+
     [self _updateState];
 }
 
