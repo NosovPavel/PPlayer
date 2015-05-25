@@ -1,0 +1,75 @@
+//Root Tab Bar
+"Storage" = "Входящие";
+"Library" = "Медиатека";
+"Playlists" = "Плейлисты";
+"Player" = "Плеер";
+"Settings" = "Настройки";
+
+//Actions on Storage Controller
+"Import to Library" = "В библиотеку";
+"Delete" = "Удалить";
+"Done" = "Готово";
+"Select items..." = "Действия...";
+
+//Actions
+"Edit" = "Изменить";
+
+//Signs on FileList VC
+"Files folder" = "Папка с файлами";
+
+//Import titles
+"Unknown genre" = "Неизвестный жанр";
+"Unknown artist" = "Неизвестный исполнитель";
+"Unknown album" = "Неизвестный альбом";
+"Unknown track" = "Неизвестный трек";
+
+//Import alert
+"Importing" = "Импортирование";
+"Importing_message" = "Perfect Player импортирует ваши файлы в библиотеку";
+
+//Library
+"Sections" = "Разделы";
+"Without sections" = "Без разделов";
+"Artists" = "Исполнители";
+"Albums" = "Альбомы";
+"Genres" = "Жанры";
+"All songs" = "Все песни";
+
+//All songs screen
+"Refreshing..." = "Обновление...";
+
+//All artists screen
+"Albums_count" = "Альбомов";
+"Tracks_count" = "песен";
+
+//All albums screen
+"Tracks_count.albums" = "Песен";
+
+//All genres screen
+"Tracks_count.genres" = "Песен";
+
+//Create playlist alert
+"Save" = "Сохранить";
+"Cancel" = "Отмена";
+"New playlist" = "Новый плейлист";
+"Assign the name to this playlist" = "Присвойте название этому плейлисту";
+"Creating" = "Создается";
+
+//Create playlist error alert view
+"Error" = "Ошибка";
+"Close" ="Закрыть";
+"You cant`t create playlists with same name" = "Вы не можете создавать плейлисты с одинаковыми названиями";
+
+//Add tracks to playlist promt
+"Add tracks to" = "Добавить песни в";
+
+//Picker buttons
+"Add" = "Добавить";
+
+//Tracks adding
+"Adding" = "Добавляется";
+"Unknown error occured, sorry :c" = "При добавлении произошла неизвестная ошибка, простите :c";
+
+//Player
+"Not plaing now" = "Не воспроизводится";
+"Unknown artist - Unkwnown album" = "Неизвестный исполнитель - Неизвестный альбом";

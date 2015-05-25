@@ -1,0 +1,75 @@
+//Root Tab Bar
+"Storage" = "Inbox";
+"Library" = "Library";
+"Playlists" = "Playlists";
+"Player" = "Player";
+"Settings" = "Settings";
+
+//Actions on Storage Controller
+"Import to Library" = "Import";
+"Delete" = "Delete";
+"Done" = "Done";
+"Select items..." = "Actions...";
+
+//Actions
+"Edit" = "Edit";
+
+//Signs on FileList VC
+"Files folder" = "Files folder";
+
+//Import titles
+"Unknown genre" = "Unknown genre";
+"Unknown artist" = "Unknown artist";
+"Unknown album" = "Unknown album";
+"Unknown track" = "Unknown track";
+
+//Import alert
+"Importing" = "Importing";
+"Importing_message" = "Perfect Player is now importing files into your library";
+
+//Library
+"Sections" = "Sections";
+"Without sections" = "Without sections";
+"Artists" = "Artists";
+"Albums" = "Albums";
+"Genres" = "Genres";
+"All songs" = "All songs";
+
+//All songs screen
+"Refreshing..." = "Refreshing...";
+
+//All artists screen
+"Albums_count" = "Albums";
+"Tracks_count" = "tracks";
+
+//All albums screen
+"Tracks_count.albums" = "Tracks";
+
+//All genres screen
+"Tracks_count.genres" = "Tracks";
+
+//Create playlist alert
+"Save" = "Save";
+"Cancel" = "Cancel";
+"New playlist" = "New playlist";
+"Assign the name to this playlist" = "Assign the name to this playlist";
+"Creating" = "Creating";
+
+//Create playlist error alert view
+"Error" = "Error";
+"Close" ="Close";
+"You cant`t create playlists with same name" = "You cant`t create playlists with same name";
+
+//Add tracks to playlist promt
+"Add tracks to" = "Add tracks to";
+
+//Picker buttons
+"Add" = "Add";
+
+//Tracks adding
+"Adding" = "Adding";
+"Unknown error occured, sorry :c" = "Unknown error occured, sorry :c";
+
+//Player
+"Not plaing now" = "Not plaing now";
+"Unknown artist - Unkwnown album" = "Unknown artist - Unkwnown album";
